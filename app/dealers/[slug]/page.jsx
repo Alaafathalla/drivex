@@ -2,174 +2,109 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, CarFront, Heart, Loader2, MapPin, Phone, ShieldCheck, Star } from 'lucide-react'
+import { MapPin, Phone, ShieldCheck, Star, Mail } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion-section'
+import { useLang } from '@/context/LangContext'
 import { api, CARS } from '@/lib/api'
 
 export default function DealerDetailsPage({ params }) {
-  const [slug, setSlug] = useState(null)
+  const { t } = useLang()
   const [dealer, setDealer] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [inventory, setInventory] = useState([])
 
   useEffect(() => {
-    params.then ? params.then((p) => setSlug(p.slug)) : setSlug(params.slug)
+    const slug = typeof params === 'object' && !params.then ? params.slug : null
+    if (!slug) return
+    api.getDealerBySlug(slug).then(d => {
+      if (d) {
+        setDealer(d)
+        setInventory(CARS.filter(c => d.inventory?.includes(c.id)))
+      }
+    })
   }, [params])
 
-  useEffect(() => {
-    if (!slug) return
-    api.getDealerBySlug(slug).then((d) => {
-      setDealer(d)
-      setLoading(false)
-    })
-  }, [slug])
-
-  if (loading) return (
-    <main className="min-h-screen bg-[#070908] text-white">
-      <SiteHeader />
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="animate-spin text-[#2ee52b]" size={32} />
-      </div>
-    </main>
-  )
-
   if (!dealer) return (
-    <main className="min-h-screen bg-[#070908] text-white">
+    <main className="min-h-screen bg-background">
       <SiteHeader />
       <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="text-[20px] font-bold">Dealer not found</p>
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       </div>
     </main>
   )
-
-  const inventory = CARS.filter((c) => dealer.inventory.includes(c.id))
 
   return (
-    <main className="min-h-screen bg-[#070908] text-white">
+    <main className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* Cover image */}
-      <div className="relative pt-[72px]">
-        <div className="h-[240px] w-full overflow-hidden">
-          <img src={dealer.cover} alt="" className="h-full w-full object-cover opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070908] via-[#070908]/60 to-transparent" />
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-[1450px] px-5 pb-16 sm:px-8 lg:px-10">
-        {/* Dealer header card */}
-        <FadeIn direction="up" delay={0.1}>
-          <div className="-mt-16 rounded-[8px] border border-white/10 bg-[#0b0d0c] p-6 md:p-8 relative z-10">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-start gap-5">
-                <div className="h-16 w-16 shrink-0 rounded-full border-2 border-[#2ee52b]/30 bg-[#2ee52b]/10 flex items-center justify-center">
-                  <CarFront size={28} className="text-[#2ee52b]" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck size={15} className="text-[#2ee52b]" />
-                    <span className="text-[10px] font-bold uppercase tracking-[.12em] text-[#2ee52b]">Verified Dealer</span>
-                  </div>
-                  <h1 className="mt-1 text-[28px] font-black">{dealer.name}</h1>
-                  <p className="mt-1 flex items-center gap-2 text-[13px] text-white/50">
-                    <MapPin size={13} /> {dealer.address}
-                  </p>
-                </div>
+      <section className="mx-auto max-w-[1450px] px-5 pb-16 pt-28 sm:px-8 lg:px-10">
+        {/* Dealer card */}
+        <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
+          className="rounded-[8px] border border-border bg-card p-7 md:p-10">
+          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
+            <div>
+              <div className="flex items-center gap-2 text-accent">
+                <ShieldCheck size={16} />
+                <span className="text-xs font-black uppercase tracking-[.15em]">{t('dealers_verified')}</span>
               </div>
-              <div className="flex gap-3">
-                <button className="flex h-11 items-center gap-2 rounded-[5px] border border-white/15 px-5 text-[12px] font-semibold transition hover:border-white/30">
-                  Message
-                </button>
-                <button className="flex h-11 items-center gap-2 rounded-[5px] bg-[#2ee52b] px-5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]">
-                  <Phone size={15} /> Call
-                </button>
-              </div>
+              <h1 className="mt-3 text-4xl font-black tracking-[-.04em]">{dealer.name}</h1>
+              <p className="mt-2 flex items-center gap-2 text-muted-foreground">
+                <MapPin size={15} /> {dealer.address}
+              </p>
+              <p className="mt-4 max-w-xl leading-7 text-muted-foreground">{dealer.description}</p>
             </div>
-
-            <div className="mt-6 flex flex-wrap gap-6 border-t border-white/8 pt-5 text-sm">
-              <div className="flex items-center gap-2">
-                <Star size={14} className="fill-[#2ee52b] text-[#2ee52b]" />
-                <span className="font-bold">{dealer.rating}</span>
-                <span className="text-white/40">rating</span>
-              </div>
-              <div>
-                <span className="font-bold">{dealer.totalCars}</span>
-                <span className="ml-1 text-white/40">vehicles</span>
-              </div>
-              <div>
-                <span className="text-white/40">Member since </span>
-                <span className="font-bold">{dealer.since}</span>
-              </div>
-              <div>
-                <span className="text-white/40">Email: </span>
-                <span className="font-semibold text-[#2ee52b]">{dealer.email}</span>
-              </div>
+            <div className="flex shrink-0 flex-col gap-2 sm:flex-row md:flex-col">
+              <a href={`tel:${dealer.phone}`}
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] bg-accent px-5 py-3 text-sm font-black text-black transition hover:bg-[#50f14d]">
+                <Phone size={15} /> {t('dealers_call')}
+              </a>
+              <a href={`mailto:${dealer.email}`}
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] border border-border px-5 py-3 text-sm font-black transition hover:border-accent">
+                <Mail size={15} /> {t('dealers_message')}
+              </a>
             </div>
           </div>
-        </FadeIn>
 
-        {/* Description */}
-        <FadeIn direction="left" delay={0.1}>
-          <div className="mt-8 rounded-[7px] border border-white/10 bg-[#0b0d0c] p-6">
-            <h2 className="font-bold">About {dealer.name}</h2>
-            <p className="mt-3 text-[14px] leading-7 text-white/60">{dealer.description}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {dealer.specialties.map((s) => (
-                <span key={s} className="rounded-full border border-[#2ee52b]/30 px-3 py-1 text-[11px] font-semibold text-[#2ee52b]">{s}</span>
-              ))}
-            </div>
+          <div className="mt-8 flex flex-wrap gap-8 border-t border-border pt-6 text-sm">
+            <span className="flex items-center gap-2 font-bold">
+              <Star className="fill-accent text-accent" size={15} /> {dealer.rating} {t('dealers_rating')}
+            </span>
+            <span className="font-bold">{dealer.totalCars} {t('dealers_cars')}</span>
+            <span className="text-muted-foreground">{t('dealers_member')} {dealer.since}</span>
+            {dealer.specialties?.map(s => (
+              <span key={s} className="rounded-full border border-border px-3 py-1 text-xs font-bold text-accent">{s}</span>
+            ))}
           </div>
-        </FadeIn>
+        </motion.div>
 
         {/* Inventory */}
-        <div className="mt-10">
-          <FadeIn direction="right">
-            <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-[22px] font-black">Available Inventory</h2>
-              <p className="text-[13px] text-white/40">{inventory.length} cars</p>
-            </div>
-          </FadeIn>
-
-          {inventory.length > 0 ? (
-            <StaggerContainer className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {inventory.map((car) => (
-                <StaggerItem key={car.id}>
-                  <motion.a
-                    href={`/cars/${car.slug}`}
-                    whileHover={{ y: -4 }}
-                    className="group block overflow-hidden rounded-[7px] border border-white/10 bg-[#0b0d0c] transition hover:border-[#2ee52b]/40"
-                  >
-                    <div className="relative aspect-[1.45] overflow-hidden">
-                      <span className="absolute left-3 top-3 z-10 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black">
-                        {car.condition}
-                      </span>
-                      <button className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/30 backdrop-blur-sm">
-                        <Heart size={14} className="text-white" />
-                      </button>
-                      <img src={car.image} alt={car.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-bold">{car.name}</h3>
-                      <p className="mt-1 text-[12px] text-white/50">{car.year} · {car.mileage?.toLocaleString()} km</p>
-                      <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-3">
-                        <p className="text-[16px] font-black text-[#2ee52b]">${car.price?.toLocaleString()}</p>
-                        <span className="flex items-center gap-1 text-[11px] font-semibold text-white/50">
-                          View <ArrowRight size={12} />
-                        </span>
-                      </div>
-                    </div>
-                  </motion.a>
-                </StaggerItem>
+        {inventory.length > 0 && (
+          <div className="mt-14">
+            <motion.h2 initial={{ opacity:0, x:-16 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
+              transition={{ duration:0.4 }}
+              className="mb-6 text-2xl font-black">{t('dealers_inventory')}</motion.h2>
+            <div className="grid gap-5 md:grid-cols-3">
+              {inventory.map((car, i) => (
+                <motion.a key={car.id} href={`/cars/${car.slug}`}
+                  initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
+                  transition={{ delay: i*0.07 }}
+                  whileHover={{ y:-4 }}
+                  className="group cursor-pointer overflow-hidden rounded-[7px] border border-border bg-card transition hover:border-accent/50">
+                  <div className="aspect-[1.45] overflow-hidden">
+                    <img src={car.image} alt={car.name}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-black">{car.name}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{car.year} · {car.mileage?.toLocaleString()} km</p>
+                    <p className="mt-3 text-lg font-black text-accent">${car.price?.toLocaleString()}</p>
+                  </div>
+                </motion.a>
               ))}
-            </StaggerContainer>
-          ) : (
-            <div className="rounded-[7px] border border-white/10 bg-[#0b0d0c] py-12 text-center text-white/40">
-              No cars currently listed
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+      </section>
 
       <SiteFooter />
     </main>

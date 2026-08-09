@@ -2,130 +2,86 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CarFront, MapPin, Search, ShieldCheck, Star } from 'lucide-react'
+import { CarFront, MapPin, ShieldCheck, Star } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion-section'
+import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
 export default function DealersPage() {
+  const { t } = useLang()
   const [dealers, setDealers] = useState([])
-  const [q, setQ] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => { api.getDealers().then(setDealers) }, [])
-
-  const filtered = dealers.filter((d) =>
-    !q || d.name.toLowerCase().includes(q.toLowerCase()) || d.city.toLowerCase().includes(q.toLowerCase())
-  )
+  useEffect(() => {
+    api.getDealers().then(data => { setDealers(data); setLoading(false) })
+  }, [])
 
   return (
-    <main className="min-h-screen bg-[#070908] text-white">
+    <main className="min-h-screen bg-background">
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-white/8 pt-[72px]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1562141961-b5d65aba8f5e?auto=format&fit=crop&w=2200&q=85"
-            alt=""
-            className="h-full w-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070908] via-[#070908]/85 to-[#070908]/60" />
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#070908]" />
-        </div>
-        <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
-          <FadeIn direction="left">
-            <p className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[.1em] text-[#2ee52b]">
-              <span className="h-[2px] w-8 bg-[#2ee52b]" /> Verified Network
-            </p>
-            <h1 className="mt-4 text-[clamp(38px,5vw,68px)] font-black leading-[.92] tracking-tight">
-              Trusted dealers.<br />Exceptional cars.
-            </h1>
-            <p className="mt-4 max-w-md text-[14px] text-white/55">
-              Every dealer on DriveX is verified, rated and held to our quality standards.
-            </p>
-          </FadeIn>
-          <FadeIn direction="up" delay={0.15}>
-            <div className="mt-8 flex max-w-md items-center gap-3 rounded-[6px] border border-white/15 bg-white/5 px-4 py-3 backdrop-blur-sm">
-              <Search size={16} className="text-[#2ee52b]" />
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search dealers or city…"
-                className="flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/35"
-              />
-            </div>
-          </FadeIn>
+      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_40%,rgba(46,229,43,.12),transparent_50%)]" />
+        <div className="relative mx-auto max-w-[1450px] px-5 py-16 sm:px-8 lg:px-10">
+          <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
+            className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('dealers_eyebrow')}</motion.p>
+          <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
+            className="mt-3 text-[clamp(30px,4.5vw,58px)] font-black leading-[.92] tracking-[-.05em]">{t('dealers_title')}</motion.h1>
+          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.2 }}
+            className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">{t('dealers_desc')}</motion.p>
         </div>
       </section>
 
-      {/* Stats bar */}
-      <FadeIn direction="up">
-        <div className="border-b border-white/8 bg-[#0a0c0b]">
-          <div className="mx-auto grid max-w-[1450px] grid-cols-3 divide-x divide-white/8 px-5 lg:px-10">
-            {[['50+', 'Verified Dealers'], ['4.8', 'Avg Rating'], ['10K+', 'Cars Listed']].map(([v, l]) => (
-              <div key={l} className="px-6 py-5 text-center">
-                <p className="text-[22px] font-black text-[#2ee52b]">{v}</p>
-                <p className="text-[11px] text-white/45">{l}</p>
-              </div>
-            ))}
+      <section className="mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
+        <motion.div initial={{ opacity:0, y:12 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
+          transition={{ duration:0.4 }}
+          className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.18em] text-accent">{t('dealers_network')}</p>
+            <h2 className="mt-2 text-3xl font-black">{t('dealers_featured')}</h2>
           </div>
-        </div>
-      </FadeIn>
+          <p className="text-sm text-muted-foreground">{t('dealers_partners')}</p>
+        </motion.div>
 
-      {/* Dealer grid */}
-      <section className="mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10">
-        <FadeIn direction="right">
-          <p className="mb-8 text-[13px] text-white/50">
-            Showing <span className="font-bold text-white">{filtered.length}</span> dealers
-          </p>
-        </FadeIn>
-        <StaggerContainer className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {filtered.map((dealer) => (
-            <StaggerItem key={dealer.id}>
+        {loading ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {Array.from({length:4}).map((_,i) => <div key={i} className="h-56 animate-pulse rounded-[7px] bg-white/5" />)}
+          </div>
+        ) : (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {dealers.map((dealer, i) => (
               <motion.a
+                key={dealer.id}
                 href={`/dealers/${dealer.slug}`}
-                whileHover={{ y: -5 }}
-                className="group block overflow-hidden rounded-[8px] border border-white/10 bg-[#0b0d0c] transition hover:border-[#2ee52b]/50"
+                initial={{ opacity:0, y:28 }}
+                whileInView={{ opacity:1, y:0 }}
+                viewport={{ once:true }}
+                transition={{ duration:0.4, delay: i * 0.07 }}
+                whileHover={{ y:-4 }}
+                className="group cursor-pointer rounded-[7px] border border-border bg-card p-6 transition hover:border-accent/60"
               >
-                {/* Cover */}
-                <div className="relative h-28 overflow-hidden">
-                  <img src={dealer.cover} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d0c] via-transparent" />
+                <div className="flex items-start justify-between">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-accent">
+                    <CarFront size={24} />
+                  </div>
+                  <ShieldCheck className="text-accent" size={18} />
                 </div>
-                {/* Logo placeholder */}
-                <div className="relative -mt-6 ml-5">
-                  <div className="h-12 w-12 rounded-full border-2 border-[#0b0d0c] bg-[#2ee52b]/10 flex items-center justify-center">
-                    <CarFront size={20} className="text-[#2ee52b]" />
-                  </div>
-                </div>
-                <div className="p-5 pt-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h3 className="font-black">{dealer.name}</h3>
-                      <p className="mt-1 flex items-center gap-1 text-[12px] text-white/50">
-                        <MapPin size={11} /> {dealer.city}
-                      </p>
-                    </div>
-                    {dealer.verified && <ShieldCheck size={17} className="mt-0.5 shrink-0 text-[#2ee52b]" />}
-                  </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-4">
-                    <div className="flex items-center gap-1">
-                      <Star size={13} className="fill-[#2ee52b] text-[#2ee52b]" />
-                      <span className="text-[13px] font-bold">{dealer.rating}</span>
-                    </div>
-                    <span className="text-[12px] text-white/50">{dealer.totalCars} cars</span>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {dealer.specialties.map((s) => (
-                      <span key={s} className="rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] text-white/50">{s}</span>
-                    ))}
-                  </div>
+                <h3 className="mt-6 text-xl font-black">{dealer.name}</h3>
+                <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin size={13} /> {dealer.city}
+                </p>
+                <div className="mt-6 flex items-center justify-between border-t border-border pt-5 text-sm">
+                  <span className="flex items-center gap-1 font-bold">
+                    <Star size={14} className="fill-accent text-accent" /> {dealer.rating}
+                  </span>
+                  <span className="text-muted-foreground">{dealer.totalCars} {t('dealers_cars')}</span>
                 </div>
               </motion.a>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+            ))}
+          </div>
+        )}
       </section>
 
       <SiteFooter />

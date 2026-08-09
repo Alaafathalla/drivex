@@ -166,3 +166,47 @@ input, textarea, select { font: inherit; }
   transform-origin: left top;
   color: #8c938d;
 }
+
+/* ── RTL / Arabic support ──────────────────────────────────────────── */
+
+/* Arabic-optimised font stack */
+[dir='rtl'] body {
+  font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+  letter-spacing: 0;
+  line-height: 1.75;
+}
+
+/* Flip directional icons when in RTL */
+[dir='rtl'] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* RTL float-label fix */
+[dir='rtl'] .float-label label {
+  left: auto;
+  right: 16px;
+  transform-origin: right top;
+}
+
+/* Language toggle pill — ensure correct direction */
+[dir='rtl'] .lang-toggle-pill {
+  direction: ltr;
+}
+
+/* Ensure inputs use inline direction for user-typed content */
+input, textarea {
+  direction: inherit;
+}
+
+/* Fix scrollbar side in RTL */
+[dir='rtl'] * {
+  scrollbar-width: thin;
+}
+
+/* Ensure motion animations respect reading direction */
+[dir='rtl'] .slide-from-left {
+  --slide-x: 30px;
+}
+[dir='rtl'] .slide-from-right {
+  --slide-x: -30px;
+}
