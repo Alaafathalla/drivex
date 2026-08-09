@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/next'
+import { LangProvider } from '@/context/LangContext'
 import './globals.css'
 
 export const metadata = {
@@ -15,10 +16,13 @@ export const viewport = {
 }
 
 export default function RootLayout({ children }) {
+  // lang/dir are set client-side by LangProvider after hydration
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr">
       <body className="antialiased">
-        {children}
+        <LangProvider>
+          {children}
+        </LangProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

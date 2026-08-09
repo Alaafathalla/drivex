@@ -2,33 +2,37 @@
 
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-
-const footerLinks = {
-  Marketplace: [
-    { label: 'Buy Cars', href: '/cars' },
-    { label: 'Rent Cars', href: '/rentals' },
-    { label: 'Sell My Car', href: '/sell' },
-    { label: 'Compare Cars', href: '/compare' },
-  ],
-  Company: [
-    { label: 'About Us', href: '/about' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'Dealers', href: '/dealers' },
-    { label: 'Careers', href: '#' },
-  ],
-  Account: [
-    { label: 'Sign In', href: '/login' },
-    { label: 'Register', href: '/register' },
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Favorites', href: '/favorites' },
-  ],
-}
+import { useLang } from '@/context/LangContext'
 
 export function SiteFooter() {
+  const { t } = useLang()
+
+  const footerLinks = {
+    footer_marketplace: [
+      { key: 'footer_buy',      href: '/cars' },
+      { key: 'footer_rent',     href: '/rentals' },
+      { key: 'footer_sell',     href: '/sell' },
+      { key: 'footer_compare',  href: '/compare' },
+    ],
+    footer_company: [
+      { key: 'footer_about',    href: '/about' },
+      { key: 'footer_contact',  href: '/contact' },
+      { key: 'footer_dealers',  href: '/dealers' },
+      { key: 'footer_careers',  href: '#' },
+    ],
+    footer_account: [
+      { key: 'footer_signin',   href: '/login' },
+      { key: 'footer_register', href: '/register' },
+      { key: 'footer_dashboard',href: '/dashboard' },
+      { key: 'footer_favorites',href: '/favorites' },
+    ],
+  }
+
   return (
     <footer className="border-t border-white/8 bg-[#050706] text-white">
       <div className="mx-auto max-w-[1450px] px-5 pt-12 pb-8 sm:px-8 lg:px-10">
         <div className="grid gap-10 border-b border-white/8 pb-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+
           {/* Brand */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -40,10 +44,10 @@ export function SiteFooter() {
               Drive<span className="text-[#2ee52b]">X</span>
             </a>
             <p className="mt-4 max-w-xs text-[13px] leading-6 text-white/45">
-              A premium marketplace for buying and renting cars with verified listings, trusted dealers and secure transactions.
+              {t('footer_tagline')}
             </p>
             <div className="mt-6 flex gap-3">
-              {['X', 'IG', 'GH'].map((label) => (
+              {['X', 'IG', 'YT'].map((label) => (
                 <a
                   key={label}
                   href="#"
@@ -55,24 +59,22 @@ export function SiteFooter() {
             </div>
           </motion.div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([section, links], colIdx) => (
+          {/* Link columns */}
+          {Object.entries(footerLinks).map(([sectionKey, links], colIdx) => (
             <motion.div
-              key={section}
+              key={sectionKey}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: (colIdx + 1) * 0.07 }}
             >
-              <p className="text-[11px] font-black uppercase tracking-[.1em] text-white/60">{section}</p>
+              <p className="text-[11px] font-black uppercase tracking-[.1em] text-white/60">
+                {t(sectionKey)}
+              </p>
               <div className="mt-4 grid gap-3">
-                {links.map(({ label, href }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    className="text-[13px] text-white/45 transition hover:text-[#2ee52b]"
-                  >
-                    {label}
+                {links.map(({ key, href }) => (
+                  <a key={key} href={href} className="text-[13px] text-white/45 transition hover:text-[#2ee52b]">
+                    {t(key)}
                   </a>
                 ))}
               </div>
@@ -82,12 +84,12 @@ export function SiteFooter() {
 
         {/* Bottom bar */}
         <div className="flex flex-col gap-3 pt-6 text-[11px] text-white/30 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 DriveX. All rights reserved.</p>
+          <p>{t('footer_rights')}</p>
           <div className="flex gap-5">
-            <a href="#" className="hover:text-white/60 transition">Privacy Policy</a>
-            <a href="#" className="hover:text-white/60 transition">Terms of Service</a>
+            <a href="#" className="transition hover:text-white/60">{t('footer_privacy')}</a>
+            <a href="#" className="transition hover:text-white/60">{t('footer_terms')}</a>
             <a href="/contact" className="inline-flex items-center gap-1 text-white/45 transition hover:text-[#2ee52b]">
-              Talk to us <ArrowUpRight size={11} />
+              {t('footer_talk')} <ArrowUpRight size={11} />
             </a>
           </div>
         </div>

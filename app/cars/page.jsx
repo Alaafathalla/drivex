@@ -1,131 +1,57 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import {
-  ChevronDown, Filter, GitCompare, Heart, LayoutGrid, List,
-  Loader2, MapPin, Search, ShieldCheck, SlidersHorizontal, X,
-} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Filter, Heart, Search, ShieldCheck, SlidersHorizontal, X, ChevronDown } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion-section'
-import { api, BODY_TYPES, CONDITIONS, FUEL_TYPES, MAKES, TRANSMISSIONS } from '@/lib/api'
-import { useSearchParams } from 'next/navigation'
-import { Suspense } from 'react'
+import { useLang } from '@/context/LangContext'
+import { api, MAKES, BODY_TYPES, FUEL_TYPES, TRANSMISSIONS, CONDITIONS } from '@/lib/api'
 
-function FilterSelect({ label, options, value, onChange }) {
-  return (
-    <div className="border-b border-white/8 py-4">
-      <p className="text-[12px] font-bold text-white">{label}</p>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-3 w-full rounded-[4px] border border-white/10 bg-[#0f1210] px-3 py-2.5 text-[12px] text-white/70 outline-none focus:border-[#2ee52b]"
-      >
-        <option value="">Any</option>
-        {options.map((o) => (
-          <option key={o} value={o}>{o}</option>
-        ))}
-      </select>
-    </div>
-  )
-}
-
-function CarCard({ car, view }) {
+function CarCard({ car, index, t }) {
   const [fav, setFav] = useState(false)
-  const [compare, setCompare] = useState(false)
-
-  if (view === 'list') {
-    return (
-      <motion.article
-        layout
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 20 }}
-        transition={{ duration: 0.35 }}
-        className="group flex gap-0 overflow-hidden rounded-[7px] border border-white/10 bg-[#0b0d0c] transition hover:border-[#2ee52b]/40"
-      >
-        <div className="relative w-[220px] shrink-0 overflow-hidden">
-          <img src={car.image} alt={car.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-          <span className="absolute left-3 top-3 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black">
-            {car.condition}
-          </span>
-        </div>
-        <div className="flex flex-1 flex-col justify-between p-5">
-          <div>
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="font-bold">{car.name}</h2>
-                <p className="mt-1 flex items-center gap-2 text-[12px] text-white/50">
-                  <MapPin size={12} /> {car.location} · {car.year} · {car.mileage?.toLocaleString()} km
-                </p>
-              </div>
-              <ShieldCheck className="shrink-0 text-[#2ee52b]" size={18} />
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {[car.transmission, car.fuel, car.body].map((t) => (
-                <span key={t} className="rounded-[3px] border border-white/10 px-2 py-1 text-[10px] text-white/55">{t}</span>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-4">
-            <p className="text-[18px] font-black text-[#2ee52b]">${car.price?.toLocaleString()}</p>
-            <a href={`/cars/${car.slug}`} className="rounded-[4px] bg-[#2ee52b] px-4 py-2 text-[11px] font-bold text-black transition hover:bg-[#50f14d]">
-              View Details
-            </a>
-          </div>
-        </div>
-      </motion.article>
-    )
-  }
-
   return (
     <motion.article
-      layout
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.35 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.38, delay: index * 0.05 }}
       whileHover={{ y: -4 }}
-      className="group overflow-hidden rounded-[7px] border border-white/10 bg-[#0b0d0c] transition hover:border-[#2ee52b]/40"
+      className="group overflow-hidden rounded-[7px] border border-border bg-card transition hover:border-[#2ee52b]/50"
     >
-      <div className="relative aspect-[1.35] overflow-hidden">
-        <span className="absolute left-3 top-3 z-10 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black">
-          {car.condition}
+      <a href={`/cars/${car.slug}`} className="relative block aspect-[1.28] overflow-hidden">
+        <img
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          src={car.image}
+          alt={car.name}
+        />
+        <span className="absolute start-4 top-4 rounded-[3px] bg-[#2ee52b] px-2.5 py-1 text-[9px] font-black text-black uppercase tracking-[.1em]">
+          {t('buy_verified')}
         </span>
-        <div className="absolute right-3 top-3 z-10 flex gap-1.5">
-          <button
-            onClick={() => setFav((v) => !v)}
-            className="grid h-8 w-8 place-items-center rounded-full bg-black/30 backdrop-blur-sm transition hover:bg-black/60"
-          >
-            <Heart size={14} className={fav ? 'fill-[#2ee52b] text-[#2ee52b]' : 'text-white'} />
-          </button>
-          <button
-            onClick={() => setCompare((v) => !v)}
-            className={`grid h-8 w-8 place-items-center rounded-full backdrop-blur-sm transition ${compare ? 'bg-[#2ee52b] text-black' : 'bg-black/30 text-white hover:bg-black/60'}`}
-          >
-            <GitCompare size={14} />
-          </button>
-        </div>
-        <img src={car.image} alt={car.name} className="h-full w-full object-cover transition duration-600 group-hover:scale-105" />
-      </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2">
+        <button
+          onClick={(e) => { e.preventDefault(); setFav(v => !v) }}
+          className="absolute end-4 top-4 grid h-9 w-9 place-items-center bg-black/60 backdrop-blur-sm transition hover:bg-black/80 cursor-pointer"
+        >
+          <Heart size={16} className={fav ? 'fill-[#2ee52b] text-[#2ee52b]' : 'text-white'} />
+        </button>
+      </a>
+      <div className="p-5">
+        <div className="flex justify-between gap-3">
           <div>
-            <h2 className="font-bold leading-tight">{car.name}</h2>
-            <p className="mt-1 text-[11px] text-white/50">{car.year} · {car.mileage?.toLocaleString()} km · {car.location}</p>
+            <h2 className="font-black tracking-[-.02em]">{car.name}</h2>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {car.year} · {car.transmission} · {car.mileage?.toLocaleString()} {t('card_km')}
+            </p>
           </div>
-          <ShieldCheck className="mt-0.5 shrink-0 text-[#2ee52b]" size={16} />
+          <ShieldCheck className="shrink-0 text-accent" size={18} />
         </div>
-        <div className="mt-3 flex gap-2">
-          {[car.transmission, car.fuel].map((t) => (
-            <span key={t} className="rounded-[3px] border border-white/10 px-2 py-0.5 text-[9px] text-white/50">{t}</span>
-          ))}
-        </div>
-        <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-3">
-          <p className="text-[16px] font-black text-[#2ee52b]">${car.price?.toLocaleString()}</p>
-          <a href={`/cars/${car.slug}`} className="text-[11px] font-semibold text-white/50 transition hover:text-[#2ee52b]">
-            View →
+        <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
+          <div>
+            <p className="text-[9px] uppercase tracking-[.13em] text-muted-foreground">{t('buy_from')}</p>
+            <b className="text-lg">${car.price?.toLocaleString()}</b>
+          </div>
+          <a className="cursor-pointer text-xs font-black text-accent hover:underline" href={`/cars/${car.slug}`}>
+            {t('buy_view_details')}
           </a>
         </div>
       </div>
@@ -133,233 +59,169 @@ function CarCard({ car, view }) {
   )
 }
 
-function CarsContent() {
-  const searchParams = useSearchParams()
+const SORT_OPTIONS = [
+  { key: 'buy_newest',    value: 'newest' },
+  { key: 'buy_price_asc', value: 'price-asc' },
+  { key: 'buy_price_desc',value: 'price-desc' },
+]
+
+export default function CarsPage() {
+  const { t } = useLang()
   const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
-  const [view, setView] = useState('grid')
+  const [filters, setFilters] = useState({ condition: '', make: '', body: '', fuel: '', transmission: '', sort: 'newest' })
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [sort, setSort] = useState('newest')
-  const [filters, setFilters] = useState({
-    make: '', body: '', fuel: '', transmission: '', condition: '',
-    minPrice: '', maxPrice: '', q: searchParams.get('q') || '',
-  })
 
-  const setFilter = (key, val) => setFilters((f) => ({ ...f, [key]: val }))
+  const setFilter = (key, val) => setFilters(f => ({ ...f, [key]: val }))
 
   useEffect(() => {
     setLoading(true)
-    api.getCars({ ...filters, sort, type: 'sale' }).then((data) => {
-      setCars(data)
-      setLoading(false)
-    })
-  }, [filters, sort])
+    api.getCars(filters).then(data => { setCars(data); setLoading(false) })
+  }, [filters])
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length
+  const filterGroups = [
+    { key: 'filter_condition', fKey: 'condition', options: CONDITIONS },
+    { key: 'filter_make',      fKey: 'make',      options: MAKES },
+    { key: 'filter_body',      fKey: 'body',      options: BODY_TYPES },
+    { key: 'filter_trans',     fKey: 'transmission', options: TRANSMISSIONS },
+    { key: 'filter_fuel',      fKey: 'fuel',      options: FUEL_TYPES },
+  ]
+
+  const Sidebar = () => (
+    <div className="sticky top-24 rounded-[7px] border border-border bg-card p-6">
+      <div className="flex items-center justify-between">
+        <h2 className="font-black">{t('buy_refine')}</h2>
+        <button onClick={() => setFilters(f => ({ ...f, condition:'', make:'', body:'', fuel:'', transmission:'' }))}
+          className="cursor-pointer text-xs font-bold text-accent hover:underline">
+          {t('buy_reset')}
+        </button>
+      </div>
+      {filterGroups.map(({ key, fKey, options }) => (
+        <div key={fKey} className="border-b border-border py-4">
+          <p className="text-sm font-bold">{t(key)}</p>
+          <div className="mt-3 relative">
+            <select
+              value={filters[fKey]}
+              onChange={e => setFilter(fKey, e.target.value)}
+              className="w-full cursor-pointer appearance-none rounded-[5px] border border-border bg-background px-3 py-2.5 text-xs text-muted-foreground focus:border-accent focus:outline-none"
+            >
+              <option value="">{t('filter_any')}</option>
+              {options.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+            <ChevronDown size={13} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 
   return (
-    <main className="min-h-screen bg-[#070908] text-white">
+    <main className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* Page hero */}
-      <section className="relative overflow-hidden border-b border-white/8 pt-[72px]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(46,229,43,.1),transparent_50%)]" />
-        <div className="relative mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10">
-          <FadeIn direction="left">
-            <p className="text-[11px] font-bold uppercase tracking-[.1em] text-[#2ee52b]">Marketplace</p>
-            <h1 className="mt-2 text-[clamp(36px,5vw,64px)] font-black leading-[.95] tracking-[-.05em]">
-              Buy Cars
-            </h1>
-            <p className="mt-3 max-w-lg text-[14px] text-white/55">
-              {cars.length} verified vehicles ready for you
-            </p>
-          </FadeIn>
-          {/* Search bar */}
-          <FadeIn direction="up" delay={0.1}>
-            <div className="mt-6 flex max-w-2xl items-center gap-3 rounded-[6px] border border-white/15 bg-white/5 px-4 py-3">
-              <Search size={17} className="shrink-0 text-[#2ee52b]" />
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(46,229,43,.12),transparent_55%)]" />
+        <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
+          <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
+            className="text-[10px] font-black uppercase tracking-[.2em] text-accent">
+            {t('buy_eyebrow')}
+          </motion.p>
+          <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
+            className="mt-3 text-[clamp(32px,5vw,64px)] font-black leading-[.92] tracking-[-.05em]">
+            {t('buy_title')}
+          </motion.h1>
+          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.2 }}
+            className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">
+            {t('buy_desc')}
+          </motion.p>
+          <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45, delay:0.3 }}
+            className="mt-7 flex max-w-lg items-center gap-3 rounded-[6px] border border-white/15 bg-white/5 p-2">
+            <div className="flex flex-1 items-center gap-3 px-3">
+              <Search size={16} className="shrink-0 text-accent" />
               <input
-                value={filters.q}
-                onChange={(e) => setFilter('q', e.target.value)}
-                placeholder="Search make, model or keyword…"
-                className="flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/35"
+                placeholder={t('nav_search_ph')}
+                onChange={e => setFilter('q', e.target.value)}
+                className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+                dir="auto"
               />
-              {filters.q && (
-                <button onClick={() => setFilter('q', '')} className="text-white/40 hover:text-white">
-                  <X size={15} />
-                </button>
-              )}
             </div>
-          </FadeIn>
+            <button className="cursor-pointer rounded-[4px] bg-accent px-5 py-3 text-xs font-black text-black transition hover:bg-[#50f14d]">
+              {t('search_label')}
+            </button>
+          </motion.div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1450px] px-5 py-10 sm:px-8 lg:px-10">
-        <div className="flex gap-8">
-          {/* Sidebar filters — desktop */}
-          <FadeIn direction="left" className="hidden w-[240px] shrink-0 lg:block">
-            <aside className="sticky top-24">
-              <div className="rounded-[7px] border border-white/10 bg-[#0b0d0c] p-5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-[13px] font-bold">Filters</h2>
-                  <button
-                    onClick={() => setFilters({ make: '', body: '', fuel: '', transmission: '', condition: '', minPrice: '', maxPrice: '', q: '' })}
-                    className="text-[11px] font-semibold text-[#2ee52b] hover:underline"
-                  >
-                    Reset all
-                  </button>
-                </div>
-                <FilterSelect label="Make" options={MAKES} value={filters.make} onChange={(v) => setFilter('make', v)} />
-                <FilterSelect label="Body Type" options={BODY_TYPES} value={filters.body} onChange={(v) => setFilter('body', v)} />
-                <FilterSelect label="Fuel Type" options={FUEL_TYPES} value={filters.fuel} onChange={(v) => setFilter('fuel', v)} />
-                <FilterSelect label="Transmission" options={TRANSMISSIONS} value={filters.transmission} onChange={(v) => setFilter('transmission', v)} />
-                <FilterSelect label="Condition" options={CONDITIONS} value={filters.condition} onChange={(v) => setFilter('condition', v)} />
-                <div className="border-b border-white/8 py-4">
-                  <p className="text-[12px] font-bold text-white">Price Range</p>
-                  <div className="mt-3 flex gap-2">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      value={filters.minPrice}
-                      onChange={(e) => setFilter('minPrice', e.target.value)}
-                      className="w-full rounded-[4px] border border-white/10 bg-[#0f1210] px-3 py-2 text-[12px] text-white outline-none focus:border-[#2ee52b]"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      value={filters.maxPrice}
-                      onChange={(e) => setFilter('maxPrice', e.target.value)}
-                      className="w-full rounded-[4px] border border-white/10 bg-[#0f1210] px-3 py-2 text-[12px] text-white outline-none focus:border-[#2ee52b]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </aside>
-          </FadeIn>
+      <section className="mx-auto max-w-[1480px] px-5 py-12 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[270px_1fr]">
 
-          {/* Main content */}
-          <div className="min-w-0 flex-1">
-            {/* Toolbar */}
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setDrawerOpen(true)}
-                  className="flex items-center gap-2 rounded-[5px] border border-white/12 px-4 py-2.5 text-[12px] font-semibold transition hover:border-white/25 lg:hidden"
-                >
-                  <SlidersHorizontal size={14} />
-                  Filters
-                  {activeFilterCount > 0 && (
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#2ee52b] text-[9px] font-black text-black">
-                      {activeFilterCount}
-                    </span>
-                  )}
-                </button>
-                <p className="text-[13px] text-white/60">
-                  <span className="font-bold text-white">{cars.length}</span> vehicles found
-                </p>
+          {/* Sidebar desktop */}
+          <aside className="hidden lg:block"><Sidebar /></aside>
+
+          {/* Grid */}
+          <div>
+            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <p className="text-sm font-bold">{cars.length} {t('buy_vehicles')}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t('buy_updated')}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <select
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                  className="rounded-[5px] border border-white/12 bg-transparent px-3 py-2.5 text-[12px] text-white outline-none"
-                >
-                  <option value="newest">Newest first</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                </select>
-                <button
-                  onClick={() => setView('grid')}
-                  className={`grid h-9 w-9 place-items-center rounded-[4px] border ${view === 'grid' ? 'border-[#2ee52b] bg-[#2ee52b]/10 text-[#2ee52b]' : 'border-white/12 text-white/50'}`}
-                >
-                  <LayoutGrid size={15} />
+              <div className="flex gap-2">
+                <button onClick={() => setDrawerOpen(true)}
+                  className="flex cursor-pointer items-center gap-2 rounded-[5px] border border-border px-4 py-2.5 text-xs font-bold transition hover:border-accent lg:hidden">
+                  <Filter size={14} /> {t('buy_refine')}
                 </button>
-                <button
-                  onClick={() => setView('list')}
-                  className={`grid h-9 w-9 place-items-center rounded-[4px] border ${view === 'list' ? 'border-[#2ee52b] bg-[#2ee52b]/10 text-[#2ee52b]' : 'border-white/12 text-white/50'}`}
-                >
-                  <List size={15} />
-                </button>
+                <div className="relative">
+                  <select
+                    value={filters.sort}
+                    onChange={e => setFilter('sort', e.target.value)}
+                    className="cursor-pointer appearance-none rounded-[5px] border border-border bg-background pe-8 ps-4 py-2.5 text-xs font-bold focus:border-accent focus:outline-none"
+                  >
+                    {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{t(o.key)}</option>)}
+                  </select>
+                  <ChevronDown size={12} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                </div>
               </div>
             </div>
 
-            {/* Car grid/list */}
             {loading ? (
-              <div className="flex items-center justify-center py-24">
-                <Loader2 className="animate-spin text-[#2ee52b]" size={32} />
-              </div>
-            ) : cars.length === 0 ? (
-              <div className="py-24 text-center">
-                <p className="text-[18px] font-bold">No cars found</p>
-                <p className="mt-2 text-white/50">Try adjusting your filters</p>
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {Array.from({length:6}).map((_,i) => <div key={i} className="h-[340px] animate-pulse rounded-[7px] bg-white/5" />)}
               </div>
             ) : (
               <AnimatePresence mode="popLayout">
-                <motion.div
-                  layout
-                  className={view === 'grid'
-                    ? 'grid gap-5 sm:grid-cols-2 xl:grid-cols-3'
-                    : 'flex flex-col gap-4'}
-                >
-                  {cars.map((car) => (
-                    <CarCard key={car.id} car={car} view={view} />
-                  ))}
+                <motion.div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {cars.map((car, i) => <CarCard key={car.id} car={car} index={i} t={t} />)}
                 </motion.div>
               </AnimatePresence>
             )}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Mobile filter drawer */}
       <AnimatePresence>
         {drawerOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-              onClick={() => setDrawerOpen(false)}
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 left-0 z-50 w-[300px] overflow-y-auto bg-[#0b0d0c] p-5 shadow-2xl"
-            >
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <h2 className="font-bold">Filters</h2>
-                <button onClick={() => setDrawerOpen(false)}><X size={20} /></button>
-              </div>
-              <FilterSelect label="Make" options={MAKES} value={filters.make} onChange={(v) => setFilter('make', v)} />
-              <FilterSelect label="Body Type" options={BODY_TYPES} value={filters.body} onChange={(v) => setFilter('body', v)} />
-              <FilterSelect label="Fuel Type" options={FUEL_TYPES} value={filters.fuel} onChange={(v) => setFilter('fuel', v)} />
-              <FilterSelect label="Transmission" options={TRANSMISSIONS} value={filters.transmission} onChange={(v) => setFilter('transmission', v)} />
-              <FilterSelect label="Condition" options={CONDITIONS} value={filters.condition} onChange={(v) => setFilter('condition', v)} />
-              <div className="mt-4">
-                <button
-                  onClick={() => setDrawerOpen(false)}
-                  className="w-full rounded-[5px] bg-[#2ee52b] py-3 text-[13px] font-bold text-black"
-                >
-                  Apply Filters
+          <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            onClick={() => setDrawerOpen(false)}>
+            <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+              transition={{ type:'spring', stiffness:300, damping:30 }}
+              onClick={e => e.stopPropagation()}
+              className="absolute inset-y-0 start-0 w-[300px] overflow-y-auto bg-card p-6">
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="font-black">{t('buy_refine')}</h2>
+                <button onClick={() => setDrawerOpen(false)} className="cursor-pointer text-muted-foreground hover:text-foreground">
+                  <X size={20} />
                 </button>
               </div>
+              <Sidebar />
             </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 
       <SiteFooter />
     </main>
-  )
-}
-
-export default function CarsPage() {
-  return (
-    <Suspense>
-      <CarsContent />
-    </Suspense>
   )
 }

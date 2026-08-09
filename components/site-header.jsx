@@ -4,18 +4,11 @@ import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, GitCompare, Heart, Menu, Search, UserRound, X } from 'lucide-react'
-
-const nav = [
-  { label: 'Home', href: '/' },
-  { label: 'Buy Cars', href: '/cars' },
-  { label: 'Rent Cars', href: '/rentals' },
-  { label: 'Sell My Car', href: '/sell' },
-  { label: 'Dealers', href: '/dealers' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-]
+import { useLang } from '@/context/LangContext'
+import { LanguageToggle } from '@/components/language-toggle'
 
 export function SiteHeader() {
+  const { t, isRTL } = useLang()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -23,16 +16,23 @@ export function SiteHeader() {
   const [searchQ, setSearchQ] = useState('')
   const searchRef = useRef(null)
 
+  const nav = [
+    { key: 'nav_home',    href: '/' },
+    { key: 'nav_buy',     href: '/cars' },
+    { key: 'nav_rent',    href: '/rentals' },
+    { key: 'nav_sell',    href: '/sell' },
+    { key: 'nav_dealers', href: '/dealers' },
+    { key: 'nav_about',   href: '/about' },
+    { key: 'nav_contact', href: '/contact' },
+  ]
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    setOpen(false)
-    setSearchOpen(false)
-  }, [pathname])
+  useEffect(() => { setOpen(false); setSearchOpen(false) }, [pathname])
 
   useEffect(() => {
     if (searchOpen) setTimeout(() => searchRef.current?.focus(), 80)
@@ -59,8 +59,9 @@ export function SiteHeader() {
         }`}
       >
         <div className="mx-auto flex h-[72px] max-w-[1450px] items-center justify-between px-5 sm:px-8 lg:px-10">
+
           {/* Logo */}
-          <a href="/" className="group flex items-center gap-2" aria-label="DriveX home">
+          <a href="/" className="group flex items-center gap-2 shrink-0" aria-label="DriveX home">
             <span className="relative flex items-center text-[26px] font-black italic tracking-[-.05em] text-white">
               Drive<span className="text-[#2ee52b]">X</span>
               <span className="absolute -top-[8px] left-0 h-[12px] w-[86px] rounded-[70%_90%_0_0] border-t-2 border-[#2ee52b] opacity-90 transition-opacity group-hover:opacity-100" />
@@ -77,7 +78,7 @@ export function SiteHeader() {
                   isActive(item.href) ? 'text-[#2ee52b]' : 'text-white/75 hover:text-white'
                 }`}
               >
-                {item.label}
+                {t(item.key)}
                 {isActive(item.href) && (
                   <motion.span
                     layoutId="nav-underline"
@@ -93,46 +94,37 @@ export function SiteHeader() {
           <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setSearchOpen(true)}
-              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Search"
+              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b] cursor-pointer"
+              aria-label={t('search_label')}
             >
               <Search size={18} strokeWidth={1.8} />
             </button>
 
-            <a
-              href="/favorites"
-              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Favorites"
-            >
+            <a href="/favorites" className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]" aria-label={t('profile_favorites')}>
               <Heart size={18} strokeWidth={1.8} />
             </a>
-
-            <a
-              href="/compare"
-              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Compare"
-            >
+            <a href="/compare" className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]" aria-label={t('compare_eyebrow')}>
               <GitCompare size={18} strokeWidth={1.8} />
             </a>
-
-            <a
-              href="/profile"
-              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Account"
-            >
+            <a href="/profile" className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 hover:text-[#2ee52b]" aria-label="Account">
               <UserRound size={18} strokeWidth={1.8} />
             </a>
 
+            {/* Language toggle — desktop */}
+            <div className="hidden sm:block ms-1">
+              <LanguageToggle />
+            </div>
+
             <a
               href="/login"
-              className="ml-1 hidden h-9 items-center rounded-[6px] border border-[#23a823] px-5 text-[12px] font-semibold text-white transition hover:border-[#2ee52b] hover:bg-[#2ee52b] hover:text-black sm:flex"
+              className="ml-1 hidden h-9 items-center rounded-[6px] border border-[#23a823] px-5 text-[12px] font-semibold text-white transition hover:border-[#2ee52b] hover:bg-[#2ee52b] hover:text-black sm:flex cursor-pointer"
             >
-              Sign In
+              {t('nav_signin')}
             </a>
 
             <button
               onClick={() => setOpen((v) => !v)}
-              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 lg:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full text-white/75 transition hover:bg-white/8 lg:hidden cursor-pointer"
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -165,20 +157,21 @@ export function SiteHeader() {
                   <motion.a
                     key={item.href}
                     href={item.href}
-                    initial={{ x: -20, opacity: 0 }}
+                    initial={{ x: isRTL ? 20 : -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: i * 0.05, duration: 0.25 }}
                     className={`flex items-center justify-between border-b border-white/8 py-4 text-sm font-semibold last:border-b-0 ${
                       isActive(item.href) ? 'text-[#2ee52b]' : 'text-white/80 hover:text-[#2ee52b]'
                     }`}
                   >
-                    {item.label}
-                    <ArrowRight size={14} className="text-white/30" />
+                    {t(item.key)}
+                    <ArrowRight size={14} className={`text-white/30 ${isRTL ? 'rotate-180' : ''}`} />
                   </motion.a>
                 ))}
-                <div className="py-4">
-                  <a href="/login" className="flex h-11 items-center justify-center rounded-[6px] bg-[#2ee52b] text-[13px] font-bold text-black">
-                    Sign In
+                <div className="flex items-center justify-between gap-3 py-4">
+                  <LanguageToggle />
+                  <a href="/login" className="flex h-11 flex-1 items-center justify-center rounded-[6px] bg-[#2ee52b] text-[13px] font-bold text-black cursor-pointer">
+                    {t('nav_signin')}
                   </a>
                 </div>
               </div>
@@ -195,7 +188,7 @@ export function SiteHeader() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[60] search-backdrop bg-black/70"
+            className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm"
             onClick={(e) => { if (e.target === e.currentTarget) setSearchOpen(false) }}
           >
             <motion.div
@@ -216,20 +209,17 @@ export function SiteHeader() {
                       window.location.href = `/cars?q=${encodeURIComponent(searchQ.trim())}`
                     }
                   }}
-                  placeholder="Search make, model, year…"
+                  placeholder={t('nav_search_ph')}
                   className="flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/35"
+                  dir="auto"
                 />
-                <button onClick={() => setSearchOpen(false)} className="text-white/40 hover:text-white">
+                <button onClick={() => setSearchOpen(false)} className="text-white/40 hover:text-white cursor-pointer">
                   <X size={18} />
                 </button>
               </div>
               <div className="mt-3 flex flex-wrap gap-2 px-1">
                 {['BMW', 'Mercedes', 'Audi', 'Tesla', 'SUV', 'Electric'].map((q) => (
-                  <a
-                    key={q}
-                    href={`/cars?q=${q}`}
-                    className="rounded-full border border-white/12 px-4 py-1.5 text-[12px] text-white/55 transition hover:border-[#2ee52b]/60 hover:text-[#2ee52b]"
-                  >
+                  <a key={q} href={`/cars?q=${q}`} className="rounded-full border border-white/12 px-4 py-1.5 text-[12px] text-white/55 transition hover:border-[#2ee52b]/60 hover:text-[#2ee52b]">
                     {q}
                   </a>
                 ))}
