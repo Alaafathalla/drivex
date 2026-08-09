@@ -1,12 +1,10 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import {
   ArrowUpRight, CalendarDays, Car, CircleDollarSign, Gauge,
   Heart, Plus, ShieldCheck, Wrench,
 } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion-section'
 
 const stats = [
@@ -25,9 +23,7 @@ const activity = [
 export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-[#070908] text-white">
-      <SiteHeader />
-
-      <div className="mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10 pt-28">
+<div className="mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10">
         {/* Header */}
         <FadeIn direction="left">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
@@ -155,9 +151,6 @@ export default function DashboardPage() {
             ))}
           </div>
         </FadeIn>
-      </div>
-
-      <SiteFooter />
-    </main>
+      </div></main>
   )
 }

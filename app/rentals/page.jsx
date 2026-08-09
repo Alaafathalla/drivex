@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CalendarDays, MapPin, Search, ShieldCheck, ArrowRight } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -74,10 +72,8 @@ export default function RentalsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+{/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(46,229,43,.12),transparent_50%)]" />
         <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
@@ -148,9 +144,6 @@ export default function RentalsPage() {
             </motion.div>
           </AnimatePresence>
         )}
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

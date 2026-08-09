@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 
 export default function ContactPage() {
@@ -20,9 +18,7 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      <section className="bg-[#070908] pt-[72px] text-white">
+<section className="bg-[#070908] text-white">
         <div className="mx-auto grid max-w-[1450px] gap-12 px-5 py-20 lg:grid-cols-[.85fr_1.15fr] lg:px-10 lg:py-28">
           {/* Left info */}
           <motion.div initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.55 }}>
@@ -86,9 +82,6 @@ export default function ContactPage() {
             )}
           </motion.div>
         </div>
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api, CARS } from '@/lib/api'
 
@@ -41,10 +39,8 @@ export default function ComparePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+{/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] text-white">
         <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('compare_eyebrow')}</motion.p>
@@ -139,9 +135,6 @@ export default function ComparePage() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      <SiteFooter />
-    </main>
+      </AnimatePresence></main>
   )
 }

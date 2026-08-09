@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Phone, ShieldCheck, Star, Mail } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api, CARS } from '@/lib/api'
 
@@ -26,7 +24,6 @@ export default function DealerDetailsPage({ params }) {
 
   if (!dealer) return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       </div>
@@ -35,7 +32,6 @@ export default function DealerDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
 
       <section className="mx-auto max-w-[1450px] px-5 pb-16 pt-28 sm:px-8 lg:px-10">
         {/* Dealer card */}
@@ -105,8 +101,6 @@ export default function DealerDetailsPage({ params }) {
           </div>
         )}
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

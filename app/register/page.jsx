@@ -1,8 +1,7 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { SiteHeader } from '@/components/site-header'
 import { useLang } from '@/context/LangContext'
 
 export default function RegisterPage() {
@@ -18,8 +17,7 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen bg-[#050706]">
-      <SiteHeader />
-      <section className="mx-auto flex min-h-screen max-w-[1300px] items-center justify-center px-5 py-28">
+<section className="mx-auto flex min-h-screen max-w-[1300px] items-center justify-center px-5 py-28">
         <motion.form
           initial={{ opacity:0, y:30 }}
           animate={{ opacity:1, y:0 }}

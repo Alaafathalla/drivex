@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 
 function Counter({ target, suffix = '' }) {
@@ -35,10 +33,8 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+{/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(46,229,43,.1),transparent_60%)]" />
         <div className="relative mx-auto max-w-[1450px] px-5 py-20 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
@@ -98,9 +94,6 @@ export default function AboutPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#070908] via-transparent to-transparent" />
         </motion.div>
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarFront, MapPin, ShieldCheck, Star } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -19,10 +17,8 @@ export default function DealersPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+{/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_40%,rgba(46,229,43,.12),transparent_50%)]" />
         <div className="relative mx-auto max-w-[1450px] px-5 py-16 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
@@ -82,9 +78,6 @@ export default function DealersPage() {
             ))}
           </div>
         )}
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

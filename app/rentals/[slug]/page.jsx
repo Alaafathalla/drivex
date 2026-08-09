@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CalendarDays, Check, Fuel, Gauge, Settings2, Users } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -24,7 +22,6 @@ export default function RentalDetailsPage({ params }) {
 
   if (!car) return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       </div>
@@ -46,7 +43,6 @@ export default function RentalDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
 
       <section className="mx-auto max-w-[1450px] px-5 pb-20 pt-28 sm:px-8 lg:px-10">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_.8fr]">
@@ -169,8 +165,6 @@ export default function RentalDetailsPage({ params }) {
           </motion.aside>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

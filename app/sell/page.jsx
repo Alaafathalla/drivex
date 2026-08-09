@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Check, Upload } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 
 const STEP_COUNT = 5
@@ -27,10 +25,8 @@ export default function SellPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] pt-[72px] text-white">
+{/* Hero */}
+      <section className="relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(46,229,43,.1),transparent_55%)]" />
         <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
@@ -188,9 +184,6 @@ export default function SellPage() {
             </div>
           </motion.div>
         </AnimatePresence>
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

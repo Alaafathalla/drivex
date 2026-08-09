@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -6,8 +6,6 @@ import {
   ArrowRight, BadgeCheck, CalendarDays, CarFront, ChevronDown,
   Headphones, Heart, Search, ShieldCheck, SlidersHorizontal, Tag,
 } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -136,10 +134,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#070908] text-white">
-      <SiteHeader />
-
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden border-b border-white/8 pt-[72px]">
+{/* ── HERO ── */}
+      <section className="relative overflow-hidden border-b border-white/8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_87%_36%,rgba(20,255,46,.18),transparent_28%),linear-gradient(90deg,#050706_0%,#070908_52%,#071009_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#070908] to-transparent" />
 
@@ -383,9 +379,6 @@ export default function HomePage() {
             </div>
           </div>
         </motion.div>
-      </section>
-
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

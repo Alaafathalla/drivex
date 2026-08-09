@@ -1,9 +1,7 @@
-'use client'
+﻿'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoreHorizontal, Plus } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 
 const MY_CARS = [
@@ -22,8 +20,7 @@ export default function MyCarsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
-      <section className="mx-auto max-w-[1200px] px-5 pb-20 pt-28 sm:px-8 lg:px-10">
+<section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-8 lg:px-10">
 
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
           className="flex items-end justify-between">
@@ -68,8 +65,6 @@ export default function MyCarsPage() {
             ))}
           </AnimatePresence>
         </motion.div>
-      </section>
-      <SiteFooter />
-    </main>
+      </section></main>
   )
 }

@@ -1,10 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Gauge, Heart, MapPin, Share2, ShieldCheck, Check } from 'lucide-react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -26,7 +24,6 @@ export default function CarDetailsPage({ params }) {
 
   if (!car) return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
@@ -51,10 +48,9 @@ export default function CarDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
 
       {/* Gallery + title */}
-      <section className="bg-[#070908] pt-[72px] text-white">
+      <section className="bg-[#070908] text-white">
         <div className="mx-auto max-w-[1450px] px-5 py-8 sm:px-8 lg:px-10">
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
             className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -221,8 +217,6 @@ export default function CarDetailsPage({ params }) {
           </div>
         </motion.aside>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }
