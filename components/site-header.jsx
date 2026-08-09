@@ -9,183 +9,158 @@ import { useFavorites } from '@/context/FavoritesContext'
 import { LanguageToggle } from '@/components/language-toggle'
 import { ScrollProgress } from '@/components/scroll-progress'
 
+const NAV = [
+  { key: 'nav_home',    href: '/' },
+  { key: 'nav_buy',     href: '/cars' },
+  { key: 'nav_rent',    href: '/rentals' },
+  { key: 'nav_sell',    href: '/sell' },
+  { key: 'nav_dealers', href: '/dealers' },
+  { key: 'nav_about',   href: '/about' },
+  { key: 'nav_contact', href: '/contact' },
+]
+
 export function SiteHeader() {
   const { t, isRTL } = useLang()
-  const { count, lastAdded } = useFavorites()
+  const { count } = useFavorites()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [searchQ, setSearchQ] = useState('')
-  const searchRef = useRef(null)
-
-  const nav = [
-    { key: 'nav_home',    href: '/' },
-    { key: 'nav_buy',     href: '/cars' },
-    { key: 'nav_rent',    href: '/rentals' },
-    { key: 'nav_sell',    href: '/sell' },
-    { key: 'nav_dealers', href: '/dealers' },
-    { key: 'nav_about',   href: '/about' },
-    { key: 'nav_contact', href: '/contact' },
-  ]
+  const [q, setQ] = useState('')
+  const ref = useRef(null)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const fn = () => setScrolled(window.scrollY > 8)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   useEffect(() => { setOpen(false); setSearchOpen(false) }, [pathname])
-
+  useEffect(() => { if (searchOpen) setTimeout(() => ref.current?.focus(), 60) }, [searchOpen])
   useEffect(() => {
-    if (searchOpen) setTimeout(() => searchRef.current?.focus(), 80)
-  }, [searchOpen])
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') { setSearchOpen(false); setOpen(false) }
+    const fn = e => {
+      if (e.key === 'Escape') { setOpen(false); setSearchOpen(false) }
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(true) }
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('keydown', fn)
+    return () => window.removeEventListener('keydown', fn)
   }, [])
 
-  const isActive = (href) => href === '/' ? pathname === '/' : pathname.startsWith(href)
+  const active = href => href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
     <>
       <ScrollProgress />
+
       <motion.header
-        initial={{ y: -80, opacity: 0 }}
+        initial={{ y: -68, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+        transition={{ duration: 0.45, ease: [.22, 1, .36, 1] }}
+        className={`fixed inset-x-0 top-0 z-50 h-[68px] border-b transition-all duration-300 ${
           scrolled
-            ? 'border-white/10 bg-[#050706]/95 shadow-[0_4px_30px_rgba(0,0,0,.45)] backdrop-blur-xl'
-            : 'border-white/6 bg-[#050706]/75 backdrop-blur-lg'
+            ? 'border-gray-200 bg-white/95 shadow-sm backdrop-blur-md'
+            : 'border-gray-100 bg-white/90 backdrop-blur-sm'
         }`}
       >
-        <div className="mx-auto flex h-[72px] max-w-[1450px] items-center justify-between px-5 sm:px-8 lg:px-10">
+        <div className="mx-auto flex h-full max-w-[1480px] items-center justify-between px-4 sm:px-6 lg:px-8">
 
           {/* Logo */}
-          <a href="/" className="group flex shrink-0 items-center gap-2" aria-label="DriveX home">
-            <span className="relative flex items-center text-[26px] font-black italic tracking-[-.05em] text-white">
-              Drive<span className="text-[#2ee52b]">X</span>
-              <motion.span
-                layoutId="logo-line"
-                className="absolute -top-[8px] left-0 h-[12px] w-[86px] rounded-[70%_90%_0_0] border-t-2 border-[#2ee52b] opacity-80 transition-opacity group-hover:opacity-100"
-              />
+          <a href="/" className="flex shrink-0 items-center gap-1.5 select-none" aria-label="DriveX">
+            <span className="flex items-center text-[22px] font-black italic tracking-tight text-gray-900">
+              Drive<span className="text-green-600">X</span>
+            </span>
+            <span className="hidden rounded-full bg-green-100 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-green-700 sm:inline">
+              Beta
             </span>
           </a>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-6 lg:flex">
-            {nav.map((item) => (
+          <nav className="hidden items-center gap-1 lg:flex">
+            {NAV.map(item => (
               <a
                 key={item.href}
                 href={item.href}
-                className={`relative text-[13px] font-semibold transition-colors ${
-                  isActive(item.href) ? 'text-[#2ee52b]' : 'text-white/70 hover:text-white'
+                className={`relative rounded-lg px-3.5 py-2 text-[13px] font-semibold transition-colors ${
+                  active(item.href)
+                    ? 'bg-green-50 text-green-700'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
                 {t(item.key)}
-                {isActive(item.href) && (
+                {active(item.href) && (
                   <motion.span
-                    layoutId="nav-underline"
-                    className="absolute -bottom-[3px] left-0 h-[2px] w-full rounded-full bg-[#2ee52b]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-lg bg-green-50"
+                    style={{ zIndex: -1 }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
               </a>
             ))}
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-1 sm:gap-2">
-
+          {/* Right */}
+          <div className="flex items-center gap-1">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Search (Ctrl+K)"
+              className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
             >
-              <Search size={18} strokeWidth={1.8} />
+              <Search size={17} />
             </button>
 
-            {/* Favorites with live count badge */}
-            <a
-              href="/favorites"
-              className="relative grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/8 hover:text-[#2ee52b]"
-              aria-label="Favorites"
-            >
-              <Heart size={18} strokeWidth={1.8} className={count > 0 ? 'fill-[#2ee52b] text-[#2ee52b]' : ''} />
+            {/* Favorites badge */}
+            <a href="/favorites" className="relative grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+              <Heart size={17} className={count > 0 ? 'fill-rose-500 text-rose-500' : ''} />
               <AnimatePresence>
                 {count > 0 && (
                   <motion.span
                     key={count}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
+                    initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-                    className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#2ee52b] px-[3px] text-[9px] font-black text-black"
+                    className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-[3px] text-[9px] font-black text-white"
                   >
-                    {count > 99 ? '99+' : count}
+                    {count > 9 ? '9+' : count}
                   </motion.span>
-                )}
-              </AnimatePresence>
-              {/* Ripple on new item added */}
-              <AnimatePresence>
-                {lastAdded && (
-                  <motion.span
-                    key="ripple"
-                    initial={{ scale: 0.5, opacity: 0.8 }}
-                    animate={{ scale: 2.5, opacity: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.55 }}
-                    className="pointer-events-none absolute inset-0 rounded-full border-2 border-[#2ee52b]"
-                  />
                 )}
               </AnimatePresence>
             </a>
 
             {/* Compare */}
-            <a href="/compare" className="grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/8 hover:text-[#2ee52b]" aria-label="Compare">
-              <GitCompare size={18} strokeWidth={1.8} />
+            <a href="/compare" className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+              <GitCompare size={17} />
             </a>
 
             {/* Account */}
-            <a href="/profile" className="grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/8 hover:text-[#2ee52b]" aria-label="Account">
-              <UserRound size={18} strokeWidth={1.8} />
+            <a href="/profile" className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+              <UserRound size={17} />
             </a>
 
             {/* Language toggle */}
-            <div className="hidden sm:block ms-1">
+            <div className="hidden sm:block">
               <LanguageToggle />
             </div>
 
-            {/* Sign in */}
+            {/* CTA */}
             <a
               href="/login"
-              className="ml-1 hidden h-9 items-center rounded-[6px] border border-[#23a823] px-5 text-[12px] font-semibold text-white transition hover:border-[#2ee52b] hover:bg-[#2ee52b] hover:text-black sm:flex"
+              className="ml-1 hidden h-9 items-center rounded-full border border-green-200 bg-green-50 px-5 text-[12px] font-bold text-green-700 transition hover:bg-green-600 hover:text-white sm:flex"
             >
               {t('nav_signin')}
             </a>
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setOpen((v) => !v)}
-              className="grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/8 lg:hidden"
-              aria-label="Toggle menu"
+              onClick={() => setOpen(v => !v)}
+              className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 lg:hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={open ? 'x' : 'm'}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
+                  initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}
                 >
-                  {open ? <X size={22} /> : <Menu size={22} />}
+                  {open ? <X size={20} /> : <Menu size={20} />}
                 </motion.span>
               </AnimatePresence>
             </button>
@@ -199,32 +174,32 @@ export function SiteHeader() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden border-t border-white/8 bg-[#070908] lg:hidden"
+              transition={{ duration: 0.25, ease: [.22, 1, .36, 1] }}
+              className="overflow-hidden border-t border-gray-100 bg-white lg:hidden"
             >
-              <div className="px-5 py-2">
-                {nav.map((item, i) => (
+              <nav className="px-4 py-3">
+                {NAV.map((item, i) => (
                   <motion.a
                     key={item.href}
                     href={item.href}
-                    initial={{ x: isRTL ? 20 : -20, opacity: 0 }}
+                    initial={{ x: isRTL ? 16 : -16, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.05, duration: 0.25 }}
-                    className={`flex items-center justify-between border-b border-white/8 py-4 text-sm font-semibold last:border-0 ${
-                      isActive(item.href) ? 'text-[#2ee52b]' : 'text-white/80'
+                    transition={{ delay: i * 0.04, duration: 0.2 }}
+                    className={`flex items-center justify-between border-b border-gray-50 py-3.5 text-[14px] font-semibold last:border-0 ${
+                      active(item.href) ? 'text-green-700' : 'text-gray-700'
                     }`}
                   >
                     {t(item.key)}
-                    <ArrowRight size={14} className={`text-white/25 ${isRTL ? 'rotate-180' : ''}`} />
+                    <ArrowRight size={14} className={`text-gray-300 ${isRTL ? 'rotate-180' : ''}`} />
                   </motion.a>
                 ))}
-                <div className="flex items-center justify-between gap-3 py-4">
+                <div className="flex items-center gap-3 pt-3 pb-1">
                   <LanguageToggle />
-                  <a href="/login" className="flex h-11 flex-1 items-center justify-center rounded-[6px] bg-[#2ee52b] text-[13px] font-bold text-black">
+                  <a href="/login" className="flex h-10 flex-1 items-center justify-center rounded-full bg-green-600 text-[13px] font-bold text-white">
                     {t('nav_signin')}
                   </a>
                 </div>
-              </div>
+              </nav>
             </motion.div>
           )}
         </AnimatePresence>
@@ -234,57 +209,51 @@ export function SiteHeader() {
       <AnimatePresence>
         {searchOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-[60] bg-black/75 backdrop-blur-md"
-            onClick={(e) => { if (e.target === e.currentTarget) setSearchOpen(false) }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm"
+            onClick={e => { if (e.target === e.currentTarget) setSearchOpen(false) }}
           >
             <motion.div
-              initial={{ y: -24, opacity: 0, scale: 0.98 }}
+              initial={{ y: -20, opacity: 0, scale: .98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: -16, opacity: 0 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="mx-auto mt-20 max-w-2xl px-4"
+              exit={{ y: -12, opacity: 0 }}
+              transition={{ duration: 0.2, ease: [.22, 1, .36, 1] }}
+              className="mx-auto mt-16 max-w-2xl px-4"
             >
-              <div className="overflow-hidden rounded-[10px] border border-white/15 bg-[#0b0d0c] shadow-[0_24px_70px_rgba(0,0,0,.6)]">
+              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
                 <div className="flex items-center gap-3 px-5 py-4">
-                  <Search size={19} className="shrink-0 text-[#2ee52b]" />
+                  <Search size={18} className="shrink-0 text-green-600" />
                   <input
-                    ref={searchRef}
-                    value={searchQ}
-                    onChange={(e) => setSearchQ(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && searchQ.trim()) {
-                        window.location.href = `/cars?q=${encodeURIComponent(searchQ.trim())}`
-                      }
+                    ref={ref}
+                    value={q}
+                    onChange={e => setQ(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && q.trim())
+                        window.location.href = `/cars?q=${encodeURIComponent(q.trim())}`
                     }}
                     placeholder={t('nav_search_ph')}
-                    className="flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/30"
+                    className="flex-1 text-[15px] text-gray-900 outline-none placeholder:text-gray-400"
                     dir="auto"
                   />
-                  <kbd className="hidden rounded border border-white/15 px-2 py-0.5 text-[10px] text-white/30 sm:block">ESC</kbd>
-                  <button onClick={() => setSearchOpen(false)} className="text-white/35 hover:text-white">
-                    <X size={18} />
+                  <kbd className="hidden rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] text-gray-400 sm:block">ESC</kbd>
+                  <button onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-gray-700">
+                    <X size={17} />
                   </button>
                 </div>
-                <div className="border-t border-white/8 px-5 py-3">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[.12em] text-white/30">Popular searches</p>
+                <div className="border-t border-gray-100 px-5 py-3">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Popular</p>
                   <div className="flex flex-wrap gap-2">
-                    {['BMW', 'Mercedes', 'Audi', 'Tesla', 'Range Rover', 'SUV', 'Electric'].map((q) => (
-                      <a
-                        key={q}
-                        href={`/cars?q=${q}`}
-                        className="rounded-full border border-white/10 px-3 py-1 text-[11px] text-white/50 transition hover:border-[#2ee52b]/50 hover:text-[#2ee52b]"
-                      >
-                        {q}
+                    {['BMW', 'Mercedes', 'Audi', 'Tesla', 'Range Rover', 'SUV', 'Electric'].map(kw => (
+                      <a key={kw} href={`/cars?q=${kw}`}
+                        className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[12px] font-medium text-gray-600 transition hover:border-green-300 hover:bg-green-50 hover:text-green-700">
+                        {kw}
                       </a>
                     ))}
                   </div>
                 </div>
               </div>
-              <p className="mt-3 text-center text-[11px] text-white/20">Press Enter to search · Ctrl+K to open</p>
+              <p className="mt-2 text-center text-[11px] text-white/60">Press Enter to search · Ctrl+K to open</p>
             </motion.div>
           </motion.div>
         )}

@@ -1,384 +1,395 @@
 ﻿'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, BadgeCheck, CalendarDays, CarFront, ChevronDown,
-  Headphones, Heart, Search, ShieldCheck, SlidersHorizontal, Tag,
+  Fuel, Gauge, Heart, Headphones, MapPin, Search, ShieldCheck,
+  SlidersHorizontal, Tag, Zap,
 } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { useFavorites } from '@/context/FavoritesContext'
+import { useToast } from '@/context/ToastContext'
 import { api } from '@/lib/api'
 
-/* ── Animated counter ── */
+/* ─────────── Animated counter ─────────── */
 function Counter({ target, suffix = '' }) {
-  const [count, setCount] = useState(0)
-  const [started, setStarted] = useState(false)
+  const [n, setN] = useState(0)
+  const [go, setGo] = useState(false)
   useEffect(() => {
-    if (!started) return
-    const dur = 1400, start = performance.now()
-    const tick = (now) => {
-      const p = Math.min((now - start) / dur, 1)
-      setCount(Math.round((1 - Math.pow(1 - p, 3)) * target))
+    if (!go) return
+    const dur = 1600, t0 = performance.now()
+    const tick = now => {
+      const p = Math.min((now - t0) / dur, 1)
+      setN(Math.round((1 - Math.pow(1 - p, 3)) * target))
       if (p < 1) requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)
-  }, [started, target])
+  }, [go, target])
   return (
-    <motion.span onViewportEnter={() => setStarted(true)} className="tabular-nums">
-      {count.toLocaleString()}{suffix}
+    <motion.span onViewportEnter={() => setGo(true)} className="tabular-nums">
+      {n.toLocaleString()}{suffix}
     </motion.span>
   )
 }
 
-/* ── Car card ── */
-function CarCard({ car, index, t }) {
-  const [fav, setFav] = useState(false)
+/* ─────────── Car card ─────────── */
+function CarCard({ car, index }) {
+  const { toggle, isFav } = useFavorites()
+  const toast = useToast()
+  const { t } = useLang()
+  const fav = isFav(car.slug)
   const isRent = car.type === 'rent'
-  const price = isRent ? `$${car.pricePerDay} ${t('card_day')}` : `$${car.price?.toLocaleString()}`
-  const href  = isRent ? `/rentals/${car.slug}` : `/cars/${car.slug}`
+  const href = isRent ? `/rentals/${car.slug}` : `/cars/${car.slug}`
+  const price = isRent ? `$${car.pricePerDay}/day` : `$${car.price?.toLocaleString()}`
+
+  const handleHeart = e => {
+    e.preventDefault()
+    toggle(car.slug)
+    toast({ message: fav ? 'Removed from wishlist' : `${car.name} added to wishlist`, type: fav ? 'info' : 'fav' })
+  }
+
   return (
     <motion.article
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.45, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-30px' }}
+      transition={{ duration: 0.42, delay: index * 0.06, ease: [.22, 1, .36, 1] }}
       whileHover={{ y: -4 }}
-      className="group relative overflow-hidden rounded-[8px] border border-white/10 bg-[#0b0d0c] transition-colors hover:border-[#2ee52b]/40"
+      className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md"
     >
-      <div className="relative h-[190px] overflow-hidden bg-[#131615]">
-        <span className="absolute start-3 top-3 z-10 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black">
-          {isRent ? t('card_for_rent') : t('card_for_sale')}
+      <a href={href} className="relative block overflow-hidden" style={{ aspectRatio: '16/10' }}>
+        <img src={car.image} alt={car.name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+
+        {/* Badge */}
+        <span className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide ${
+          isRent ? 'bg-blue-600 text-white' : car.condition === 'New' ? 'bg-green-600 text-white' : 'bg-amber-500 text-white'
+        }`}>
+          {isRent ? 'Rent' : car.condition}
         </span>
-        <button
-          onClick={() => setFav(v => !v)}
-          className="absolute end-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/30 backdrop-blur-sm transition hover:bg-black/50 cursor-pointer"
+
+        {/* Heart */}
+        <motion.button
+          onClick={handleHeart}
+          whileTap={{ scale: 0.82 }}
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition hover:bg-white"
+          aria-label="Toggle wishlist"
         >
-          <motion.span animate={{ scale: fav ? [1, 1.35, 1] : 1 }} transition={{ duration: 0.25 }}>
-            <Heart size={16} className={fav ? 'fill-[#2ee52b] text-[#2ee52b]' : 'text-white'} />
+          <motion.span animate={fav ? { scale: [1, 1.4, 1] } : {}}>
+            <Heart size={16} className={fav ? 'fill-rose-500 text-rose-500' : 'text-gray-500'} />
           </motion.span>
-        </button>
-        <img src={car.image} alt={car.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-      </div>
+        </motion.button>
+      </a>
+
       <div className="p-4">
-        <h3 className="truncate text-[14px] font-semibold">{car.name}</h3>
-        <p className="mt-1 text-[10px] text-white/45">
-          {car.year} · {isRent ? `${car.seats} ${t('card_seats')}` : `${car.mileage?.toLocaleString()} ${t('card_km')}`}
-        </p>
-        <div className="mt-3 flex items-center justify-between">
-          <p className="text-[15px] font-bold text-[#2ee52b]">{price}</p>
-          <a href={href} className="text-[11px] font-semibold text-white/50 transition hover:text-[#2ee52b] cursor-pointer">
-            {t('card_view')}
-          </a>
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="truncate font-bold text-gray-900">{car.name}</h3>
+            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-gray-400">
+              <MapPin size={10} /> {car.location} · {car.year}
+            </p>
+          </div>
+          <p className="shrink-0 font-black text-green-600">{price}</p>
         </div>
+
+        {!isRent && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {[car.transmission, car.fuel, `${car.mileage?.toLocaleString()} km`].map(tag => (
+              <span key={tag} className="rounded-md bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500 border border-gray-100">{tag}</span>
+            ))}
+          </div>
+        )}
+
+        <a href={href}
+          className="mt-4 flex h-9 w-full items-center justify-center gap-1.5 rounded-xl bg-green-50 text-[12px] font-bold text-green-700 transition hover:bg-green-600 hover:text-white">
+          {isRent ? 'Book Now' : 'View Details'} <ArrowRight size={13} />
+        </a>
       </div>
     </motion.article>
   )
 }
 
-/* ── Category card ── */
-function CategoryCard({ category, index }) {
+/* ─────────── Category pill ─────────── */
+function CatCard({ cat, index }) {
   return (
-    <motion.a
-      href="/cars"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.4, delay: index * 0.06 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="group overflow-hidden rounded-[8px] border border-white/10 bg-[#0b0d0c] cursor-pointer"
+    <motion.a href={`/cars?body=${cat.slug}`}
+      initial={{ opacity: 0, scale: .94 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.35, delay: index * 0.06 }}
+      whileHover={{ y: -3 }}
+      className="group relative overflow-hidden rounded-2xl border border-gray-100 shadow-sm"
+      style={{ aspectRatio: '4/3' }}
     >
-      <div className="h-[145px] overflow-hidden">
-        <img src={category.image} alt={category.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-      </div>
-      <div className="flex items-end justify-between p-4">
-        <div>
-          <h3 className="text-[13px] font-semibold">{category.title}</h3>
-          <p className="mt-1 text-[11px] text-white/45">{category.count}+ Cars</p>
-        </div>
-        <span className="grid h-8 w-8 place-items-center rounded-[4px] bg-[#159219] text-white transition group-hover:bg-[#2ee52b] group-hover:text-black">
-          <ArrowRight size={15} />
-        </span>
+      <img src={cat.image} alt={cat.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+      <div className="absolute bottom-0 left-0 p-4">
+        <p className="font-black text-white">{cat.title}</p>
+        <p className="text-[11px] text-white/70">{cat.count}+ cars</p>
       </div>
     </motion.a>
   )
 }
 
-export default function HomePage() {
-  const { t, lang } = useLang()
+const BENEFITS = [
+  { icon: ShieldCheck, title: 'Verified Listings',   text: 'Every car is inspected and certified' },
+  { icon: Tag,         title: 'Best Market Prices',  text: 'Competitive pricing guaranteed' },
+  { icon: Zap,         title: 'Instant Booking',     text: 'Reserve in under 2 minutes' },
+  { icon: Headphones,  title: '24/7 Support',        text: 'Real people, always available' },
+]
+
+const STATS = [
+  { val: 10000, suf: '+', label: 'Cars Listed' },
+  { val: 5000,  suf: '+', label: 'Happy Customers' },
+  { val: 50,    suf: '+', label: 'Trusted Dealers' },
+  { val: 12,    suf: '',  label: 'Cities Covered' },
+]
+
+export default function Home() {
+  const { t } = useLang()
   const [mode, setMode] = useState('buy')
-  const [featuredCars, setFeaturedCars] = useState([])
-  const [categories, setCategories] = useState([])
+  const [cars, setCars] = useState([])
+  const [cats, setCats] = useState([])
 
   useEffect(() => {
-    Promise.all([api.getFeaturedCars(), api.getCategories()]).then(([cars, cats]) => {
-      setFeaturedCars(cars)
-      setCategories(cats)
+    Promise.all([api.getFeaturedCars(), api.getCategories()]).then(([c, k]) => {
+      setCars(c); setCats(k)
     })
   }, [])
 
-  const benefits = [
-    { icon: BadgeCheck, titleKey: 'benefit_selection_title', textKey: 'benefit_selection_text' },
-    { icon: Tag,        titleKey: 'benefit_deals_title',     textKey: 'benefit_deals_text' },
-    { icon: ShieldCheck,titleKey: 'benefit_secure_title',    textKey: 'benefit_secure_text' },
-    { icon: Headphones, titleKey: 'benefit_support_title',   textKey: 'benefit_support_text' },
-  ]
-
-  const stats = [
-    { labelKey: 'stat_cars',      value: 10000, suffix: '+' },
-    { labelKey: 'stat_customers', value: 5000,  suffix: '+' },
-    { labelKey: 'stat_dealers',   value: 50,    suffix: '+' },
-    { labelKey: 'stat_cities',    value: 12,    suffix: '' },
-  ]
-
-  const searchHref = mode === 'buy' ? '/cars' : '/rentals'
-
   return (
-    <main className="min-h-screen bg-[#070908] text-white">
-{/* ── HERO ── */}
-      <section className="relative overflow-hidden border-b border-white/8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_87%_36%,rgba(20,255,46,.18),transparent_28%),linear-gradient(90deg,#050706_0%,#070908_52%,#071009_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#070908] to-transparent" />
+    <div className="bg-white">
 
-        <div className="relative mx-auto max-w-[1450px] px-5 sm:px-8 lg:px-10">
-          <div className="grid min-h-[540px] items-center gap-8 py-12 lg:grid-cols-[.82fr_1.18fr] lg:py-5">
+      {/* ── HERO ──────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800">
+        {/* Subtle green glow */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,197,94,.18),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
 
-            {/* Text side */}
-            <div className="relative z-10 max-w-[500px] lg:py-10">
+        <div className="relative mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <div className="grid min-h-[560px] items-center gap-8 py-16 lg:grid-cols-[1fr_1fr]">
+
+            {/* Text */}
+            <div className="z-10">
               <motion.div
-                initial={{ opacity: 0, x: lang === 'ar' ? 30 : -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[.06em] text-[#2ee52b]"
+                initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.55, ease: [.22,1,.36,1] }}
               >
-                <span>{t('hero_eyebrow')}</span>
-                <span className="h-[2px] w-12 bg-[#2ee52b]" />
-              </motion.div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-[11px] font-bold text-green-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" /> Premium Car Marketplace
+                </span>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[clamp(48px,6vw,76px)] font-black leading-[.95] tracking-[-.055em]"
-              >
-                {t('hero_h1_1')}<br />{t('hero_h1_2')}
-              </motion.h1>
+                <h1 className="mt-5 text-[clamp(42px,6vw,76px)] font-black leading-[.92] tracking-[-0.05em] text-white">
+                  Find Your<br />
+                  <span className="text-green-400">Perfect</span> Car
+                </h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.35 }}
-                className="mt-5 max-w-[360px] text-[18px] leading-7 text-white/60"
-              >
-                {t('hero_sub')}
-              </motion.p>
+                <p className="mt-5 max-w-md text-[17px] leading-7 text-gray-400">
+                  Buy or rent from 10,000+ verified premium cars. Transparent pricing, trusted dealers.
+                </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.45 }}
-                className="mt-7 flex flex-wrap gap-3"
-              >
-                <a href="/cars" className="inline-flex h-12 items-center gap-3 rounded-[5px] bg-[#2ee52b] px-7 text-[13px] font-bold text-black transition hover:bg-[#50f14d] cursor-pointer">
-                  {t('hero_buy_btn')} <ArrowRight size={16} />
-                </a>
-                <a href="/rentals" className="inline-flex h-12 items-center gap-3 rounded-[5px] border border-white/20 bg-black/20 px-7 text-[13px] font-bold text-white transition hover:border-[#2ee52b] hover:text-[#2ee52b] cursor-pointer">
-                  {t('hero_rent_btn')} <ArrowRight size={16} />
-                </a>
-              </motion.div>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a href="/cars"
+                    className="inline-flex h-12 items-center gap-2 rounded-full bg-green-500 px-7 text-[14px] font-bold text-white transition hover:bg-green-400">
+                    Browse Cars <ArrowRight size={16} />
+                  </a>
+                  <a href="/rentals"
+                    className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-7 text-[14px] font-bold text-white transition hover:bg-white/10">
+                    Rent a Car
+                  </a>
+                </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="mt-9 grid max-w-[420px] grid-cols-3 gap-4 text-[9px] text-white/55"
-              >
-                {[
-                  [BadgeCheck, 'hero_badge1', 'hero_badge1_sub'],
-                  [ShieldCheck,'hero_badge2', 'hero_badge2_sub'],
-                  [Headphones, 'hero_badge3', 'hero_badge3_sub'],
-                ].map(([Icon, titleKey, subKey]) => (
-                  <div key={titleKey} className="flex gap-2">
-                    <Icon className="mt-0.5 shrink-0 text-[#2ee52b]" size={18} />
-                    <span><b className="block text-white">{t(titleKey)}</b>{t(subKey)}</span>
-                  </div>
-                ))}
+                {/* Trust row */}
+                <div className="mt-8 flex flex-wrap gap-5">
+                  {[['✓', 'Free inspection'], ['✓', 'Verified dealers'], ['✓', 'Secure payment']].map(([ic, label]) => (
+                    <span key={label} className="flex items-center gap-1.5 text-[12px] text-gray-400">
+                      <span className="text-green-400 font-bold">{ic}</span> {label}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             </div>
 
-            {/* Image side */}
+            {/* Hero car image */}
             <motion.div
-              initial={{ opacity: 0, x: lang === 'ar' ? -60 : 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="relative min-h-[360px] self-end lg:min-h-[510px]"
+              initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: [.22,1,.36,1] }}
+              className="relative hidden lg:block"
             >
-              <div className="absolute inset-y-8 end-0 w-2/3 rounded-full bg-[#0d7f11]/20 blur-3xl" />
+              <div className="absolute -inset-12 bg-green-400/10 blur-3xl rounded-full" />
               <img
-                src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1800&q=95"
-                alt="Premium sports car"
-                className="absolute bottom-0 end-[-8%] h-[94%] w-[112%] object-cover object-center mix-blend-screen [mask-image:linear-gradient(to_bottom,black_72%,transparent_100%)]"
+                src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1600&q=90"
+                alt="Premium car"
+                className="relative w-full rounded-2xl object-cover opacity-90 [mask-image:linear-gradient(to_bottom,black_75%,transparent)]"
+                style={{ aspectRatio: '16/10' }}
               />
             </motion.div>
           </div>
 
           {/* ── Search bar ── */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-20 -mt-1 rounded-[8px] border border-white/12 bg-[#0a0c0b]/95 shadow-[0_18px_60px_rgba(0,0,0,.35)]"
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35, ease: [.22,1,.36,1] }}
+            className="relative z-10 -mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl"
           >
-            <div className="flex border-b border-white/10">
-              {[['buy', CarFront, 'search_buy'], ['rent', CalendarDays, 'search_rent']].map(([m, Icon, labelKey]) => (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={`flex h-14 items-center gap-3 border-b-2 px-7 text-[13px] font-semibold transition cursor-pointer ${
-                    mode === m ? 'border-[#2ee52b] text-white' : 'border-transparent text-white/55 hover:text-white'
-                  }`}
-                >
-                  <Icon size={17} className={mode === m ? 'text-[#2ee52b]' : ''} />
-                  {t(labelKey)}
+            {/* Tabs */}
+            <div className="flex border-b border-gray-100">
+              {[['buy', CarFront, 'Buy Cars'], ['rent', CalendarDays, 'Rent Cars']].map(([m, Icon, label]) => (
+                <button key={m} onClick={() => setMode(m)}
+                  className={`flex h-13 items-center gap-2 border-b-2 px-6 py-3.5 text-[13px] font-bold transition ${
+                    mode === m
+                      ? 'border-green-500 text-green-700'
+                      : 'border-transparent text-gray-400 hover:text-gray-700'
+                  }`}>
+                  <Icon size={16} className={mode === m ? 'text-green-500' : ''} />
+                  {label}
                 </button>
               ))}
             </div>
-            <div className="grid gap-3 p-5 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_.95fr]">
-              {['search_all_makes','search_all_models','search_min_price','search_max_price','search_year'].map((key) => (
-                <button key={key} className="flex h-12 items-center justify-between rounded-[5px] border border-white/12 bg-white/[.035] px-4 text-[12px] text-white/45 transition hover:border-white/25 hover:bg-white/[.06] cursor-pointer">
-                  <span>{t(key)}</span>
-                  <ChevronDown size={14} />
+            <div className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]">
+              {['All Makes', 'All Models', 'Min Price', 'Max Price', 'Year'].map(label => (
+                <button key={label}
+                  className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 text-[12px] text-gray-500 transition hover:border-green-300 hover:bg-green-50 hover:text-green-700">
+                  <span>{label}</span><ChevronDown size={13} />
                 </button>
               ))}
-              <button className="flex h-10 items-center gap-2 text-[12px] font-semibold text-white/80 hover:text-[#2ee52b] sm:col-span-1 cursor-pointer">
-                <SlidersHorizontal size={15} />{t('search_more')}
-              </button>
-              <a href={searchHref} className="flex h-12 items-center justify-center gap-3 rounded-[4px] bg-[#2ee52b] text-[12px] font-bold text-black transition hover:bg-[#50f14d] sm:col-start-2 lg:col-start-5 cursor-pointer">
-                {t('search_btn')} <Search size={16} />
+              <a href={mode === 'buy' ? '/cars' : '/rentals'}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-green-600 px-6 text-[13px] font-bold text-white transition hover:bg-green-500 sm:col-span-2 lg:col-span-1">
+                <Search size={15} /> Search
               </a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── BENEFITS ── */}
-      <section className="mx-auto max-w-[1450px] px-5 py-10 sm:px-8 lg:px-10">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {benefits.map(({ icon: Icon, titleKey, textKey }, i) => (
+      {/* ── BENEFITS ──────────────────────────────── */}
+      <section className="bg-gray-50 pt-24 pb-10">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {BENEFITS.map(({ icon: Icon, title, text }, i) => (
+              <motion.div key={title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.38, delay: i * 0.07 }}
+                className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-50">
+                  <Icon size={20} className="text-green-600" />
+                </div>
+                <div>
+                  <p className="text-[13px] font-bold text-gray-900">{title}</p>
+                  <p className="mt-0.5 text-[11px] text-gray-500">{text}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CATEGORIES ──────────────────────────────── */}
+      <section className="bg-gray-50 py-10">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-7 flex items-center justify-between">
+            <motion.h2
+              initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.4 }}
+              className="text-[22px] font-black text-gray-900">
+              Browse by Category
+            </motion.h2>
+            <a href="/cars" className="flex items-center gap-1 text-[13px] font-semibold text-green-600 hover:text-green-700">
+              View all <ArrowRight size={14} />
+            </a>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {cats.length
+              ? cats.map((c, i) => <CatCard key={c.slug} cat={c} index={i} />)
+              : Array.from({ length: 5 }).map((_, i) => <div key={i} className="skeleton rounded-2xl" style={{ aspectRatio: '4/3' }} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURED CARS ──────────────────────────── */}
+      <section className="py-14">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-7 flex items-center justify-between">
             <motion.div
-              key={titleKey}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              whileHover={{ y: -3 }}
-              className="flex min-h-[112px] items-center gap-5 rounded-[7px] border border-white/10 bg-[#0a0c0b] px-7 transition hover:border-[#2ee52b]/40"
+              initial={{ opacity: 0, x: 16 }} whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.4 }}
             >
-              <Icon size={30} strokeWidth={1.7} className="shrink-0 text-[#2ee52b]" />
-              <div>
-                <h3 className="text-[13px] font-semibold">{t(titleKey)}</h3>
-                <p className="mt-1 max-w-[150px] text-[11px] leading-5 text-white/50">{t(textKey)}</p>
-              </div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Hand-picked</p>
+              <h2 className="mt-1 text-[22px] font-black text-gray-900">Featured Cars</h2>
             </motion.div>
-          ))}
+            <a href="/cars" className="flex items-center gap-1 text-[13px] font-semibold text-green-600 hover:text-green-700">
+              View all <ArrowRight size={14} />
+            </a>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {cars.length
+              ? cars.slice(0, 8).map((car, i) => <CarCard key={car.id} car={car} index={i} />)
+              : Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-[320px] rounded-2xl" />)}
+          </div>
         </div>
       </section>
 
-      {/* ── CATEGORIES ── */}
-      <section className="mx-auto max-w-[1450px] px-5 py-5 sm:px-8 lg:px-10">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 flex items-center justify-between"
-        >
-          <h2 className="text-[22px] font-bold">{t('section_categories')}</h2>
-          <a href="/cars" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#2ee52b] cursor-pointer">
-            {t('section_view_all')} <ArrowRight size={15} />
-          </a>
-        </motion.div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {categories.length
-            ? categories.map((cat, i) => <CategoryCard key={cat.title} category={cat} index={i} />)
-            : Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-[210px] animate-pulse rounded-[8px] bg-white/5" />)
-          }
+      {/* ── STATS ──────────────────────────────────── */}
+      <section className="bg-green-600 py-14">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-px bg-green-500/30 overflow-hidden rounded-2xl lg:grid-cols-4">
+            {STATS.map(({ val, suf, label }, i) => (
+              <motion.div key={label}
+                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4 }}
+                className="flex flex-col items-center bg-green-600 py-10 gap-1"
+              >
+                <p className="text-[42px] font-black text-white tabular-nums">
+                  <Counter target={val} suffix={suf} />
+                </p>
+                <p className="text-[12px] text-green-200">{label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── FEATURED CARS ── */}
-      <section className="mx-auto max-w-[1450px] px-5 py-10 sm:px-8 lg:px-10">
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 flex items-center justify-between"
-        >
-          <h2 className="text-[22px] font-bold">{t('section_featured')}</h2>
-          <a href="/cars" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#2ee52b] cursor-pointer">
-            {t('section_view_all')} <ArrowRight size={15} />
-          </a>
-        </motion.div>
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          {featuredCars.length
-            ? featuredCars.map((car, i) => <CarCard key={car.id} car={car} index={i} t={t} />)
-            : Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-[280px] animate-pulse rounded-[8px] bg-white/5" />)
-          }
-        </div>
-      </section>
-
-      {/* ── STATS ── */}
-      <section className="mx-auto max-w-[1450px] px-5 py-8 sm:px-8 lg:px-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 gap-px overflow-hidden rounded-[8px] bg-white/8 lg:grid-cols-4"
-        >
-          {stats.map(({ labelKey, value, suffix }) => (
-            <div key={labelKey} className="flex flex-col items-center justify-center gap-1 bg-[#0a0c0b] py-10">
-              <p className="text-[36px] font-black text-[#2ee52b]">
-                <Counter target={value} suffix={suffix} />
+      {/* ── CTA BANNER ─────────────────────────────── */}
+      <section className="py-16">
+        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.5 }}
+            className="relative overflow-hidden rounded-3xl bg-gray-900 px-8 py-14 lg:px-14"
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(34,197,94,.2),transparent_60%)]" />
+            <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block">
+              <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=1200&q=90"
+                alt="Car" className="h-full w-full object-cover opacity-30 [mask-image:linear-gradient(to_left,black_60%,transparent)]" />
+            </div>
+            <div className="relative z-10 max-w-lg">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-green-400">Sell smarter</p>
+              <h2 className="mt-3 text-[clamp(28px,4vw,44px)] font-black leading-tight text-white">
+                Ready to sell your car?
+              </h2>
+              <p className="mt-3 text-[14px] leading-7 text-gray-400">
+                Get an instant valuation, list in minutes and reach thousands of verified buyers.
               </p>
-              <p className="text-[11px] text-white/50">{t(labelKey)}</p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a href="/valuation"
+                  className="inline-flex h-11 items-center gap-2 rounded-full bg-green-500 px-7 text-[13px] font-bold text-white transition hover:bg-green-400">
+                  Get free valuation <ArrowRight size={15} />
+                </a>
+                <a href="/sell"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/20 px-7 text-[13px] font-bold text-white transition hover:bg-white/10">
+                  List my car
+                </a>
+              </div>
             </div>
-          ))}
-        </motion.div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
-      <section className="mx-auto max-w-[1450px] px-5 pb-14 pt-4 sm:px-8 lg:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[8px] border border-[#2ee52b]/25 bg-[linear-gradient(100deg,#07130a_0%,#0b2810_48%,#063a0a_100%)] px-7 py-10 lg:px-10 lg:py-14"
-        >
-          <div className="absolute inset-y-0 end-0 hidden w-[42%] lg:block">
-            <img
-              src="https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=1200&q=90"
-              alt="Sports car"
-              className="h-full w-full object-cover opacity-55 [mask-image:linear-gradient(to_left,black_68%,transparent)]"
-            />
-          </div>
-          <div className="relative z-10">
-            <p className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.05em] text-[#2ee52b]">
-              {t('cta_eyebrow')} <span className="h-[2px] w-12 bg-[#2ee52b]" />
-            </p>
-            <h2 className="mt-5 max-w-[420px] text-[30px] font-bold leading-tight">{t('cta_title')}</h2>
-            <p className="mt-3 max-w-[430px] text-[12px] leading-6 text-white/55">{t('cta_text')}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/cars" className="inline-flex h-11 items-center gap-3 rounded-[4px] bg-[#2ee52b] px-6 text-[12px] font-bold text-black transition hover:bg-[#50f14d] cursor-pointer">
-                {t('cta_explore')} <ArrowRight size={15} />
-              </a>
-              <a href="/sell" className="inline-flex h-11 items-center gap-3 rounded-[4px] border border-white/20 px-6 text-[12px] font-bold text-white transition hover:border-[#2ee52b] hover:text-[#2ee52b] cursor-pointer">
-                {t('cta_sell')}
-              </a>
-            </div>
-          </div>
-        </motion.div>
-      </section></main>
+    </div>
   )
 }

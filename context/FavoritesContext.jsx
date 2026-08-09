@@ -3,13 +3,15 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 const KEY = 'drivex_favorites'
-const FavoritesContext = createContext(null)
+const FavCtx = createContext(null)
 
+/**
+ * Manages saved car slugs in localStorage.
+ * Toast firing is done at call-site so this stays context-agnostic.
+ */
 export function FavoritesProvider({ children }) {
-  const [slugs, setSlugs] = useState([])
+  const [slugs, setSlugs]   = useState([])
   const [mounted, setMounted] = useState(false)
-  // Track recently-added slug for burst animation
-  const [lastAdded, setLastAdded] = useState(null)
 
   useEffect(() => {
     try {
@@ -19,36 +21,28 @@ export function FavoritesProvider({ children }) {
     setMounted(true)
   }, [])
 
-  const persist = (next) => {
-    setSlugs(next)
-    try { localStorage.setItem(KEY, JSON.stringify(next)) } catch {}
-  }
-
   const toggle = useCallback((slug) => {
-    setSlugs((prev) => {
-      const already = prev.includes(slug)
-      const next = already ? prev.filter((s) => s !== slug) : [...prev, slug]
+    setSlugs(prev => {
+      const added = !prev.includes(slug)
+      const next  = added ? [...prev, slug] : prev.filter(s => s !== slug)
       try { localStorage.setItem(KEY, JSON.stringify(next)) } catch {}
-      if (!already) {
-        setLastAdded(slug)
-        setTimeout(() => setLastAdded(null), 900)
-      }
       return next
     })
   }, [])
 
-  const isFav = useCallback((slug) => slugs.includes(slug), [slugs])
-  const count = slugs.length
+  const isFav  = useCallback((slug) => slugs.includes(slug), [slugs])
+  const add    = useCallback((slug) => { if (!slugs.includes(slug)) toggle(slug) }, [slugs, toggle])
+  const remove = useCallback((slug) => { if (slugs.includes(slug))  toggle(slug) }, [slugs, toggle])
 
   return (
-    <FavoritesContext.Provider value={{ slugs, toggle, isFav, count, lastAdded, mounted }}>
+    <FavCtx.Provider value={{ slugs, toggle, isFav, add, remove, count: slugs.length, mounted }}>
       {children}
-    </FavoritesContext.Provider>
+    </FavCtx.Provider>
   )
 }
 
 export function useFavorites() {
-  const ctx = useContext(FavoritesContext)
-  if (!ctx) throw new Error('useFavorites must be used inside <FavoritesProvider>')
+  const ctx = useContext(FavCtx)
+  if (!ctx) throw new Error('useFavorites must be inside <FavoritesProvider>')
   return ctx
 }
