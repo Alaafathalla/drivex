@@ -22,7 +22,7 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-background">
-<section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-8 lg:px-10">
+<section className="w-full mx-auto max-w-[1600px] px-4 pb-20 sm:px-8 lg:px-10">
 
         {/* Avatar row */}
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}

@@ -1,8 +1,8 @@
-import { ArrowDownRight } from 'lucide-react'
+﻿import { ArrowDownRight } from 'lucide-react'
 
 export function PageHero({ eyebrow, title, description, children, image }) {
   return (
-    <section className="grain relative overflow-hidden bg-[#090c10] text-white">
+    <section className="w-full grain relative overflow-hidden bg-[#090c10] text-white">
       {image && (
         <div className="absolute inset-0">
           <img src={image} alt="" className="h-full w-full object-cover object-center opacity-45" />
@@ -10,7 +10,7 @@ export function PageHero({ eyebrow, title, description, children, image }) {
           <div className="absolute inset-0 bg-gradient-to-t from-[#090c10] via-transparent to-transparent" />
         </div>
       )}
-      <div className="relative mx-auto min-h-[540px] max-w-[1540px] px-5 py-20 lg:px-8 lg:py-24 xl:px-12">
+      <div className="relative mx-auto min-h-[540px] max-w-[1540px] px-4 py-20 lg:px-8 lg:py-24 xl:px-12">
         <div className="flex h-full min-h-[380px] flex-col justify-between">
           <div className="max-w-[980px]">
             <div className="flex items-center gap-4"><span className="h-px w-11 bg-[#d7ff3f]"/><p className="text-[10px] font-black uppercase tracking-[.23em] text-[#d7ff3f]">{eyebrow}</p></div>

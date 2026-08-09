@@ -34,9 +34,9 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
 {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] text-white">
+      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(46,229,43,.1),transparent_60%)]" />
-        <div className="relative mx-auto max-w-[1450px] px-5 py-20 sm:px-8 lg:px-10">
+        <div className="relative mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('about_eyebrow')}</motion.p>
           <motion.h1 initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.55, delay:0.1 }}
@@ -49,7 +49,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission */}
-      <section className="mx-auto max-w-[1450px] px-5 py-20 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10">
         <div className="grid gap-14 lg:grid-cols-2">
           <motion.h2 initial={{ opacity:0, x:-30 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
             transition={{ duration:0.55 }}
@@ -60,7 +60,7 @@ export default function AboutPage() {
             transition={{ duration:0.55 }}>
             <p className="leading-8 text-muted-foreground">{t('about_body')}</p>
             <a href="/contact"
-              className="mt-7 inline-flex cursor-pointer items-center gap-2 rounded-[5px] border border-border px-5 py-3 text-sm font-black transition hover:border-accent hover:text-accent">
+              className="mt-7 inline-flex cursor-pointer items-center gap-2 rounded-[5px] border border-border px-4 py-3 text-sm font-black transition hover:border-accent hover:text-accent">
               {t('about_partner')} <ArrowRight size={15} />
             </a>
           </motion.div>
@@ -83,7 +83,7 @@ export default function AboutPage() {
       </section>
 
       {/* Image section */}
-      <section className="mx-auto max-w-[1450px] px-5 pb-20 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-[1600px] px-4 pb-20 sm:px-8 lg:px-10">
         <motion.div initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
           transition={{ duration:0.6 }}
           className="relative overflow-hidden rounded-[8px]">

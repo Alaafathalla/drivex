@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { use, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -62,10 +62,10 @@ export default function CarDetailPage({ params }) {
   const isRent = car.listingType === 'rent'
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1480px] px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1600px] px-4 py-3 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-1.5 text-[12px] text-gray-400">
             <a href="/" className="hover:text-green-600 transition">Home</a>
             <span>/</span>
@@ -76,7 +76,7 @@ export default function CarDetailPage({ params }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1480px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
 
           {/* ── Left column ───────────────────── */}
@@ -126,7 +126,7 @@ export default function CarDetailPage({ params }) {
               <div className="flex gap-1 rounded-2xl border border-gray-200 bg-gray-50 p-1 w-fit">
                 {Object.entries(TAB).map(([key, label]) => (
                   <button key={key} onClick={() => setTab(key)}
-                    className={`rounded-xl px-5 py-2 text-[13px] font-bold transition ${tab === key ? 'bg-white text-green-700 shadow border border-gray-200' : 'text-gray-500 hover:text-gray-800'}`}>
+                    className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${tab === key ? 'bg-white text-green-700 shadow border border-gray-200' : 'text-gray-500 hover:text-gray-800'}`}>
                     {label}
                   </button>
                 ))}
@@ -147,10 +147,10 @@ export default function CarDetailPage({ params }) {
                         </div>
                         <div className="flex gap-2">
                           <a href={`tel:${car.owner.phone}`}
-                            className="flex items-center gap-2 rounded-full bg-green-600 px-5 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
+                            className="flex items-center gap-2 rounded-full bg-green-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
                             <Phone size={14} /> Call
                           </a>
-                          <button className="rounded-full border border-gray-200 px-5 py-2.5 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
+                          <button className="rounded-full border border-gray-200 px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
                             Message
                           </button>
                         </div>

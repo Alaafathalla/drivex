@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -57,16 +57,16 @@ export default function ReviewPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1000px] px-4 py-6 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
           <a href={car ? `/cars/${car.id}/rent` : '/cars'} className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-4 block">← Edit booking</a>
           <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Step 2 of 3</p>
           <h1 className="mt-1 text-[26px] font-black text-gray-900">Review your booking</h1>
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1000px] px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
           <div className="space-y-5">
 
@@ -76,7 +76,7 @@ export default function ReviewPage() {
             {/* Booking details */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, delay: .1 }}
               className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="border-b border-gray-100 px-5 py-4">
+              <div className="border-b border-gray-100 px-4 py-4">
                 <h3 className="font-bold text-gray-900">Booking Details</h3>
               </div>
               <div className="divide-y divide-gray-50 px-5">

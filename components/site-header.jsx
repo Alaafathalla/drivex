@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -56,13 +56,13 @@ export function SiteHeader() {
         initial={{ y: -68, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, ease: [.22, 1, .36, 1] }}
-        className={`fixed inset-x-0 top-0 z-50 h-[68px] border-b transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 z-50 h-[68px] w-full border-b transition-all duration-300 ${
           scrolled
             ? 'border-gray-200 bg-white/95 shadow-sm backdrop-blur-md'
             : 'border-gray-100 bg-white/90 backdrop-blur-sm'
         }`}
       >
-        <div className="mx-auto flex h-full max-w-[1480px] items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-full w-full max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-10">
 
           {/* Logo */}
           <a href="/" className="flex shrink-0 items-center gap-1.5 select-none" aria-label="DriveX">
@@ -222,7 +222,7 @@ export function SiteHeader() {
               className="mx-auto mt-16 max-w-2xl px-4"
             >
               <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
-                <div className="flex items-center gap-3 px-5 py-4">
+                <div className="flex items-center gap-3 px-4 py-4">
                   <Search size={18} className="shrink-0 text-green-600" />
                   <input
                     ref={ref}
@@ -241,7 +241,7 @@ export function SiteHeader() {
                     <X size={17} />
                   </button>
                 </div>
-                <div className="border-t border-gray-100 px-5 py-3">
+                <div className="border-t border-gray-100 px-4 py-3">
                   <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Popular</p>
                   <div className="flex flex-wrap gap-2">
                     {['BMW', 'Mercedes', 'Audi', 'Tesla', 'Range Rover', 'SUV', 'Electric'].map(kw => (

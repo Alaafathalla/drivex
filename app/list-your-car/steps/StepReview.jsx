@@ -1,4 +1,4 @@
-import { Car, CheckCircle2, MapPin, Phone, Tag } from 'lucide-react'
+﻿import { Car, CheckCircle2, MapPin, Phone, Tag } from 'lucide-react'
 
 function Row({ label, value }) {
   if (!value) return null
@@ -13,11 +13,11 @@ function Row({ label, value }) {
 function Section({ icon: Icon, title, children }) {
   return (
     <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-      <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-5 py-3">
+      <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3">
         <Icon size={16} className="text-green-500" />
         <p className="text-[13px] font-bold text-gray-900">{title}</p>
       </div>
-      <div className="px-5 py-2">{children}</div>
+      <div className="px-4 py-2">{children}</div>
     </div>
   )
 }
@@ -26,7 +26,7 @@ export function StepReview({ data }) {
   const isRent = data.listingType === 'rent'
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-green-200 bg-green-50 px-5 py-4">
+      <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-4">
         <p className="font-bold text-green-800">Almost done! Review your listing before submitting.</p>
         <p className="mt-0.5 text-[12px] text-green-700">Your listing will be reviewed by our team and published within 24 hours.</p>
       </div>
@@ -34,7 +34,7 @@ export function StepReview({ data }) {
       {/* Photos preview */}
       {data.images.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-5 py-3">
+          <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3">
             <p className="text-[13px] font-bold text-gray-900">Photos ({data.images.length})</p>
           </div>
           <div className="grid grid-cols-4 gap-2 p-3">

@@ -40,8 +40,8 @@ export default function ComparePage() {
   return (
     <main className="min-h-screen bg-background">
 {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] text-white">
-        <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
+      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
+        <div className="relative mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('compare_eyebrow')}</motion.p>
           <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
@@ -51,7 +51,7 @@ export default function ComparePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1450px] overflow-x-auto px-5 py-14 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-[1600px] overflow-x-auto px-4 py-14 sm:px-8 lg:px-10">
         {/* Header row with car images + remove */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
           className="grid min-w-[640px] gap-px bg-border"
@@ -91,13 +91,13 @@ export default function ComparePage() {
         <div className="min-w-[640px]"
           style={{ display:'grid', gridTemplateColumns: `200px repeat(${selected.length + (selected.length < 4 ? 1 : 0)}, 1fr)` }}>
           {specRows.flatMap(([label, fn]) => [
-            <div key={`l-${label}`} className="border-t border-border bg-background px-5 py-4">
+            <div key={`l-${label}`} className="border-t border-border bg-background px-4 py-4">
               <p className="text-xs font-bold text-muted-foreground">{label}</p>
             </div>,
             ...selected.map(car => (
               <motion.div key={`${car.id}-${label}`}
                 initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ duration:0.3 }}
-                className="border-t border-s border-border bg-background px-5 py-4 text-sm font-semibold">
+                className="border-t border-s border-border bg-background px-4 py-4 text-sm font-semibold">
                 {fn(car)}
               </motion.div>
             )),

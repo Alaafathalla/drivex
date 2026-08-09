@@ -20,8 +20,8 @@ export default function FavoritesPage() {
   return (
     <main className="min-h-screen bg-[#070908] text-white">
 {/* Hero */}
-      <section className="border-b border-white/8">
-        <div className="mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10">
+      <section className="w-full border-b border-white/8">
+        <div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-8 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ export default function FavoritesPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1450px] px-5 py-10 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-[1600px] px-4 py-10 sm:px-8 lg:px-10">
         {!mounted ? (
           /* skeleton */
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -189,7 +189,7 @@ export default function FavoritesPage() {
               </p>
               <a
                 href="/compare"
-                className="flex items-center gap-2 rounded-[5px] bg-[#2ee52b] px-5 py-2.5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]"
+                className="flex items-center gap-2 rounded-[5px] bg-[#2ee52b] px-4 py-2.5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]"
               >
                 Compare <ArrowRight size={14} />
               </a>

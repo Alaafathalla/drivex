@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -150,10 +150,10 @@ export default function MyListingsPage() {
   const visible = tab === 'all' ? listings : listings.filter(l => l.status === tab)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[960px] px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
@@ -161,7 +161,7 @@ export default function MyListingsPage() {
               <p className="mt-1 text-[14px] text-gray-400">{listings.length} total listing{listings.length !== 1 ? 's' : ''}</p>
             </div>
             <a href="/list-your-car"
-              className="flex items-center gap-2 rounded-2xl bg-green-600 px-5 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500">
+              className="flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500">
               <Plus size={16} /> Add Listing
             </a>
           </div>
@@ -170,7 +170,7 @@ export default function MyListingsPage() {
 
       {/* Tabs */}
       <div className="sticky top-[68px] z-20 border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[960px] overflow-x-auto px-4 sm:px-6">
+        <div className="mx-auto max-w-[1600px] overflow-x-auto px-4 sm:px-6">
           <div className="flex gap-1 py-3">
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)}
@@ -188,7 +188,7 @@ export default function MyListingsPage() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-[960px] px-4 py-7 sm:px-6">
+      <div className="mx-auto max-w-[1600px] px-4 py-7 sm:px-6">
         {loading ? (
           <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
         ) : visible.length === 0 ? (

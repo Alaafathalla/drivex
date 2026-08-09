@@ -44,7 +44,7 @@ export default function RentalDetailsPage({ params }) {
   return (
     <main className="min-h-screen bg-background">
 
-      <section className="mx-auto max-w-[1450px] px-5 pb-20 pt-28 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-[1600px] px-4 pb-20 pt-28 sm:px-8 lg:px-10">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_.8fr]">
           {/* Left */}
           <motion.div initial={{ opacity:0, x:-24 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.5 }}>

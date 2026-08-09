@@ -24,14 +24,23 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr">
-      <body className="antialiased bg-white text-gray-900">
+      {/*
+        body uses flex-col so header / main / footer stack normally.
+        No max-width here — every section controls its own inner column.
+      */}
+      <body className="antialiased flex flex-col min-h-screen w-full bg-white text-gray-900">
         <LangProvider>
           <FavoritesProvider>
             <ToastProvider>
+              {/* Fixed header — full-width */}
               <SiteHeader />
-              <main className="min-h-screen pt-[68px]">
+
+              {/* Page content — fills remaining height, offset below the fixed header */}
+              <main className="flex-1 w-full pt-[68px]">
                 {children}
               </main>
+
+              {/* Footer — full-width */}
               <SiteFooter />
             </ToastProvider>
           </FavoritesProvider>

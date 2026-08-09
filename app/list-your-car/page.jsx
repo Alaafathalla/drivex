@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -118,7 +118,7 @@ export default function ListYourCarPage() {
   const CurrentStep = STEPS[step]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
         <div className="mx-auto max-w-[820px] px-4 py-6 sm:px-6">

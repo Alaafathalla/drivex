@@ -1,4 +1,4 @@
-import { Calendar, Fuel, Gauge, Palette, Settings2, Users, Car, Zap } from 'lucide-react'
+﻿import { Calendar, Fuel, Gauge, Palette, Settings2, Users, Car, Zap } from 'lucide-react'
 
 export function CarSpecifications({ car }) {
   const specs = [
@@ -17,7 +17,7 @@ export function CarSpecifications({ car }) {
   return (
     <div className="grid gap-px bg-gray-100 overflow-hidden rounded-2xl sm:grid-cols-2">
       {specs.map(({ icon: Icon, label, value }) => (
-        <div key={label} className="flex items-center gap-3 bg-white px-5 py-4">
+        <div key={label} className="flex items-center gap-3 bg-white px-4 py-4">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-50">
             <Icon size={16} className="text-green-600" />
           </div>

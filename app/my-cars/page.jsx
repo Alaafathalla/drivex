@@ -20,7 +20,7 @@ export default function MyCarsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-<section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-8 lg:px-10">
+<section className="w-full mx-auto max-w-[1600px] px-4 pb-20 sm:px-8 lg:px-10">
 
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
           className="flex items-end justify-between">
@@ -29,7 +29,7 @@ export default function MyCarsPage() {
             <h1 className="mt-2 text-4xl font-black">{t('mycars_title')}</h1>
           </div>
           <a href="/sell"
-            className="cursor-pointer flex items-center gap-2 rounded-[5px] bg-accent px-5 py-3 text-sm font-black text-black transition hover:bg-[#50f14d]">
+            className="cursor-pointer flex items-center gap-2 rounded-[5px] bg-accent px-4 py-3 text-sm font-black text-black transition hover:bg-[#50f14d]">
             <Plus size={16} /> {t('mycars_add')}
           </a>
         </motion.div>

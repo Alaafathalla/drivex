@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { use, useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -21,7 +21,7 @@ export default function RentalSuccessPage({ params }) {
   const txnId   = result?.transactionId
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
+    <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
       <motion.div
         initial={{ opacity: 0, scale: .94, y: 20 }}
         animate={{ opacity: 1, scale: 1,   y: 0 }}
@@ -69,7 +69,7 @@ export default function RentalSuccessPage({ params }) {
           )}
 
           {/* Booking details */}
-          <div className="divide-y divide-gray-50 px-5 py-2">
+          <div className="divide-y divide-gray-50 px-4 py-2">
             {[
               ['Booking ID',       bookingId || '—'],
               ['Transaction ID',   txnId || '—'],
@@ -89,7 +89,7 @@ export default function RentalSuccessPage({ params }) {
 
           {/* Total footer */}
           {booking?.total && (
-            <div className="flex items-center justify-between bg-green-50 px-5 py-4 border-t border-green-100">
+            <div className="flex items-center justify-between bg-green-50 px-4 py-4 border-t border-green-100">
               <p className="font-bold text-gray-700">Total Paid</p>
               <p className="text-[22px] font-black text-green-600">${booking.total}</p>
             </div>

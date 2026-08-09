@@ -63,11 +63,11 @@ function CarsContent() {
   const activeFiltersCount = Object.entries(filters).filter(([, v]) => v !== '' && v !== undefined).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
 
       {/* ── Hero / toolbar ─────────────────────── */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-[1480px] px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
 
           {/* Title */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4 }}>
@@ -81,7 +81,7 @@ function CarsContent() {
           <div className="mt-5 flex items-center gap-1 rounded-2xl border border-gray-200 bg-gray-50 p-1 w-fit">
             {[['all','All'],['rent','For Rent'],['sale','For Sale']].map(([val,label]) => (
               <button key={val} onClick={() => setTab(val)}
-                className={`rounded-xl px-5 py-2 text-[13px] font-bold transition ${
+                className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${
                   tab === val ? 'bg-white shadow text-green-700 border border-gray-200' : 'text-gray-500 hover:text-gray-800'
                 }`}>
                 {label}
@@ -127,7 +127,7 @@ function CarsContent() {
       </div>
 
       {/* ── Body ───────────────────────────────── */}
-      <div className="mx-auto max-w-[1480px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex gap-7">
 
           {/* Sidebar — desktop */}
@@ -213,7 +213,7 @@ function CarsContent() {
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
               className="fixed inset-y-0 left-0 z-50 w-[300px] overflow-y-auto bg-white shadow-2xl">
-              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4">
+              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-4">
                 <p className="font-bold text-gray-900">Filters</p>
                 <button onClick={() => setDrawer(false)}><X size={20} className="text-gray-400" /></button>
               </div>

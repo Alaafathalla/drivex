@@ -23,7 +23,7 @@ const activity = [
 export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-[#070908] text-white">
-<div className="mx-auto max-w-[1450px] px-5 py-12 sm:px-8 lg:px-10">
+<div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-8 lg:px-10">
         {/* Header */}
         <FadeIn direction="left">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
@@ -32,10 +32,10 @@ export default function DashboardPage() {
               <h1 className="mt-2 text-[clamp(28px,4vw,44px)] font-black tracking-tight">Good morning, Alex.</h1>
             </div>
             <div className="flex gap-3">
-              <a href="/sell" className="flex items-center gap-2 rounded-[5px] bg-[#2ee52b] px-5 py-2.5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]">
+              <a href="/sell" className="flex items-center gap-2 rounded-[5px] bg-[#2ee52b] px-4 py-2.5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]">
                 <Plus size={14} /> List a Car
               </a>
-              <a href="/profile" className="flex items-center gap-2 rounded-[5px] border border-white/15 px-5 py-2.5 text-[12px] font-semibold transition hover:border-white/30">
+              <a href="/profile" className="flex items-center gap-2 rounded-[5px] border border-white/15 px-4 py-2.5 text-[12px] font-semibold transition hover:border-white/30">
                 My Profile <ArrowUpRight size={14} />
               </a>
             </div>

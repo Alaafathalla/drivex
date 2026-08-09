@@ -26,9 +26,9 @@ export default function SellPage() {
   return (
     <main className="min-h-screen bg-background">
 {/* Hero */}
-      <section className="relative overflow-hidden bg-[#070908] text-white">
+      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(46,229,43,.1),transparent_55%)]" />
-        <div className="relative mx-auto max-w-[1450px] px-5 py-14 sm:px-8 lg:px-10">
+        <div className="relative mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('sell_eyebrow')}</motion.p>
           <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
@@ -38,7 +38,7 @@ export default function SellPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-5 py-14 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-4xl px-4 py-14 sm:px-8 lg:px-10">
         {/* Step progress bar */}
         <div className="mb-10">
           <div className="flex items-center justify-between">

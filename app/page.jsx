@@ -163,12 +163,12 @@ export default function Home() {
     <div className="bg-white">
 
       {/* ── HERO ──────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800">
+      <section className="relative w-full overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800">
         {/* Subtle green glow */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,197,94,.18),transparent_55%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
 
-        <div className="relative mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="grid min-h-[560px] items-center gap-8 py-16 lg:grid-cols-[1fr_1fr]">
 
             {/* Text */}
@@ -265,8 +265,8 @@ export default function Home() {
       </section>
 
       {/* ── BENEFITS ──────────────────────────────── */}
-      <section className="bg-gray-50 pt-24 pb-10">
-        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full bg-gray-50 pt-24 pb-10">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {BENEFITS.map(({ icon: Icon, title, text }, i) => (
               <motion.div key={title}
@@ -290,8 +290,8 @@ export default function Home() {
       </section>
 
       {/* ── CATEGORIES ──────────────────────────────── */}
-      <section className="bg-gray-50 py-10">
-        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full bg-gray-50 py-10">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="mb-7 flex items-center justify-between">
             <motion.h2
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
@@ -312,8 +312,8 @@ export default function Home() {
       </section>
 
       {/* ── FEATURED CARS ──────────────────────────── */}
-      <section className="py-14">
-        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full py-14">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="mb-7 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0, x: 16 }} whileInView={{ opacity: 1, x: 0 }}
@@ -335,8 +335,8 @@ export default function Home() {
       </section>
 
       {/* ── STATS ──────────────────────────────────── */}
-      <section className="bg-green-600 py-14">
-        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full bg-green-600 py-14">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-2 gap-px bg-green-500/30 overflow-hidden rounded-2xl lg:grid-cols-4">
             {STATS.map(({ val, suf, label }, i) => (
               <motion.div key={label}
@@ -355,8 +355,8 @@ export default function Home() {
       </section>
 
       {/* ── CTA BANNER ─────────────────────────────── */}
-      <section className="py-16">
-        <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <section className="w-full py-16">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.5 }}

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -69,7 +69,7 @@ function BookingCard({ booking, onCancel }) {
       </div>
 
       {/* Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-4">
         <div className="flex items-center gap-4">
           <div>
             <p className="text-[10px] text-gray-400">Total</p>
@@ -148,10 +148,10 @@ export default function MyBookingsPage() {
   const visible = tab === 'all' ? bookings : bookings.filter(b => b.status === tab)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[920px] px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
           <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
           <h1 className="mt-1 text-[28px] font-black text-gray-900">My Bookings</h1>
           <p className="mt-1 text-[14px] text-gray-500">{bookings.length} total booking{bookings.length !== 1 ? 's' : ''}</p>
@@ -160,7 +160,7 @@ export default function MyBookingsPage() {
 
       {/* Tabs */}
       <div className="border-b border-gray-100 bg-white sticky top-[68px] z-20">
-        <div className="mx-auto max-w-[920px] px-4 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
           <div className="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)}
@@ -174,7 +174,7 @@ export default function MyBookingsPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[920px] px-4 py-7 sm:px-6">
+      <div className="mx-auto max-w-[1600px] px-4 py-7 sm:px-6">
         {loading ? (
           <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
         ) : error ? (

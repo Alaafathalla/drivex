@@ -11,7 +11,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-[#050706]">
-<section className="mx-auto grid min-h-screen max-w-[1300px] items-center gap-16 px-5 lg:grid-cols-2 lg:px-10">
+<section className="w-full mx-auto grid min-h-screen max-w-[1300px] items-center gap-16 px-5 lg:grid-cols-2 lg:px-10">
 
         {/* Left */}
         <motion.div initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.6 }}

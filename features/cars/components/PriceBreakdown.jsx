@@ -1,4 +1,4 @@
-export function PriceBreakdown({ breakdown }) {
+﻿export function PriceBreakdown({ breakdown }) {
   const { days, dailyRate, base, insurance, service, tax, discount, total } = breakdown
 
   const rows = [
@@ -11,10 +11,10 @@ export function PriceBreakdown({ breakdown }) {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100">
+      <div className="px-4 py-4 border-b border-gray-100">
         <p className="font-bold text-gray-900">Price Breakdown</p>
       </div>
-      <div className="px-5 py-4 space-y-3">
+      <div className="px-4 py-4 space-y-3">
         {rows.map(r => (
           <div key={r.label} className="flex items-center justify-between text-[13px]">
             <span className="text-gray-500">{r.label}</span>
@@ -24,7 +24,7 @@ export function PriceBreakdown({ breakdown }) {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-between border-t border-gray-200 bg-green-50 px-5 py-4">
+      <div className="flex items-center justify-between border-t border-gray-200 bg-green-50 px-4 py-4">
         <p className="font-bold text-gray-900">Total</p>
         <p className="text-[22px] font-black text-green-600">${total}</p>
       </div>

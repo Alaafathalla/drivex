@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -95,10 +95,10 @@ export default function CheckoutPage() {
     `w-full rounded-2xl border px-4 py-3 text-[14px] outline-none transition focus:ring-2 focus:ring-green-100 ${err ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-green-400'}`
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1050px] px-4 py-6 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
           <a href="/rental/review" className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-3 block">← Back to review</a>
           <div className="flex items-center justify-between">
             <div>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1050px] px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
         <div className="grid gap-7 lg:grid-cols-[1fr_360px]">
 
           {/* Left */}

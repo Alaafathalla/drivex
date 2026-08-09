@@ -33,7 +33,7 @@ export default function DealerDetailsPage({ params }) {
   return (
     <main className="min-h-screen bg-background">
 
-      <section className="mx-auto max-w-[1450px] px-5 pb-16 pt-28 sm:px-8 lg:px-10">
+      <section className="w-full mx-auto max-w-[1600px] px-4 pb-16 pt-28 sm:px-8 lg:px-10">
         {/* Dealer card */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
           className="rounded-[8px] border border-border bg-card p-7 md:p-10">
@@ -51,11 +51,11 @@ export default function DealerDetailsPage({ params }) {
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row md:flex-col">
               <a href={`tel:${dealer.phone}`}
-                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] bg-accent px-5 py-3 text-sm font-black text-black transition hover:bg-[#50f14d]">
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] bg-accent px-4 py-3 text-sm font-black text-black transition hover:bg-[#50f14d]">
                 <Phone size={15} /> {t('dealers_call')}
               </a>
               <a href={`mailto:${dealer.email}`}
-                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] border border-border px-5 py-3 text-sm font-black transition hover:border-accent">
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-[5px] border border-border px-4 py-3 text-sm font-black transition hover:border-accent">
                 <Mail size={15} /> {t('dealers_message')}
               </a>
             </div>

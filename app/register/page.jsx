@@ -17,7 +17,7 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen bg-[#050706]">
-<section className="mx-auto flex min-h-screen max-w-[1300px] items-center justify-center px-5 py-28">
+<section className="w-full mx-auto flex min-h-screen max-w-[1300px] items-center justify-center px-4 py-28">
         <motion.form
           initial={{ opacity:0, y:30 }}
           animate={{ opacity:1, y:0 }}
