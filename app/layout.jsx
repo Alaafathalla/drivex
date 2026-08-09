@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata = {
   title: 'DriveX — Buy & Rent Premium Cars',
-  description: 'Buy, rent and sell premium cars with trusted dealers and secure transactions.',
+  description: 'Buy, rent and sell premium cars with verified dealers and secure transactions.',
   generator: 'Next.js',
 }
 
@@ -15,5 +15,12 @@ export const viewport = {
 }
 
 export default function RootLayout({ children }) {
-  return <html lang="en"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
+  return (
+    <html lang="en">
+      <body className="antialiased">
+        {children}
+        {process.env.NODE_ENV === 'production' && <Analytics />}
+      </body>
+    </html>
+  )
 }
