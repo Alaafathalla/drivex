@@ -1,134 +1,164 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
-  ArrowDownRight, ArrowRight, ArrowUpRight, BatteryCharging, Car, Check,
-  ChevronDown, CircleParking, Droplets, Gauge, Heart, MapPin, Search,
-  ShieldCheck, Sparkles, Star, Wrench
+  ArrowRight,
+  BadgeCheck,
+  CalendarDays,
+  CarFront,
+  ChevronDown,
+  Headphones,
+  Heart,
+  Search,
+  ShieldCheck,
+  SlidersHorizontal,
+  Tag,
+  UserRound,
 } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 
-const cars = [
-  { slug:'porsche-cayenne-s', name:'Porsche Cayenne S', year:'2024', price:'AED 365,000', image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=90', meta:'18,200 KM · AWD · Automatic', tone:'bg-[#d8d5cc]' },
-  { slug:'mercedes-glc-300', name:'Mercedes GLC 300', year:'2024', price:'AED 279,000', image:'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1400&q=90', meta:'12,400 KM · 4MATIC · Automatic', tone:'bg-[#dce3e6]' },
-  { slug:'bmw-7-series', name:'BMW 7 Series', year:'2025', price:'AED 429,000', image:'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&q=90', meta:'8,900 KM · RWD · Automatic', tone:'bg-[#dad7d0]' },
+const categories = [
+  { title: 'Luxury Cars', count: '120+ Cars', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=90' },
+  { title: 'SUVs', count: '200+ Cars', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=900&q=90' },
+  { title: 'Sedans', count: '150+ Cars', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=90' },
+  { title: 'Sports Cars', count: '80+ Cars', image: 'https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=900&q=90' },
+  { title: 'Electric Cars', count: '60+ Cars', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=900&q=90' },
 ]
 
-const services = [
-  { n:'01', title:'Buy & Sell', desc:'Verified inventory, fair valuation and a cleaner transaction journey.', href:'/cars', icon:Car },
-  { n:'02', title:'Rent', desc:'Daily, weekly and monthly cars delivered where you need them.', href:'/rentals', icon:CircleParking },
-  { n:'03', title:'Maintain', desc:'Book trusted workshops with transparent scopes and pricing.', href:'/maintenance', icon:Wrench },
-  { n:'04', title:'Care', desc:'Wash, detailing and protection designed around your schedule.', href:'/wash', icon:Droplets },
-  { n:'05', title:'Assist', desc:'24/7 roadside support, towing and emergency help.', href:'/roadside', icon:BatteryCharging },
-  { n:'06', title:'Inspect', desc:'Independent checks and digital reports before you commit.', href:'/inspection', icon:ShieldCheck },
+const featuredCars = [
+  { name: 'BMW 5 Series', type: 'FOR SALE', year: '2023', km: '15,000 km', price: '$54,900', image: 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?auto=format&fit=crop&w=900&q=90' },
+  { name: 'Range Rover Sport', type: 'FOR RENT', year: '2022', km: '30,000 km', price: '$120 / day', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=900&q=90' },
+  { name: 'Mercedes-Benz C-Class', type: 'FOR SALE', year: '2023', km: '10,000 km', price: '$42,900', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=90' },
+  { name: 'Audi A6', type: 'FOR RENT', year: '2022', km: '25,000 km', price: '$85 / day', image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=900&q=90' },
+  { name: 'Tesla Model 3', type: 'FOR SALE', year: '2023', km: '8,000 km', price: '$39,900', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=900&q=90' },
 ]
 
-const brands = ['PORSCHE','MERCEDES-BENZ','BMW','RANGE ROVER','AUDI','TESLA','TOYOTA']
+const benefits = [
+  { icon: BadgeCheck, title: 'Wide Selection', text: 'Thousands of cars to choose from' },
+  { icon: Tag, title: 'Best Deals', text: 'Competitive prices every day' },
+  { icon: ShieldCheck, title: 'Secure Payments', text: 'Safe and secure transactions' },
+  { icon: Headphones, title: '24/7 Support', text: "We're here to help anytime" },
+]
 
 export default function Page() {
-  const [activeTab, setActiveTab] = useState('Buy')
+  const [mode, setMode] = useState('buy')
   const [favorites, setFavorites] = useState([])
 
-  const toggleFavorite = (i) => setFavorites((f) => f.includes(i) ? f.filter((x) => x !== i) : [...f, i])
+  const toggleFavorite = (name) => setFavorites((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name])
+
+  const searchHref = useMemo(() => mode === 'buy' ? '/cars' : '/rentals', [mode])
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f4f4ef] text-[#11151a]">
-      <SiteHeader dark />
+    <main className="min-h-screen bg-[#070908] text-white">
+      <SiteHeader />
 
-      <section className="grain relative min-h-[880px] overflow-hidden bg-[#090c10] text-white">
-        <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2400&q=95" alt="Luxury vehicle" className="h-full w-full object-cover object-[68%_center] opacity-55" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#090c10_0%,rgba(9,12,16,.94)_37%,rgba(9,12,16,.35)_68%,rgba(9,12,16,.14)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,#090c10_0%,transparent_30%)]" />
-        </div>
+      <section className="relative overflow-hidden border-b border-white/8 pt-[74px]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_87%_36%,rgba(20,255,46,.18),transparent_28%),linear-gradient(90deg,#050706_0%,#070908_52%,#071009_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#070908] to-transparent" />
 
-        <div className="absolute right-5 top-36 hidden items-center gap-3 xl:flex"><span className="h-2 w-2 rounded-full bg-[#d7ff3f]"/><span className="text-[9px] font-black uppercase tracking-[.2em] text-white/45">Live inventory / 10,248 vehicles</span></div>
-        <div className="absolute bottom-32 right-8 hidden text-[10px] font-black tracking-[.18em] text-white/25 xl:block vertical-label">AUTOMOTIVE ECOSYSTEM / 2026</div>
+        <div className="relative mx-auto max-w-[1450px] px-5 sm:px-8 lg:px-10">
+          <div className="grid min-h-[550px] items-center gap-8 py-12 lg:grid-cols-[.82fr_1.18fr] lg:py-5">
+            <div className="relative z-10 max-w-[500px] lg:py-10">
+              <div className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[.06em] text-[#2ee52b]"><span>Premium Cars</span><span className="h-[2px] w-12 bg-[#2ee52b]" /></div>
+              <h1 className="text-[clamp(48px,6vw,76px)] font-black leading-[.95] tracking-[-.055em]">Find Your<br/>Perfect Car</h1>
+              <p className="mt-5 max-w-[360px] text-[18px] leading-7 text-white/60">Buy or rent premium cars at the best prices</p>
 
-        <div className="relative mx-auto flex min-h-[880px] max-w-[1540px] flex-col justify-between px-5 pb-8 pt-24 lg:px-8 lg:pb-10 xl:px-12">
-          <div className="grid flex-1 items-center gap-14 lg:grid-cols-[1.08fr_.92fr]">
-            <div className="max-w-[820px] animate-[fadeUp_.8s_ease-out_both]">
-              <div className="mb-8 flex items-center gap-4"><span className="h-px w-12 bg-[#d7ff3f]"/><span className="text-[10px] font-black uppercase tracking-[.24em] text-[#d7ff3f]">A new standard for car ownership</span></div>
-              <h1 className="text-[clamp(64px,8.8vw,142px)] font-black leading-[.78] tracking-[-.085em]">
-                DRIVE<br/><span className="display-outline">EVERYTHING.</span>
-              </h1>
-              <div className="mt-9 grid max-w-2xl gap-6 border-l border-white/15 pl-5 sm:grid-cols-[1fr_auto] sm:items-end">
-                <p className="max-w-xl text-[15px] leading-7 text-white/58 sm:text-[17px]">One premium platform to buy, rent, care for, maintain and manage every part of your car life.</p>
-                <a href="/cars" className="group inline-flex h-12 items-center gap-2 rounded-full bg-[#d7ff3f] px-5 text-xs font-black text-[#090c10]">Explore cars <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"/></a>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a href="/cars" className="inline-flex h-12 items-center gap-8 rounded-[5px] bg-[#2ee52b] px-7 text-[13px] font-bold text-black transition hover:bg-[#50f14d]">Buy a Car <ArrowRight size={16}/></a>
+                <a href="/rentals" className="inline-flex h-12 items-center gap-8 rounded-[5px] border border-white/20 bg-black/20 px-7 text-[13px] font-bold text-white transition hover:border-[#2ee52b] hover:text-[#2ee52b]">Rent a Car <ArrowRight size={16}/></a>
+              </div>
+
+              <div className="mt-9 grid max-w-[420px] grid-cols-3 gap-4 text-[9px] text-white/55">
+                <div className="flex gap-2"><BadgeCheck className="mt-0.5 text-[#2ee52b]" size={18}/><span><b className="block text-white">Best Prices</b>Guaranteed</span></div>
+                <div className="flex gap-2"><ShieldCheck className="mt-0.5 text-[#2ee52b]" size={18}/><span><b className="block text-white">Trusted Dealers</b>Verified</span></div>
+                <div className="flex gap-2"><Headphones className="mt-0.5 text-[#2ee52b]" size={18}/><span><b className="block text-white">24/7 Support</b>Available</span></div>
               </div>
             </div>
 
-            <div className="lg:self-end lg:pb-14">
-              <div className="rounded-[26px] border border-white/12 bg-[#0f141a]/72 p-2 shadow-[0_35px_100px_rgba(0,0,0,.42)] backdrop-blur-2xl">
-                <div className="flex gap-1 px-1 pt-1">{['Buy','Rent','Services'].map((tab) => <button key={tab} onClick={() => setActiveTab(tab)} className={`rounded-full px-4 py-2.5 text-[10px] font-black uppercase tracking-[.14em] transition ${activeTab===tab?'bg-white text-[#0a0d10]':'text-white/42 hover:text-white'}`}>{tab}</button>)}</div>
-                <div className="mt-2 grid gap-2 md:grid-cols-2 xl:grid-cols-[1.3fr_1fr_1fr_auto]">
-                  {[
-                    [activeTab==='Buy'?'Make & model':activeTab==='Rent'?'Pick-up':'Service','All options'],
-                    [activeTab==='Rent'?'Dates':'Budget',activeTab==='Rent'?'12 Aug — 16 Aug':'Any range'],
-                    ['Location','Dubai, UAE']
-                  ].map(([label,value],i) => <button key={label} className={`min-h-[78px] rounded-[18px] bg-white/[.06] px-4 text-left ${i===2?'hidden xl:block':''}`}><span className="block text-[9px] font-bold uppercase tracking-[.16em] text-white/30">{label}</span><span className="mt-2 flex items-center justify-between text-sm font-bold text-white">{value}<ChevronDown size={14} className="opacity-40"/></span></button>)}
-                  <a href={activeTab==='Buy'?'/cars':activeTab==='Rent'?'/rentals':'/services'} className="flex min-h-[78px] items-center justify-center gap-2 rounded-[18px] bg-[#d7ff3f] px-6 text-xs font-black text-[#090c10]"><Search size={16}/> Search</a>
+            <div className="relative min-h-[360px] self-end lg:min-h-[510px]">
+              <div className="absolute inset-y-8 right-0 w-2/3 rounded-full bg-[#0d7f11]/20 blur-3xl" />
+              <img
+                src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1800&q=95"
+                alt="Premium black sports car"
+                className="absolute bottom-0 right-[-8%] h-[94%] w-[112%] object-cover object-center mix-blend-screen [mask-image:linear-gradient(to_bottom,black_72%,transparent_100%)]"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,#070908_0%,transparent_35%)]" />
+            </div>
+          </div>
+
+          <div className="relative z-20 -mt-1 rounded-[8px] border border-white/12 bg-[#0a0c0b]/95 shadow-[0_18px_60px_rgba(0,0,0,.35)]">
+            <div className="flex border-b border-white/10">
+              <button onClick={() => setMode('buy')} className={`flex h-14 items-center gap-3 border-b-2 px-7 text-[13px] font-semibold transition ${mode === 'buy' ? 'border-[#2ee52b] text-white' : 'border-transparent text-white/55 hover:text-white'}`}><CarFront size={18} className={mode === 'buy' ? 'text-[#2ee52b]' : ''}/>Buy Cars</button>
+              <button onClick={() => setMode('rent')} className={`flex h-14 items-center gap-3 border-b-2 px-7 text-[13px] font-semibold transition ${mode === 'rent' ? 'border-[#2ee52b] text-white' : 'border-transparent text-white/55 hover:text-white'}`}><CalendarDays size={17} className={mode === 'rent' ? 'text-[#2ee52b]' : ''}/>Rent Cars</button>
+            </div>
+
+            <div className="grid gap-3 p-5 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_.95fr]">
+              {['All Makes', 'All Models', 'Min Price', 'Max Price', 'Year'].map((label) => (
+                <button key={label} className="flex h-12 items-center justify-between rounded-[5px] border border-white/12 bg-white/[.035] px-4 text-[12px] text-white/45 hover:border-white/25"><span>{label}</span><ChevronDown size={14}/></button>
+              ))}
+              <button className="flex h-10 items-center gap-2 text-[12px] font-semibold text-white/80 hover:text-[#2ee52b] sm:col-span-1"><SlidersHorizontal size={15}/>More Filters</button>
+              <a href={searchHref} className="flex h-12 items-center justify-center gap-3 rounded-[4px] bg-[#2ee52b] text-[12px] font-bold text-black transition hover:bg-[#50f14d] sm:col-start-2 lg:col-start-5"><span>Search Cars</span><Search size={16}/></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1450px] px-5 py-8 sm:px-8 lg:px-10">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {benefits.map(({ icon: Icon, title, text }) => (
+            <div key={title} className="flex min-h-[112px] items-center gap-5 rounded-[7px] border border-white/10 bg-[#0a0c0b] px-7 transition hover:border-[#2ee52b]/45">
+              <Icon size={30} strokeWidth={1.7} className="text-[#2ee52b]" />
+              <div><h3 className="text-[13px] font-semibold">{title}</h3><p className="mt-1 max-w-[150px] text-[11px] leading-5 text-white/50">{text}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1450px] px-5 py-5 sm:px-8 lg:px-10">
+        <div className="mb-5 flex items-center justify-between"><h2 className="text-[22px] font-bold">Browse by Category</h2><a href="/cars" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#2ee52b]">View All <ArrowRight size={15}/></a></div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {categories.map((category) => (
+            <a key={category.title} href="/cars" className="group overflow-hidden rounded-[7px] border border-white/10 bg-[#0b0d0c] transition hover:-translate-y-1 hover:border-[#2ee52b]/45">
+              <div className="h-[145px] overflow-hidden bg-[#111] p-2"><img src={category.image} alt={category.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div>
+              <div className="flex items-end justify-between p-4"><div><h3 className="text-[13px] font-semibold">{category.title}</h3><p className="mt-1 text-[11px] text-white/45">{category.count}</p></div><span className="grid h-8 w-8 place-items-center rounded-[4px] bg-[#159219] text-white transition group-hover:bg-[#2ee52b] group-hover:text-black"><ArrowRight size={15}/></span></div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1450px] px-5 py-10 sm:px-8 lg:px-10">
+        <div className="mb-5 flex items-center justify-between"><h2 className="text-[22px] font-bold">Featured Cars</h2><a href="/cars" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#2ee52b]">View All <ArrowRight size={15}/></a></div>
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+          {featuredCars.map((car) => {
+            const isFavorite = favorites.includes(car.name)
+            return (
+              <article key={car.name} className="group relative overflow-hidden rounded-[7px] border border-white/10 bg-[#0b0d0c] transition hover:-translate-y-1 hover:border-[#2ee52b]/40">
+                <div className="relative h-[180px] overflow-hidden bg-[#131615]">
+                  <span className="absolute left-3 top-3 z-10 rounded-[3px] bg-[#42d94a] px-2 py-1 text-[9px] font-bold text-white">{car.type}</span>
+                  <button onClick={() => toggleFavorite(car.name)} className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/25 text-white backdrop-blur-sm"><Heart size={18} className={isFavorite ? 'fill-[#2ee52b] text-[#2ee52b]' : ''}/></button>
+                  <img src={car.image} alt={car.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                 </div>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-5 text-white/40">
-                <div className="flex items-center gap-2"><MapPin size={14} className="text-[#d7ff3f]"/><span className="text-[10px] font-bold uppercase tracking-[.13em]">Dubai · Abu Dhabi · UAE</span></div>
-                <div className="hidden items-center gap-2 sm:flex"><Star size={13} className="fill-[#d7ff3f] text-[#d7ff3f]"/><span className="text-[10px] font-bold">4.9 / 5 experience rating</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid border-y border-white/10 lg:grid-cols-4">
-            {[['10K+','verified vehicles'],['350+','trusted partners'],['24/7','roadside coverage'],['01','connected ecosystem']].map(([a,b],i) => <div key={b} className={`flex items-end justify-between px-0 py-5 lg:px-6 ${i>0?'lg:border-l lg:border-white/10':''}`}><div><p className="text-2xl font-black tracking-[-.04em]">{a}</p><p className="mt-1 text-[9px] font-bold uppercase tracking-[.14em] text-white/30">{b}</p></div><ArrowDownRight size={17} className="text-white/20"/></div>)}
-          </div>
+                <div className="p-4">
+                  <h3 className="truncate text-[14px] font-semibold">{car.name}</h3>
+                  <p className="mt-1 text-[10px] text-white/45">{car.year} · {car.km}</p>
+                  <div className="mt-3 flex items-center justify-between"><p className="text-[15px] font-bold text-[#2ee52b]">{car.price}</p><Heart size={17} className="text-white/70"/></div>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </section>
 
-      <section className="overflow-hidden border-b border-black/8 bg-[#d7ff3f] py-3">
-        <div className="flex w-max animate-[marquee_28s_linear_infinite] whitespace-nowrap">{[...brands,...brands].map((brand,i)=><span key={`${brand}-${i}`} className="mx-9 text-[11px] font-black tracking-[.18em] text-[#11151a]/70">{brand}</span>)}</div>
-      </section>
-
-      <section className="mx-auto max-w-[1540px] px-5 py-28 lg:px-8 xl:px-12">
-        <div className="grid gap-14 lg:grid-cols-[.75fr_1.25fr]">
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-[10px] font-black uppercase tracking-[.22em] text-[#829d12]">One ecosystem / six journeys</p>
-            <h2 className="mt-5 text-[clamp(44px,5vw,78px)] font-black leading-[.94] tracking-[-.07em]">The car is only the beginning.</h2>
-            <p className="mt-6 max-w-md text-[15px] leading-7 text-[#6f7478]">Motory connects the moments before purchase, during ownership and long after the keys are in your hand.</p>
-          </div>
-
-          <div className="border-t border-black/12">
-            {services.map((s) => { const Icon=s.icon; return <a key={s.title} href={s.href} className="group grid gap-4 border-b border-black/12 py-6 sm:grid-cols-[70px_56px_1fr_auto] sm:items-center sm:py-7"><span className="text-[10px] font-black tracking-[.16em] text-black/35">{s.n}</span><span className="grid h-11 w-11 place-items-center rounded-full border border-black/12 bg-white/40"><Icon size={19} strokeWidth={1.6}/></span><div><h3 className="text-[28px] font-black tracking-[-.045em] sm:text-[34px]">{s.title}</h3><p className="mt-1 max-w-xl text-sm leading-6 text-[#74797c]">{s.desc}</p></div><span className="grid h-11 w-11 place-items-center rounded-full bg-[#11151a] text-white transition-transform group-hover:rotate-45"><ArrowUpRight size={17}/></span></a> })}
+      <section className="mx-auto max-w-[1450px] px-5 pb-14 pt-3 sm:px-8 lg:px-10">
+        <div className="relative overflow-hidden rounded-[8px] border border-[#2ee52b]/25 bg-[linear-gradient(100deg,#07130a_0%,#0b2810_48%,#063a0a_100%)] px-7 py-10 lg:px-8 lg:py-12">
+          <div className="absolute inset-y-0 right-0 hidden w-[44%] lg:block"><img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=1200&q=90" alt="Premium green sports car" className="h-full w-full object-cover opacity-60 [mask-image:linear-gradient(to_left,black_68%,transparent)]"/></div>
+          <div className="relative z-10 grid gap-8 lg:grid-cols-[1.15fr_.9fr_1fr] lg:items-center">
+            <div><p className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.05em] text-[#2ee52b]">Experience the difference <span className="h-[2px] w-12 bg-[#2ee52b]"/></p><h2 className="mt-5 max-w-[420px] text-[30px] font-bold leading-tight">Premium Cars, Premium Experience</h2><p className="mt-3 max-w-[430px] text-[12px] leading-6 text-white/55">Whether you want to buy your dream car or rent the perfect ride, we make it simple and secure.</p><a href="/cars" className="mt-6 inline-flex h-11 items-center gap-8 rounded-[4px] bg-[#2ee52b] px-6 text-[12px] font-bold text-black">Explore Cars <ArrowRight size={15}/></a></div>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-7 text-[11px]"><div className="flex gap-3"><CarFront className="text-[#2ee52b]" size={22}/><span><b className="block text-[18px] text-[#2ee52b]">10,000+</b>Cars Available</span></div><div className="flex gap-3"><Headphones className="text-[#2ee52b]" size={22}/><span><b className="block text-[18px] text-[#2ee52b]">24/7</b>Support</span></div><div className="flex gap-3"><UserRound className="text-[#2ee52b]" size={22}/><span><b className="block text-[18px] text-[#2ee52b]">5,000+</b>Happy Customers</span></div><div className="flex gap-3"><ShieldCheck className="text-[#2ee52b]" size={22}/><span><b className="block text-[18px] text-[#2ee52b]">50+</b>Trusted Dealers</span></div></div>
+            <div className="hidden lg:block" />
           </div>
         </div>
-      </section>
-
-      <section className="bg-[#11151a] py-28 text-white">
-        <div className="mx-auto max-w-[1540px] px-5 lg:px-8 xl:px-12">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <div><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">Curated inventory</p><h2 className="mt-5 text-[clamp(44px,5vw,78px)] font-black leading-[.94] tracking-[-.07em]">Cars worth<br/>stopping for.</h2></div>
-            <a href="/cars" className="group inline-flex items-center gap-3 text-xs font-black uppercase tracking-[.12em] text-white/65">View full inventory <span className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition group-hover:bg-[#d7ff3f] group-hover:text-black"><ArrowUpRight size={15}/></span></a>
-          </div>
-
-          <div className="mt-14 grid gap-5 xl:grid-cols-3">
-            {cars.map((car,i)=><article key={car.slug} className="group relative overflow-hidden rounded-[26px] bg-[#171c22]">
-              <a href={`/cars/${car.slug}`} className={`relative block aspect-[1.18] overflow-hidden ${car.tone}`}><img src={car.image} alt={car.name} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.055]"/><div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"/><span className="absolute left-4 top-4 rounded-full bg-black/70 px-3 py-1.5 text-[9px] font-black uppercase tracking-[.14em] backdrop-blur">Verified</span><button onClick={(e)=>{e.preventDefault(); toggleFavorite(i)}} className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-black"><Heart size={16} className={favorites.includes(i)?'fill-black':''}/></button><span className="absolute bottom-4 right-4 rounded-full bg-[#d7ff3f] px-3 py-1.5 text-[9px] font-black text-black">{car.year}</span></a>
-              <div className="p-6"><div className="flex items-start justify-between gap-5"><div><h3 className="text-[22px] font-black tracking-[-.04em]">{car.name}</h3><p className="mt-2 text-[11px] uppercase tracking-[.08em] text-white/35">{car.meta}</p></div><ArrowUpRight size={18} className="text-white/30 transition group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#d7ff3f]"/></div><div className="mt-6 flex items-end justify-between border-t border-white/10 pt-5"><p className="text-[10px] uppercase tracking-[.12em] text-white/30">Drive away from</p><p className="text-xl font-black">{car.price}</p></div></div>
-            </article>)}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1540px] px-5 py-28 lg:px-8 xl:px-12">
-        <div className="grid overflow-hidden rounded-[32px] bg-[#e7e7e1] lg:grid-cols-[1.08fr_.92fr]">
-          <div className="relative min-h-[560px] overflow-hidden"><img src="https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&w=1500&q=92" alt="Luxury car" className="absolute inset-0 h-full w-full object-cover"/><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent"/><div className="absolute bottom-7 left-7 right-7 flex items-end justify-between text-white"><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#d7ff3f]">Sell smarter</p><h3 className="mt-2 text-3xl font-black tracking-[-.05em]">Know your car’s real value.</h3></div><a href="/valuation" className="grid h-12 w-12 place-items-center rounded-full bg-white text-black"><ArrowUpRight size={18}/></a></div></div>
-          <div className="flex flex-col justify-between p-8 sm:p-12 lg:p-14"><div><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#829d12]">Ownership intelligence</p><h2 className="mt-5 text-[clamp(40px,4vw,64px)] font-black leading-[.95] tracking-[-.065em]">Your garage.<br/>Actually useful.</h2><p className="mt-6 max-w-md text-[15px] leading-7 text-[#6f7478]">A live vehicle profile for mileage, maintenance, insurance, inspections, documents and future care.</p></div><div className="mt-12 rounded-[22px] bg-[#11151a] p-6 text-white"><div className="flex items-center justify-between"><div><p className="text-[9px] uppercase tracking-[.16em] text-white/30">Primary vehicle</p><h3 className="mt-2 text-2xl font-black">Porsche Cayenne S</h3></div><Gauge className="text-[#d7ff3f]"/></div><div className="mt-8 grid grid-cols-3 gap-3 border-t border-white/10 pt-5">{[['18,200','KM'],['42','Days'],['Good','Health']].map(([a,b])=><div key={b}><p className="text-lg font-black">{a}</p><p className="mt-1 text-[8px] uppercase tracking-[.12em] text-white/30">{b}</p></div>)}</div></div><a href="/garage" className="mt-6 inline-flex items-center gap-2 text-xs font-black">Open My Garage <ArrowRight size={15}/></a></div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden bg-[#d7ff3f] py-24 text-[#11151a]">
-        <div className="pointer-events-none absolute -right-10 -top-24 text-[300px] font-black leading-none tracking-[-.12em] text-black/[.05]">24</div>
-        <div className="relative mx-auto grid max-w-[1540px] gap-10 px-5 lg:grid-cols-[1fr_auto] lg:items-end lg:px-8 xl:px-12"><div><p className="text-[10px] font-black uppercase tracking-[.2em]">Roadside / Always on</p><h2 className="mt-5 max-w-4xl text-[clamp(50px,7vw,108px)] font-black leading-[.82] tracking-[-.085em]">HELP SHOULD<br/>MOVE FAST.</h2><p className="mt-7 max-w-xl text-[15px] leading-7 text-black/60">Towing, battery, flat tire, fuel delivery and lockout support — available around the clock.</p></div><a href="/roadside" className="group inline-flex items-center gap-4 rounded-full bg-[#11151a] px-6 py-4 text-xs font-black text-white">Request help <ArrowUpRight size={16} className="transition group-hover:-translate-y-1 group-hover:translate-x-1"/></a></div>
       </section>
 
       <SiteFooter />

@@ -2,14 +2,14 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata = {
-  title: 'motory. — Premium automotive ecosystem',
-  description: 'Buy, rent, maintain, inspect, value and manage your car through one premium automotive platform.',
+  title: 'DriveX — Buy & Rent Premium Cars',
+  description: 'Buy, rent and sell premium cars with trusted dealers and secure transactions.',
   generator: 'Next.js',
 }
 
 export const viewport = {
-  colorScheme: 'light',
-  themeColor: '#0b1017',
+  colorScheme: 'dark',
+  themeColor: '#070908',
   width: 'device-width',
   initialScale: 1,
 }
