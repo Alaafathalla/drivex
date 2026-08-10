@@ -33,7 +33,7 @@ export default function DealerDetailsPage({ params }) {
   return (
     <main className="min-h-screen bg-background">
 
-      <section className="w-full mx-auto max-w-[1600px] px-4 pb-16 pt-28 sm:px-8 lg:px-10">
+      <section className="w-full px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pt-32 xl:px-12">
         {/* Dealer card */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
           className="rounded-[8px] border border-border bg-card p-7 md:p-10">

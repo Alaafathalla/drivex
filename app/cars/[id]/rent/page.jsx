@@ -75,7 +75,7 @@ export default function RentPage({ params }) {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
+        <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
           <a href={`/cars/${id}`} className="flex items-center gap-2 text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-4">
             ← Back to listing
           </a>
@@ -85,7 +85,7 @@ export default function RentPage({ params }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
+      <div className="w-full px-4 py-10 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-7 lg:grid-cols-[1fr_360px]">
           {/* Form */}
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4 }}>

@@ -82,7 +82,7 @@ export default function ValuationPage() {
     <main className="min-h-screen bg-[#070908] text-white">{/* Hero */}
       <section className="w-full relative overflow-hidden border-b border-white/8">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,rgba(46,229,43,.13),transparent_55%)]" />
-        <div className="relative mx-auto max-w-[1600px] px-4 py-16 sm:px-8 lg:px-10">
+        <div className="relative w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-12">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.45 }}
             className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[.14em] text-[#2ee52b]">
@@ -113,7 +113,7 @@ export default function ValuationPage() {
       </section>
 
       {/* Main */}
-      <section className="w-full mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
+      <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr]">
 
           {/* Form */}

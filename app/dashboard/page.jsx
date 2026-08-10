@@ -23,7 +23,7 @@ const activity = [
 export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-[#070908] text-white">
-<div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-8 lg:px-10">
+<div className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12">
         {/* Header */}
         <FadeIn direction="left">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">

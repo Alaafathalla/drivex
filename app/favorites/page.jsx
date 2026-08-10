@@ -6,6 +6,12 @@ import { useFavorites } from '@/context/FavoritesContext'
 import { useLang } from '@/context/LangContext'
 import { CARS, RENTALS } from '@/lib/api'
 
+const getItemKey = (item, index) => {
+  const prefix = item?.type || 'item'
+  const id = item?.slug || item?.id || index
+  return `${prefix}-${id}`
+}
+
 const ALL = [
   ...CARS,
   ...RENTALS.map((r) => ({ ...r, type: 'rent', price: r.pricePerDay })),
@@ -21,7 +27,7 @@ export default function FavoritesPage() {
     <main className="min-h-screen bg-[#070908] text-white">
 {/* Hero */}
       <section className="w-full border-b border-white/8">
-        <div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-8 lg:px-10">
+        <div className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -61,7 +67,7 @@ export default function FavoritesPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1600px] px-4 py-10 sm:px-8 lg:px-10">
+      <div className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12">
         {!mounted ? (
           /* skeleton */
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -122,7 +128,7 @@ export default function FavoritesPage() {
 
                   return (
                     <motion.article
-                      key={car.slug}
+                      key={getItemKey(car, i)}
                       layout
                       initial={{ opacity: 0, scale: 0.92 }}
                       animate={{ opacity: 1, scale: 1 }}

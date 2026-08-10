@@ -12,7 +12,7 @@ export default function RoadsidePage() {
     <main className="bg-[#070908] text-white">
       {/* Hero */}
       <section className="w-full border-b border-white/8">
-        <div className="mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
+        <div className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
           <p className="text-[11px] font-bold uppercase tracking-[.14em] text-[#2ee52b]">24/7 Roadside Assistance</p>
           <h1 className="mt-3 text-[clamp(36px,5vw,64px)] font-black leading-[.92] tracking-tight">Help is on the way.</h1>
           <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">
@@ -21,7 +21,7 @@ export default function RoadsidePage() {
         </div>
       </section>
 
-      <section className="w-full mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
+      <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Map placeholder */}
           <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-4 overflow-hidden rounded-[8px] border border-white/10 bg-[radial-gradient(circle_at_55%_45%,rgba(46,229,43,.12),transparent_35%)]">

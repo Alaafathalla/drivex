@@ -153,7 +153,7 @@ export default function MyListingsPage() {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
+        <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
@@ -170,7 +170,7 @@ export default function MyListingsPage() {
 
       {/* Tabs */}
       <div className="sticky top-[68px] z-20 border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] overflow-x-auto px-4 sm:px-6">
+        <div className="w-full overflow-x-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex gap-1 py-3">
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)}
@@ -188,7 +188,7 @@ export default function MyListingsPage() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-[1600px] px-4 py-7 sm:px-6">
+      <div className="w-full px-4 py-7 sm:px-6 lg:px-8 xl:px-12">
         {loading ? (
           <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
         ) : visible.length === 0 ? (

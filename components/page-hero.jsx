@@ -10,7 +10,7 @@ export function PageHero({ eyebrow, title, description, children, image }) {
           <div className="absolute inset-0 bg-gradient-to-t from-[#090c10] via-transparent to-transparent" />
         </div>
       )}
-      <div className="relative mx-auto min-h-[540px] max-w-[1540px] px-4 py-20 lg:px-8 lg:py-24 xl:px-12">
+      <div className="relative mx-auto min-h-[540px] w-full px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28 xl:px-12">
         <div className="flex h-full min-h-[380px] flex-col justify-between">
           <div className="max-w-[980px]">
             <div className="flex items-center gap-4"><span className="h-px w-11 bg-[#d7ff3f]"/><p className="text-[10px] font-black uppercase tracking-[.23em] text-[#d7ff3f]">{eyebrow}</p></div>

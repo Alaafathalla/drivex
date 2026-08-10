@@ -29,7 +29,7 @@ export function SiteFooter() {
   const { t } = useLang()
   return (
     <footer className="w-full border-t border-gray-100 bg-white">
-      <div className="mx-auto max-w-[1600px] px-4 pt-14 pb-8 sm:px-6 lg:px-8">
+      <div className="w-full px-4 pt-16 pb-10 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24 xl:px-12">
 
         {/* Grid */}
         <div className="grid gap-10 border-b border-gray-100 pb-10 md:grid-cols-[1.5fr_repeat(3,1fr)]">

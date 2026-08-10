@@ -36,7 +36,7 @@ export default function AboutPage() {
 {/* Hero */}
       <section className="w-full relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(46,229,43,.1),transparent_60%)]" />
-        <div className="relative mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10">
+        <div className="relative w-full px-4 py-20 sm:px-6 lg:px-8 xl:px-12">
           <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('about_eyebrow')}</motion.p>
           <motion.h1 initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.55, delay:0.1 }}
@@ -49,7 +49,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission */}
-      <section className="w-full mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10">
+      <section className="w-full px-4 py-20 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-14 lg:grid-cols-2">
           <motion.h2 initial={{ opacity:0, x:-30 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
             transition={{ duration:0.55 }}
@@ -83,7 +83,7 @@ export default function AboutPage() {
       </section>
 
       {/* Image section */}
-      <section className="w-full mx-auto max-w-[1600px] px-4 pb-20 sm:px-8 lg:px-10">
+      <section className="w-full px-4 pb-20 sm:px-6 lg:px-8 xl:px-12">
         <motion.div initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
           transition={{ duration:0.6 }}
           className="relative overflow-hidden rounded-[8px]">

@@ -151,7 +151,7 @@ export default function MyBookingsPage() {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
+        <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
           <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
           <h1 className="mt-1 text-[28px] font-black text-gray-900">My Bookings</h1>
           <p className="mt-1 text-[14px] text-gray-500">{bookings.length} total booking{bookings.length !== 1 ? 's' : ''}</p>
@@ -160,7 +160,7 @@ export default function MyBookingsPage() {
 
       {/* Tabs */}
       <div className="border-b border-gray-100 bg-white sticky top-[68px] z-20">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)}
@@ -174,7 +174,7 @@ export default function MyBookingsPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-4 py-7 sm:px-6">
+      <div className="w-full px-4 py-7 sm:px-6 lg:px-8 xl:px-12">
         {loading ? (
           <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
         ) : error ? (

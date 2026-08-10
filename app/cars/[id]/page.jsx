@@ -65,7 +65,7 @@ export default function CarDetailPage({ params }) {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-3 sm:px-6 lg:px-8">
+        <div className="w-full px-4 py-3 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-1.5 text-[12px] text-gray-400">
             <a href="/" className="hover:text-green-600 transition">Home</a>
             <span>/</span>
@@ -76,7 +76,7 @@ export default function CarDetailPage({ params }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
 
           {/* ── Left column ───────────────────── */}

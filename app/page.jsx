@@ -12,6 +12,12 @@ import { useFavorites } from '@/context/FavoritesContext'
 import { useToast } from '@/context/ToastContext'
 import { api } from '@/lib/api'
 
+const getItemKey = (item, index) => {
+  const prefix = item?.type || item?.category || 'item'
+  const id = item?.slug || item?.id || index
+  return `${prefix}-${id}`
+}
+
 /* ─────────── Animated counter ─────────── */
 function Counter({ target, suffix = '' }) {
   const [n, setN] = useState(0)
@@ -168,7 +174,7 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,197,94,.18),transparent_55%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
 
-        <div className="relative mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="grid min-h-[560px] items-center gap-8 py-16 lg:grid-cols-[1fr_1fr]">
 
             {/* Text */}
@@ -265,8 +271,8 @@ export default function Home() {
       </section>
 
       {/* ── BENEFITS ──────────────────────────────── */}
-      <section className="w-full bg-gray-50 pt-24 pb-10">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+      <section className="w-full bg-gray-50 py-20 sm:py-24 lg:py-28">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {BENEFITS.map(({ icon: Icon, title, text }, i) => (
               <motion.div key={title}
@@ -290,8 +296,8 @@ export default function Home() {
       </section>
 
       {/* ── CATEGORIES ──────────────────────────────── */}
-      <section className="w-full bg-gray-50 py-10">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+      <section className="w-full bg-gray-50 py-12 sm:py-16 lg:py-20">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="mb-7 flex items-center justify-between">
             <motion.h2
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
@@ -312,8 +318,8 @@ export default function Home() {
       </section>
 
       {/* ── FEATURED CARS ──────────────────────────── */}
-      <section className="w-full py-14">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+      <section className="w-full py-16 sm:py-20 lg:py-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="mb-7 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0, x: 16 }} whileInView={{ opacity: 1, x: 0 }}
@@ -328,15 +334,15 @@ export default function Home() {
           </div>
           <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {cars.length
-              ? cars.slice(0, 8).map((car, i) => <CarCard key={car.id} car={car} index={i} />)
+              ? cars.slice(0, 8).map((car, i) => <CarCard key={getItemKey(car, i)} car={car} index={i} />)
               : Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-[320px] rounded-2xl" />)}
           </div>
         </div>
       </section>
 
       {/* ── STATS ──────────────────────────────────── */}
-      <section className="w-full bg-green-600 py-14">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+      <section className="w-full bg-green-600 py-16 sm:py-20 lg:py-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="grid grid-cols-2 gap-px bg-green-500/30 overflow-hidden rounded-2xl lg:grid-cols-4">
             {STATS.map(({ val, suf, label }, i) => (
               <motion.div key={label}
@@ -355,8 +361,8 @@ export default function Home() {
       </section>
 
       {/* ── CTA BANNER ─────────────────────────────── */}
-      <section className="w-full py-16">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
+      <section className="w-full py-18 sm:py-20 lg:py-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.5 }}

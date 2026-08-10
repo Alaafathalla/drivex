@@ -75,7 +75,7 @@ export default function RentalsPage() {
 {/* Hero */}
       <section className="w-full relative overflow-hidden bg-[#070908] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(46,229,43,.12),transparent_50%)]" />
-        <div className="relative mx-auto max-w-[1600px] px-4 py-14 sm:px-8 lg:px-10">
+        <div className="relative w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
           <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
             className="text-[10px] font-black uppercase tracking-[.2em] text-accent">
             {t('rent_eyebrow')}
@@ -112,7 +112,7 @@ export default function RentalsPage() {
 
       {/* Category tabs */}
       <section className="w-full sticky top-[72px] z-30 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto max-w-[1600px] overflow-x-auto px-4 sm:px-6 lg:px-10">
+        <div className="w-full overflow-x-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex gap-1 py-3">
             {CATEGORIES.map(cat => (
               <button
@@ -132,7 +132,7 @@ export default function RentalsPage() {
       </section>
 
       {/* Grid */}
-      <section className="w-full mx-auto max-w-[1600px] px-4 py-12 sm:px-8 lg:px-10">
+      <section className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12">
         {loading ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({length:6}).map((_,i) => <div key={i} className="aspect-[1.35] animate-pulse rounded-[7px] bg-white/5" />)}

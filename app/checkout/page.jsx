@@ -98,7 +98,7 @@ export default function CheckoutPage() {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
+        <div className="w-full px-4 py-6 sm:px-6 lg:px-8 xl:px-12">
           <a href="/rental/review" className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-3 block">← Back to review</a>
           <div className="flex items-center justify-between">
             <div>
@@ -113,7 +113,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6">
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid gap-7 lg:grid-cols-[1fr_360px]">
 
           {/* Left */}

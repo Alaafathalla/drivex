@@ -19,7 +19,7 @@ export default function MyRentalsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-<section className="w-full mx-auto max-w-[1600px] px-4 pb-20 sm:px-8 lg:px-10">
+<section className="w-full px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pt-10 xl:px-12">
 
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}>
           <p className="text-xs font-black uppercase tracking-[.18em] text-accent">Account</p>

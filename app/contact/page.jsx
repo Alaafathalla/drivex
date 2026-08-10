@@ -19,7 +19,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-background">
 <section className="w-full bg-[#070908] text-white">
-        <div className="mx-auto grid max-w-[1600px] gap-12 px-4 py-20 lg:grid-cols-[.85fr_1.15fr] lg:px-10 lg:py-28">
+        <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:px-8 lg:py-28 xl:px-12">
           {/* Left info */}
           <motion.div initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.55 }}>
             <p className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('contact_eyebrow')}</p>

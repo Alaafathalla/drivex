@@ -67,7 +67,7 @@ function CarsContent() {
 
       {/* ── Hero / toolbar ─────────────────────── */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
+        <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
 
           {/* Title */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4 }}>
@@ -127,7 +127,7 @@ function CarsContent() {
       </div>
 
       {/* ── Body ───────────────────────────────── */}
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex gap-7">
 
           {/* Sidebar — desktop */}

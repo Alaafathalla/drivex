@@ -62,7 +62,7 @@ export function SiteHeader() {
             : 'border-gray-100 bg-white/90 backdrop-blur-sm'
         }`}
       >
-        <div className="mx-auto flex h-full w-full max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-10">
+        <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12">
 
           {/* Logo */}
           <a href="/" className="flex shrink-0 items-center gap-1.5 select-none" aria-label="DriveX">
@@ -219,7 +219,7 @@ export function SiteHeader() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.2, ease: [.22, 1, .36, 1] }}
-              className="mx-auto mt-16 max-w-2xl px-4"
+              className="mx-auto mt-16 w-full max-w-[1600px] px-4"
             >
               <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
                 <div className="flex items-center gap-3 px-4 py-4">
