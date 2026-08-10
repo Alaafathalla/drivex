@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Check, Upload } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { useToast } from '@/context/ToastContext'
 
 const STEP_COUNT = 5
 
 export default function SellPage() {
   const { t } = useLang()
+  const toast = useToast()
   const [step, setStep] = useState(1)
 
   const stepLabels = t('sell_steps')
@@ -38,7 +40,8 @@ export default function SellPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
+      <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
+        <div className="mx-auto w-full max-w-6xl">
         {/* Step progress bar */}
         <div className="mb-10">
           <div className="flex items-center justify-between">
@@ -175,7 +178,13 @@ export default function SellPage() {
               </button>
               <motion.button
                 whileTap={{ scale: 0.97 }}
-                onClick={() => setStep(s => Math.min(STEP_COUNT, s + 1))}
+                onClick={() => {
+                  if (step === STEP_COUNT) {
+                    toast({ message: 'Your listing is ready to be submitted.', type: 'success' })
+                    return
+                  }
+                  setStep(s => Math.min(STEP_COUNT, s + 1))
+                }}
                 className="cursor-pointer inline-flex items-center gap-2 rounded-[5px] bg-accent px-7 py-3 text-xs font-black text-black transition hover:bg-[#50f14d]"
               >
                 {step === STEP_COUNT ? t('sell_submit') : t('sell_continue')}
@@ -184,6 +193,7 @@ export default function SellPage() {
             </div>
           </motion.div>
         </AnimatePresence>
+        </div>
       </section></main>
   )
 }

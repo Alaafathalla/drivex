@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { useToast } from '@/context/ToastContext'
 
 export default function ContactPage() {
   const { t } = useLang()
+  const toast = useToast()
   const [sent, setSent] = useState(false)
 
   const fields = [
@@ -19,7 +21,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-background">
 <section className="w-full bg-[#070908] text-white">
-        <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:px-8 lg:py-28 xl:px-12">
+        <div className="mx-auto grid w-full max-w-[1600px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:px-8 lg:py-28 xl:px-12">
           {/* Left info */}
           <motion.div initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.55 }}>
             <p className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('contact_eyebrow')}</p>
@@ -47,7 +49,7 @@ export default function ContactPage() {
               </motion.div>
             ) : (
               <form
-                onSubmit={e => { e.preventDefault(); setSent(true) }}
+                onSubmit={e => { e.preventDefault(); setSent(true); toast({ message: 'Thanks for reaching out. We’ll contact you shortly.', type: 'success' }) }}
                 className="rounded-[8px] bg-white p-7 text-foreground sm:p-9"
               >
                 <div className="grid gap-5 sm:grid-cols-2">
