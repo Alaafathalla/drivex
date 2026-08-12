@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarFront, MapPin, ShieldCheck, Star } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -17,18 +18,18 @@ export default function DealersPage() {
 
   return (
     <main className="min-h-screen bg-background">
-{/* Hero */}
-      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_40%,rgba(46,229,43,.12),transparent_50%)]" />
-        <div className="relative w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-12">
-          <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('dealers_eyebrow')}</motion.p>
-          <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
-            className="mt-3 text-[clamp(30px,4.5vw,58px)] font-black leading-[.92] tracking-[-.05em]">{t('dealers_title')}</motion.h1>
-          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.2 }}
-            className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">{t('dealers_desc')}</motion.p>
+      <PageHero
+        eyebrow={t('dealers_eyebrow')}
+        title={t('dealers_title')}
+        description={t('dealers_desc')}
+        image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86"
+      >
+        <div className="mt-8 flex flex-wrap gap-3 text-[11px] font-black uppercase tracking-[.18em] text-white/65">
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Verified sellers</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Trusted network</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Premium service</span>
         </div>
-      </section>
+      </PageHero>
 
       <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
         <motion.div initial={{ opacity:0, y:12 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}

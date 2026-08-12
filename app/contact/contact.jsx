@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { useLang } from '@/context/LangContext'
 import { useToast } from '@/context/ToastContext'
 
@@ -20,21 +21,21 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-[#f5f7f6] text-gray-900">
-      <section className="w-full bg-[#070908] text-white">
+      <PageHero
+        eyebrow={t('contact_eyebrow')}
+        title={t('contact_title')}
+        description={t('contact_desc')}
+        image="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=86"
+      >
+        <div className="mt-8 grid gap-4 text-sm text-white/70 sm:grid-cols-3">
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Mail className="text-[#d7ff3f]" size={17} /> hello@drivex.ae</p>
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Phone className="text-[#d7ff3f]" size={17} /> +971 4 000 0000</p>
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><MapPin className="text-[#d7ff3f]" size={17} /> Dubai, UAE</p>
+        </div>
+      </PageHero>
+
+      <section className="w-full bg-[#f5f7f6] text-white">
         <div className="page-inner grid gap-12 py-20 sm:py-24 lg:grid-cols-[.85fr_1.15fr] lg:py-28">
-          {/* Left info */}
-          <motion.div initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.55 }}>
-            <p className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('contact_eyebrow')}</p>
-            <h1 className="mt-5 text-[clamp(40px,6vw,80px)] font-black leading-[.9] tracking-[-.055em] whitespace-pre-line">
-              {t('contact_title')}
-            </h1>
-            <p className="mt-6 max-w-md leading-7 text-white/55">{t('contact_desc')}</p>
-            <div className="mt-10 grid gap-4 text-sm text-white/65">
-              <p className="flex items-center gap-3"><Mail className="text-accent" size={17} /> hello@drivex.ae</p>
-              <p className="flex items-center gap-3"><Phone className="text-accent" size={17} /> +971 4 000 0000</p>
-              <p className="flex items-center gap-3"><MapPin className="text-accent" size={17} /> Dubai, UAE</p>
-            </div>
-          </motion.div>
 
           {/* Form */}
           <motion.div initial={{ opacity:0, x:30 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.55, delay:0.1 }}>

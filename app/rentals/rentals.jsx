@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CalendarDays, MapPin, Search, ShieldCheck, ArrowRight } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 
@@ -72,43 +73,30 @@ export default function RentalsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-{/* Hero */}
-      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,rgba(46,229,43,.12),transparent_50%)]" />
-        <div className="relative w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
-          <motion.p initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.4 }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-accent">
-            {t('rent_eyebrow')}
-          </motion.p>
-          <motion.h1 initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
-            className="mt-3 text-[clamp(36px,5.5vw,72px)] font-black leading-[.9] tracking-[-.05em]">
-            {t('rent_title')}
-          </motion.h1>
-          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.2 }}
-            className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">
-            {t('rent_desc')}
-          </motion.p>
-
-          {/* Quick booking bar */}
-          <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.3 }}
-            className="mt-8 grid max-w-3xl gap-1 overflow-hidden rounded-[7px] border border-white/15 bg-black/30 p-1 backdrop-blur sm:grid-cols-4">
-            {[
-              [MapPin,       'rent_pickup',     'Dubai Marina'],
-              [CalendarDays, 'rent_from_date',  '12 Aug'],
-              [CalendarDays, 'rent_until_date', '16 Aug'],
-            ].map(([Icon, labelKey, placeholder]) => (
-              <div key={labelKey} className="bg-white/[.07] px-4 py-3 rounded-[5px]">
-                <Icon size={14} className="text-accent" />
-                <p className="mt-2 text-[9px] uppercase tracking-[.15em] text-white/35">{t(labelKey)}</p>
-                <p className="mt-1 text-sm font-bold">{placeholder}</p>
-              </div>
-            ))}
-            <button className="cursor-pointer rounded-[5px] bg-accent px-4 py-3 text-xs font-black text-black transition hover:bg-[#50f14d]">
-              {t('rent_find_btn')}
-            </button>
-          </motion.div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={t('rent_eyebrow')}
+        title={t('rent_title')}
+        description={t('rent_desc')}
+        image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86"
+      >
+        <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.3 }}
+          className="mt-8 grid max-w-3xl gap-1 overflow-hidden rounded-[7px] border border-white/15 bg-black/30 p-1 backdrop-blur sm:grid-cols-4">
+          {[
+            [MapPin, 'rent_pickup', 'Dubai Marina'],
+            [CalendarDays, 'rent_from_date', '12 Aug'],
+            [CalendarDays, 'rent_until_date', '16 Aug'],
+          ].map(([Icon, labelKey, placeholder]) => (
+            <div key={labelKey} className="bg-white/[.07] px-4 py-3 rounded-[5px]">
+              <Icon size={14} className="text-[#d7ff3f]" />
+              <p className="mt-2 text-[9px] uppercase tracking-[.15em] text-white/35">{t(labelKey)}</p>
+              <p className="mt-1 text-sm font-bold">{placeholder}</p>
+            </div>
+          ))}
+          <button className="cursor-pointer rounded-[5px] bg-[#d7ff3f] px-4 py-3 text-xs font-black text-[#090c10] transition hover:bg-[#c7f134]">
+            {t('rent_find_btn')}
+          </button>
+        </motion.div>
+      </PageHero>
 
       {/* Category tabs */}
       <section className="w-full sticky top-[72px] z-30 border-b border-border bg-background/95 backdrop-blur-md">

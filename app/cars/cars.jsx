@@ -7,6 +7,7 @@ import {
   ChevronLeft, ChevronRight, Loader2,
   Search, SlidersHorizontal, X,
 } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { CarCard } from '@/features/cars/components/CarCard'
 import { CarFilters } from '@/features/cars/components/CarFilters'
 import { carService } from '@/services/carService'
@@ -64,30 +65,26 @@ function CarsContent() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
+      <PageHero
+        eyebrow="Buy cars"
+        title={tab === 'rent' ? 'Cars for Rent' : tab === 'sale' ? 'Cars for Sale' : 'Discover your next drive.'}
+        description="Browse trusted listings, compare specs, and find a vehicle that fits your lifestyle, budget, and pace."
+        image="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=86"
+      >
+        <div className="mt-5 flex items-center gap-1 rounded-2xl border border-white/10 bg-white/5 p-1 w-fit backdrop-blur-sm">
+          {[['all','All'],['rent','For Rent'],['sale','For Sale']].map(([val,label]) => (
+            <button key={val} onClick={() => setTab(val)}
+              className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${
+                tab === val ? 'bg-[#d7ff3f] text-[#090c10] shadow' : 'text-white/70 hover:text-white'
+              }`}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </PageHero>
 
-      {/* ── Hero / toolbar ─────────────────────── */}
       <div className="border-b border-gray-200 bg-white">
         <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-
-          {/* Title */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4 }}>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Marketplace</p>
-            <h1 className="mt-1 text-[clamp(26px,3.5vw,42px)] font-black text-gray-900">
-              {tab === 'rent' ? 'Cars for Rent' : tab === 'sale' ? 'Cars for Sale' : 'All Cars'}
-            </h1>
-          </motion.div>
-
-          {/* Tabs */}
-          <div className="mt-5 flex items-center gap-1 rounded-2xl border border-gray-200 bg-gray-50 p-1 w-fit">
-            {[['all','All'],['rent','For Rent'],['sale','For Sale']].map(([val,label]) => (
-              <button key={val} onClick={() => setTab(val)}
-                className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${
-                  tab === val ? 'bg-white shadow text-green-700 border border-gray-200' : 'text-gray-500 hover:text-gray-800'
-                }`}>
-                {label}
-              </button>
-            ))}
-          </div>
 
           {/* Search + Sort row */}
           <div className="mt-5 flex flex-wrap items-center gap-3">

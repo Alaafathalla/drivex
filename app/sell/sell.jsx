@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Check, Upload } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { useLang } from '@/context/LangContext'
 import { useToast } from '@/context/ToastContext'
 
@@ -27,18 +28,18 @@ export default function SellPage() {
 
   return (
     <main className="min-h-screen bg-background">
-{/* Hero */}
-      <section className="w-full relative overflow-hidden bg-[#070908] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(46,229,43,.1),transparent_55%)]" />
-        <div className="relative w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
-          <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-accent">{t('sell_eyebrow')}</motion.p>
-          <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.1 }}
-            className="mt-3 text-[clamp(32px,5vw,64px)] font-black leading-[.92] tracking-[-.05em]">{t('sell_title')}</motion.h1>
-          <motion.p initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.2 }}
-            className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">{t('sell_desc')}</motion.p>
+      <PageHero
+        eyebrow={t('sell_eyebrow')}
+        title={t('sell_title')}
+        description={t('sell_desc')}
+        image="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2200&q=86"
+      >
+        <div className="mt-8 flex flex-wrap gap-3 text-[11px] font-black uppercase tracking-[.18em] text-white/65">
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Fast valuation</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Local buyers</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Hassle-free</span>
         </div>
-      </section>
+      </PageHero>
 
       <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
         <div className="mx-auto w-full max-w-6xl">

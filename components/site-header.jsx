@@ -58,19 +58,16 @@ export function SiteHeader() {
         transition={{ duration: 0.45, ease: [.22, 1, .36, 1] }}
         className={`fixed inset-x-0 top-0 z-50 h-[68px] w-full border-b transition-all duration-300 ${
           scrolled
-            ? 'border-gray-200 bg-white/95 shadow-sm backdrop-blur-md'
-            : 'border-gray-100 bg-white/90 backdrop-blur-sm'
+            ? 'border-[#E7E9E5] bg-white/95 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-md'
+            : 'border-[#EEF0EC] bg-white/90 backdrop-blur-sm'
         }`}
       >
         <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12">
 
           {/* Logo */}
           <a href="/" className="flex shrink-0 items-center gap-1.5 select-none" aria-label="DriveX">
-            <span className="flex items-center text-[22px] font-black italic tracking-tight text-gray-900">
-              Drive<span className="text-green-600">X</span>
-            </span>
-            <span className="hidden rounded-full bg-green-100 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-green-700 sm:inline">
-              Beta
+            <span className="flex items-center text-[22px] font-black italic tracking-[-0.05em] text-[#0E1418]">
+              Drive<span className="text-[#B5E92E]">X</span>
             </span>
           </a>
 
@@ -80,45 +77,35 @@ export function SiteHeader() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`relative rounded-lg px-3.5 py-2 text-[13px] font-semibold transition-colors ${
+                className={`relative rounded-full px-4 py-2 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors ${
                   active(item.href)
-                    ? 'bg-green-50 text-green-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-[#B5E92E] text-[#0B1220] shadow-[0_8px_18px_rgba(181,233,46,0.35)]'
+                    : 'text-[#475569] hover:bg-[#F4F7F2] hover:text-[#0F172A]'
                 }`}
               >
                 {t(item.key)}
-                {active(item.href) && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-lg bg-green-50"
-                    style={{ zIndex: -1 }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
               </a>
             ))}
           </nav>
 
           {/* Right */}
-          <div className="flex items-center gap-1">
-            {/* Search */}
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => setSearchOpen(true)}
-              className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A]"
             >
               <Search size={17} />
             </button>
 
-            {/* Favorites badge */}
-            <a href="/favorites" className="relative grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
-              <Heart size={17} className={count > 0 ? 'fill-rose-500 text-rose-500' : ''} />
+            <a href="/favorites" className="relative grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A]">
+              <Heart size={17} className={count > 0 ? 'fill-[#F43F5E] text-[#F43F5E]' : ''} />
               <AnimatePresence>
                 {count > 0 && (
                   <motion.span
                     key={count}
                     initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-                    className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-[3px] text-[9px] font-black text-white"
+                    className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#F43F5E] px-[3px] text-[9px] font-black text-white"
                   >
                     {count > 9 ? '9+' : count}
                   </motion.span>
@@ -126,33 +113,28 @@ export function SiteHeader() {
               </AnimatePresence>
             </a>
 
-            {/* Compare */}
-            <a href="/compare" className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+            <a href="/compare" className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A]">
               <GitCompare size={17} />
             </a>
 
-            {/* Account */}
-            <a href="/profile" className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+            <a href="/profile" className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A]">
               <UserRound size={17} />
             </a>
 
-            {/* Language toggle */}
             <div className="hidden sm:block">
               <LanguageToggle />
             </div>
 
-            {/* CTA */}
             <a
               href="/login"
-              className="ml-1 hidden h-9 items-center rounded-full border border-green-200 bg-green-50 px-5 text-[12px] font-bold text-green-700 transition hover:bg-green-600 hover:text-white sm:flex"
+              className="ml-1 hidden h-9 items-center rounded-full bg-[#0E1418] px-5 text-[12px] font-bold text-white transition hover:bg-[#B5E92E] hover:text-[#0B1220] sm:flex"
             >
               {t('nav_signin')}
             </a>
 
-            {/* Mobile hamburger */}
             <button
               onClick={() => setOpen(v => !v)}
-              className="grid h-9 w-9 place-items-center rounded-full text-gray-500 transition hover:bg-gray-100 lg:hidden"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A] lg:hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
