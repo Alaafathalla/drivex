@@ -23,7 +23,7 @@ export default function ServicesPageView() {
   return (
     <main>
       <PageHero eyebrow="Car care, simplified" title="Care for your car. Without the hassle." description="Trusted specialists, transparent pricing, premium booking flows and service history that stays connected to your vehicle." image="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=2200&q=86" />
-      <section className="w-full px-4 py-20 sm:px-6 lg:px-8 lg:py-24 xl:px-12">
+      <section className="page-inner py-20 sm:py-24 lg:py-28">
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {items.map(([title, desc, price, Icon, href], i) => (
             <a

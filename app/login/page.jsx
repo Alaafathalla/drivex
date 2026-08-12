@@ -1,5 +1,2 @@
-﻿import LoginPageView from './LoginPageView'
+export { default } from './login'
 
-export default function LoginPage() {
-  return <LoginPageView />
-}

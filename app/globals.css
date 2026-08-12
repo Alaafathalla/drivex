@@ -19,17 +19,17 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0f1117;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #0f1117;
-  --primary: #16a34a;
+  --card-foreground: #070707;
+  --primary: #B5E92E;
   --primary-foreground: #ffffff;
   --muted: #f4f6f5;
   --muted-foreground: #6b7280;
-  --accent: #16a34a;
+  --accent: #B5E92E;
   --accent-foreground: #ffffff;
   --border: #e5e7eb;
-  --ring: #16a34a;
+  --ring: #B5E92E;
   --surface: #f9fafb;
   --surface-2: #f3f4f6;
 
@@ -77,6 +77,13 @@ button, select, input, textarea { font: inherit; }
 /* Use .page-wrap on sections that should be full-bleed,
    and .inner on their inner content column.            */
 .inner {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-px);
+}
+
+.page-inner {
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
@@ -151,3 +158,51 @@ input, textarea { direction: inherit; }
 .auto-grid-sm  { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 1.25rem; }
 .auto-grid-md  { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 1.25rem; }
 .auto-grid-lg  { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 1.5rem; }
+
+/* ── Brand override: force all green utilities to the requested lime brand color ── */
+[class*='bg-green-'],
+[class*='bg-emerald-'],
+[class*='bg-lime-'],
+[class*='text-green-'],
+[class*='text-emerald-'],
+[class*='text-lime-'],
+[class*='border-green-'],
+[class*='border-emerald-'],
+[class*='border-lime-'],
+[class*='ring-green-'],
+[class*='ring-emerald-'],
+[class*='ring-lime-'] {
+  --brand-lime: #B5E92E;
+}
+
+[class*='bg-green-'],
+[class*='bg-emerald-'],
+[class*='bg-lime-'] {
+  background-color: #B5E92E !important;
+}
+
+[class*='text-green-'],
+[class*='text-emerald-'],
+[class*='text-lime-'] {
+  color: #B5E92E !important;
+}
+
+[class*='border-green-'],
+[class*='border-emerald-'],
+[class*='border-lime-'] {
+  border-color: #B5E92E !important;
+}
+
+[class*='ring-green-'],
+[class*='ring-emerald-'],
+[class*='ring-lime-'] {
+  --tw-ring-color: #B5E92E !important;
+  box-shadow: 0 0 0 1px #B5E92E !important;
+}
+
+[class*='#2ee52b'] {
+  background-color: #B5E92E !important;
+  color: #B5E92E !important;
+  border-color: #B5E92E !important;
+  fill: #B5E92E !important;
+}
