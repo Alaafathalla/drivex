@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -10,13 +10,13 @@ import { LanguageToggle } from '@/components/language-toggle'
 import { ScrollProgress } from '@/components/scroll-progress'
 
 const NAV = [
-  { key: 'nav_home',    href: '/' },
-  { key: 'nav_buy',     href: '/cars' },
-  { key: 'nav_rent',    href: '/rentals' },
-  { key: 'nav_sell',    href: '/sell' },
-  { key: 'nav_dealers', href: '/dealers' },
-  { key: 'nav_about',   href: '/about' },
-  { key: 'nav_contact', href: '/contact' },
+  { key: 'nav_home',       href: '/' },
+  { key: 'nav_buy',        href: '/cars' },
+  { key: 'nav_rent',       href: '/rentals' },
+  { key: 'nav_categories', href: '/categories' },
+  { key: 'nav_locations',  href: '/rent-by-location' },
+  { key: 'nav_services',   href: '/services' },
+  { key: 'nav_contact',    href: '/contact' },
 ]
 
 export function SiteHeader() {
@@ -72,7 +72,7 @@ export function SiteHeader() {
           </a>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-0.5 xl:flex">
             {NAV.map(item => (
               <a
                 key={item.href}
@@ -134,7 +134,7 @@ export function SiteHeader() {
 
             <button
               onClick={() => setOpen(v => !v)}
-              className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A] lg:hidden"
+              className="grid h-9 w-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F4F7F2] hover:text-[#0F172A] xl:hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -157,7 +157,7 @@ export function SiteHeader() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: [.22, 1, .36, 1] }}
-              className="overflow-hidden border-t border-gray-100 bg-white lg:hidden"
+              className="overflow-hidden border-t border-gray-100 bg-white xl:hidden"
             >
               <nav className="px-4 py-3">
                 {NAV.map((item, i) => (

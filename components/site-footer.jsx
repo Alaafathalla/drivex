@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
@@ -7,9 +7,10 @@ import { useLang } from '@/context/LangContext'
 const COLS = {
   footer_marketplace: [
     ['footer_buy',      '/cars'],
-    ['footer_rent',     '/rentals'],
-    ['footer_sell',     '/sell'],
-    ['footer_compare',  '/compare'],
+    ['footer_rent',       '/rentals'],
+    ['footer_categories', '/categories'],
+    ['footer_locations',  '/rent-by-location'],
+    ['footer_services',   '/services'],
   ],
   footer_company: [
     ['footer_about',    '/about'],

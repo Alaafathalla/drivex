@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, CalendarDays, Car, Loader2, MapPin } from 'lucide-react'
 import { PriceBreakdown } from '@/features/cars/components/PriceBreakdown'
 import { carService } from '@/services/carService'
-import { calcRental } from '@/services/bookingService'
+import { calcRental } from '@/lib/booking-service'
 
 const LOCATIONS = ['Dubai Marina','Downtown Dubai','Dubai Airport','Abu Dhabi Airport','Sharjah City Centre','Ajman','Palm Jumeirah']
 

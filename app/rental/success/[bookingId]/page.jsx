@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { use, useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -99,9 +99,9 @@ export default function RentalSuccessPage({ params }) {
         {/* Actions */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45 }}
           className="flex flex-col gap-3">
-          <Link href="/my-bookings"
+          <Link href="/my-rentals"
             className="flex h-13 items-center justify-center gap-2 rounded-2xl bg-green-600 py-3.5 text-[14px] font-bold text-white transition hover:bg-green-500 shadow-sm shadow-green-200">
-            View My Bookings <ArrowRight size={16} />
+            Track My Rental <ArrowRight size={16} />
           </Link>
           <button onClick={() => window.print()}
             className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3 text-[13px] font-semibold text-gray-700 transition hover:border-green-400 hover:text-green-700">

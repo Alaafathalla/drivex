@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -47,7 +47,8 @@ export default function CheckoutPage() {
       if (!raw) { router.replace('/cars'); return }
       const b = JSON.parse(raw)
       setBooking(b)
-      if (b.carId) carService.getCarById(b.carId).then(setCar).catch(() => {})
+      if (b.car) setCar(b.car)
+      else if (b.carId) carService.getCarById(b.carId).then(setCar).catch(() => {})
     } catch { router.replace('/cars') }
   }, [router])
 

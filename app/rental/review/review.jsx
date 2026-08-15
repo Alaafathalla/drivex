@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -24,7 +24,8 @@ export default function ReviewPage() {
       if (!raw) { router.replace('/cars'); return }
       const b = JSON.parse(raw)
       setBooking(b)
-      if (b.carId) carService.getCarById(b.carId).then(setCar).catch(() => {})
+      if (b.car) setCar(b.car)
+      else if (b.carId) carService.getCarById(b.carId).then(setCar).catch(() => {})
     } catch { router.replace('/cars') }
   }, [router])
 
@@ -53,6 +54,7 @@ export default function ReviewPage() {
     ['Drop-off location', booking.dropoffLocation],
     ['Driver age',        booking.driverAge],
     ['License',           booking.driverLicense],
+    ...(booking.addons?.length ? [['Services', booking.addons.map((item) => item.name).join(', ')]] : []),
     ...(booking.notes ? [['Notes', booking.notes]] : []),
   ]
 
@@ -60,7 +62,7 @@ export default function ReviewPage() {
     <div className="w-full min-h-screen bg-gray-50">
       <div className="border-b border-gray-100 bg-white">
         <div className="w-full px-4 py-6 sm:px-6 lg:px-8 xl:px-12">
-          <a href={car ? `/cars/${car.id}/rent` : '/cars'} className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-4 block">← Edit booking</a>
+          <a href={car?.rentalSlug ? `/rentals/${car.rentalSlug}` : car ? `/cars/${car.id}/rent` : '/rentals'} className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-4 block">← Edit booking</a>
           <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Step 2 of 3</p>
           <h1 className="mt-1 text-[26px] font-black text-gray-900">Review your booking</h1>
         </div>
