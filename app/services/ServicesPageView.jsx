@@ -1,42 +1,34 @@
 'use client'
 
-import { ArrowRight, CalendarHeart, CarFront, Plane, ShieldCheck, Sparkles, Wrench } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowRight, CalendarHeart, CarFront, CheckCircle2, Clock3, MapPin, Plane, ShieldCheck, Sparkles, Wrench } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { SERVICE_CATALOG } from '@/lib/rental-catalog'
+import { clientApi } from '@/lib/client-api'
+import { FaqSection, SectionHeading, TestimonialsSection, TrustBand } from '@/components/platform/rich-sections'
 
-const ICONS = {
-  wash: Sparkles,
-  wedding: CalendarHeart,
-  airport: Plane,
-  maintenance: Wrench,
-  inspection: ShieldCheck,
-  roadside: CarFront,
+const ICONS = { wash: Sparkles, wedding: CalendarHeart, airport: Plane, maintenance: Wrench, inspection: ShieldCheck, tuning: Wrench, delivery: CarFront, roadside: CarFront }
+
+function ServiceBooking({ selected, setSelected }) {
+  const [form,setForm]=useState({date:'',time:'10:00',location:'',name:'',phone:'',notes:''})
+  const [status,setStatus]=useState('idle')
+  const service=useMemo(()=>SERVICE_CATALOG.find(s=>s.slug===selected)||SERVICE_CATALOG[0],[selected])
+  const update=(key,value)=>setForm(f=>({...f,[key]:value}))
+  const submit=async(e)=>{e.preventDefault();setStatus('loading');try{await clientApi.post('/api/services/book',{service:service.slug,...form});setStatus('success')}catch{setStatus('error')}}
+  return <div className="grid overflow-hidden rounded-[28px] border border-[#dfe5db] bg-white shadow-[0_24px_60px_rgba(15,23,42,.08)] lg:grid-cols-[.85fr_1.15fr]">
+    <div className="relative min-h-[360px] overflow-hidden bg-[#071016] p-7 text-white"><img src={service.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-35"/><div className="absolute inset-0 bg-gradient-to-t from-[#071016] via-[#071016]/85 to-[#071016]/40"/><div className="relative flex h-full flex-col"><p className="text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">Selected service</p><h3 className="mt-4 text-3xl font-black tracking-[-.04em]">{service.title}</h3><p className="mt-3 text-sm leading-7 text-white/60">{service.description}</p><div className="mt-auto pt-8"><p className="text-sm font-black text-[#B5E92E]">{service.price}</p><div className="mt-4 flex flex-wrap gap-2">{['Verified provider','Transparent quote','Flexible scheduling'].map(item=><span key={item} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold text-white/55">{item}</span>)}</div></div></div></div>
+    <form onSubmit={submit} className="p-6 sm:p-8"><div className="grid gap-4 sm:grid-cols-2"><label className="sm:col-span-2"><span className="mb-2 block text-xs font-black text-[#475569]">Service</span><select value={selected} onChange={e=>{setSelected(e.target.value);setStatus('idle')}} className="h-12 w-full rounded-2xl border border-[#dfe5db] bg-white px-4 text-sm font-bold outline-none focus:border-[#B5E92E]">{SERVICE_CATALOG.map(item=><option key={item.slug} value={item.slug}>{item.title}</option>)}</select></label><label><span className="mb-2 block text-xs font-black text-[#475569]">Preferred date</span><input required type="date" value={form.date} onChange={e=>update('date',e.target.value)} className="h-12 w-full rounded-2xl border border-[#dfe5db] px-4 text-sm outline-none focus:border-[#B5E92E]"/></label><label><span className="mb-2 block text-xs font-black text-[#475569]">Preferred time</span><input type="time" value={form.time} onChange={e=>update('time',e.target.value)} className="h-12 w-full rounded-2xl border border-[#dfe5db] px-4 text-sm outline-none focus:border-[#B5E92E]"/></label><label className="sm:col-span-2"><span className="mb-2 block text-xs font-black text-[#475569]">Location</span><input required value={form.location} onChange={e=>update('location',e.target.value)} placeholder="Dubai Marina, Abu Dhabi, Sharjah…" className="h-12 w-full rounded-2xl border border-[#dfe5db] px-4 text-sm outline-none focus:border-[#B5E92E]"/></label><label><span className="mb-2 block text-xs font-black text-[#475569]">Name</span><input required value={form.name} onChange={e=>update('name',e.target.value)} className="h-12 w-full rounded-2xl border border-[#dfe5db] px-4 text-sm outline-none focus:border-[#B5E92E]"/></label><label><span className="mb-2 block text-xs font-black text-[#475569]">Phone</span><input required value={form.phone} onChange={e=>update('phone',e.target.value)} className="h-12 w-full rounded-2xl border border-[#dfe5db] px-4 text-sm outline-none focus:border-[#B5E92E]"/></label><label className="sm:col-span-2"><span className="mb-2 block text-xs font-black text-[#475569]">Notes</span><textarea value={form.notes} onChange={e=>update('notes',e.target.value)} rows={3} placeholder="Vehicle, access instructions, special request…" className="w-full rounded-2xl border border-[#dfe5db] px-4 py-3 text-sm outline-none focus:border-[#B5E92E]"/></label></div>{status==='success'?<div className="mt-5 flex items-center gap-3 rounded-2xl bg-[#edf7d3] p-4 text-sm font-bold text-[#536a14]"><CheckCircle2 size={18}/>Request received. A DriveX service partner will confirm the slot.</div>:<button disabled={status==='loading'} className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0e1418] text-sm font-black text-white disabled:opacity-60">{status==='loading'?'Sending request…':'Request service'}<ArrowRight size={15}/></button>}{status==='error'&&<p className="mt-3 text-xs font-bold text-red-500">Could not submit the request. Check the required fields and try again.</p>}</form>
+  </div>
 }
 
 export default function ServicesPageView() {
-  return (
-    <main className="bg-[#F5F6F3]">
-      <PageHero eyebrow="Beyond the rental" title="Everything your drive may need." description="Book car care, wedding transport, airport transfer and support services through one premium automotive platform." image="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=2200&q=86" />
-
-      <section className="page-inner py-16 sm:py-20">
-        <div className="mb-10 grid gap-5 lg:grid-cols-[1fr_.7fr] lg:items-end">
-          <div><p className="text-xs font-black uppercase tracking-[.18em] text-[#7C8B55]">Service marketplace</p><h2 className="mt-2 text-4xl font-black tracking-[-.045em] text-[#0F172A]">Professional services, connected to your booking.</h2></div>
-          <p className="text-sm leading-7 text-[#64748B]">Use services as standalone bookings or add eligible options directly to a rental before checkout.</p>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {SERVICE_CATALOG.map((service, index) => {
-            const Icon = ICONS[service.slug] || Sparkles
-            const href = service.slug === 'wedding' || service.slug === 'airport' ? `/services/${service.slug}` : `/${service.slug}`
-            return (
-              <a key={service.slug} href={href} className={`group overflow-hidden rounded-[26px] border border-[#E2E6DE] bg-white shadow-[0_18px_45px_rgba(15,23,42,.05)] ${index === 0 ? 'md:col-span-2 xl:col-span-1' : ''}`}>
-                <div className="relative aspect-[1.75] overflow-hidden"><img src={service.image} alt={service.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#071016]/70 via-transparent to-transparent" /><span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-[#0F172A]">{service.category}</span><div className="absolute bottom-4 left-4 grid h-10 w-10 place-items-center rounded-full bg-[#B5E92E] text-[#0E1418]"><Icon size={18} /></div></div>
-                <div className="p-5"><div className="flex items-start justify-between gap-5"><div><h3 className="text-xl font-black tracking-[-.025em] text-[#0F172A]">{service.title}</h3><p className="mt-2 text-sm leading-6 text-[#64748B]">{service.description}</p></div><ArrowRight className="mt-1 shrink-0 transition-transform group-hover:translate-x-1" size={18} /></div><p className="mt-5 text-xs font-black uppercase tracking-[.1em] text-[#7C8B55]">{service.price}</p></div>
-              </a>
-            )
-          })}
-        </div>
-      </section>
-    </main>
-  )
+  const [selected,setSelected]=useState('inspection')
+  return <main className="bg-[#F5F6F3]">
+    <PageHero eyebrow="Beyond the drive" title="Book trusted automotive services without leaving the platform." description="Inspection, detailing, maintenance, roadside support and premium transport—scheduled with clear expectations and API-ready service requests." image="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=2200&q=86"/>
+    <section className="page-inner py-16"><SectionHeading eyebrow="Service marketplace" title="One platform from inspection to aftercare." description="Each service can run as a standalone booking or become an add-on inside a vehicle journey."/><div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{SERVICE_CATALOG.map((service,index)=>{const Icon=ICONS[service.slug]||Sparkles;return <motion.button key={service.slug} onClick={()=>setSelected(service.slug)} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:index*.05}} className={`group overflow-hidden rounded-[25px] border bg-white text-left shadow-[0_16px_45px_rgba(15,23,42,.05)] transition ${selected===service.slug?'border-[#B5E92E] ring-4 ring-[#B5E92E]/10':'border-[#e2e6de]'}`}><div className="relative aspect-[1.75] overflow-hidden"><img src={service.image} alt={service.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-gradient-to-t from-[#071016]/75 via-transparent to-transparent"/><span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-[#0f172a]">{service.category}</span><span className="absolute bottom-4 left-4 grid size-10 place-items-center rounded-full bg-[#B5E92E] text-[#071016]"><Icon size={18}/></span></div><div className="p-5"><div className="flex justify-between gap-5"><div><h3 className="text-lg font-black text-[#0f172a]">{service.title}</h3><p className="mt-2 text-sm leading-6 text-[#64748b]">{service.description}</p></div><ArrowRight size={17} className="mt-1 shrink-0"/></div><p className="mt-5 text-xs font-black uppercase tracking-[.1em] text-[#7d9f24]">{service.price}</p></div></motion.button>})}</div></section>
+    <section className="page-inner pb-16"><SectionHeading eyebrow="Book a slot" title="Tell us what you need and when." description="This form posts to a structured mock service-booking endpoint and is ready to map onto your production backend."/><ServiceBooking selected={selected} setSelected={setSelected}/></section>
+    <section className="bg-white py-16"><div className="page-inner"><SectionHeading eyebrow="How it works" title="Service without the phone-tag."/><div className="grid gap-4 md:grid-cols-3">{[[MapPin,'Choose the service','Select location, date and vehicle context.'],[Clock3,'Get a confirmed slot','A verified partner confirms availability and scope.'],[ShieldCheck,'Track the outcome','Keep the booking, quote and service history connected to your vehicle.']].map(([Icon,title,text],i)=><div key={title} className="rounded-[24px] border border-[#e2e6de] bg-[#fafbf9] p-6"><span className="text-[10px] font-black text-[#94a3b8]">0{i+1}</span><Icon size={20} className="mt-8 text-[#7d9f24]"/><h3 className="mt-5 text-lg font-black text-[#0f172a]">{title}</h3><p className="mt-2 text-sm leading-6 text-[#64748b]">{text}</p></div>)}</div></div></section>
+    <TrustBand/><TestimonialsSection/><FaqSection items={[["Can I book a service without renting or buying a car?","Yes. The service marketplace supports standalone requests as well as add-ons connected to another DriveX journey."],["Are service prices fixed?","Displayed prices are starting prices. The partner can confirm a final quote after the vehicle, location and scope are known."],["Can I choose a specific workshop?","The API schema can be extended with provider selection. The current mock flow routes a service request to the appropriate partner pool."],["Can service history appear in my dashboard?","Yes. The booking response includes structured IDs and status fields intended to be connected to the user dashboard and vehicle profile."]]}/>
+  </main>
 }

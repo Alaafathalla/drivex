@@ -1,238 +1,75 @@
-﻿'use client'
+'use client'
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import {
-  ChevronLeft, ChevronRight, Loader2,
-  Search, SlidersHorizontal, X,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, Grid2X2, List, Loader2, Search, SlidersHorizontal, X } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { CarCard } from '@/features/cars/components/CarCard'
 import { CarFilters } from '@/features/cars/components/CarFilters'
 import { carService } from '@/services/carService'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { useCurrency } from '@/context/CurrencyContext'
+import { FaqSection, TrustBand } from '@/components/platform/rich-sections'
 
-const SORT_OPTIONS = [
-  { value: 'newest',     label: 'Newest first' },
-  { value: 'price-asc',  label: 'Price: Low → High' },
-  { value: 'price-desc', label: 'Price: High → Low' },
-  { value: 'rating',     label: 'Top rated' },
-  { value: 'oldest',     label: 'Oldest first' },
-]
+const SORT_OPTIONS=[['newest','Newest first'],['price-asc','Price: Low → High'],['price-desc','Price: High → Low'],['rating','Top rated'],['oldest','Oldest first']]
+const EMPTY={brand:'',bodyType:'',fuelType:'',transmission:'',city:'',seats:'',minYear:'',maxYear:'',minPrice:'',maxPrice:'',minMileage:'',maxMileage:'',available:undefined}
 
-const EMPTY = { brand: '', bodyType: '', fuelType: '', transmission: '', city: '', seats: '', minYear: '', maxYear: '', minPrice: '', maxPrice: '', available: undefined }
-
-function CarsContent() {
-  const sp     = useSearchParams()
-  const router = useRouter()
-
-  const [tab,     setTab]     = useState(sp.get('type') || 'all')
-  const [sort,    setSort]    = useState('newest')
-  const [q,       setQ]       = useState(sp.get('q') || '')
-  const [filters, setFilters] = useState({ ...EMPTY })
-  const [page,    setPage]    = useState(1)
-  const [drawer,  setDrawer]  = useState(false)
-
-  const [data,    setData]    = useState({ items: [], total: 0, pages: 1 })
-  const [loading, setLoading] = useState(true)
-  const [error,   setError]   = useState(null)
-
-  const abortRef = useRef(null)
-
-  const load = useCallback(async () => {
-    if (abortRef.current) abortRef.current = false
-    const token = {}; abortRef.current = token
-    setLoading(true); setError(null)
-    try {
-      const res = await carService.getCars({
-        ...filters,
-        listingType: tab === 'all' ? undefined : tab,
-        q: q || undefined, sort, page, limit: 9,
-      })
-      if (token !== abortRef.current) return
-      setData(res)
-    } catch (e) {
-      setError(e.message || 'Failed to load cars.')
-    } finally {
-      setLoading(false)
-    }
-  }, [filters, tab, q, sort, page])
-
-  useEffect(() => { setPage(1) }, [filters, tab, q, sort])
-  useEffect(() => { load() }, [load])
-
-  const activeFiltersCount = Object.entries(filters).filter(([, v]) => v !== '' && v !== undefined).length
-
-  return (
-    <div className="w-full min-h-screen bg-gray-50">
-      <PageHero
-        eyebrow="Buy cars"
-        title={tab === 'rent' ? 'Cars for Rent' : tab === 'sale' ? 'Cars for Sale' : 'Discover your next drive.'}
-        description="Browse trusted listings, compare specs, and find a vehicle that fits your lifestyle, budget, and pace."
-        image="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=86"
-      >
-        <div className="mt-5 flex items-center gap-1 rounded-2xl border border-white/10 bg-white/5 p-1 w-fit backdrop-blur-sm">
-          {[['all','All'],['rent','For Rent'],['sale','For Sale']].map(([val,label]) => (
-            <button key={val} onClick={() => setTab(val)}
-              className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${
-                tab === val ? 'bg-[#d7ff3f] text-[#090c10] shadow' : 'text-white/70 hover:text-white'
-              }`}>
-              {label}
-            </button>
-          ))}
-        </div>
-      </PageHero>
-
-      <div className="border-b border-gray-200 bg-white">
-        <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-
-          {/* Search + Sort row */}
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <div className="flex h-11 flex-1 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 shadow-sm min-w-[220px] max-w-md">
-              <Search size={16} className="shrink-0 text-gray-400" />
-              <input
-                value={q}
-                onChange={e => setQ(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && load()}
-                placeholder="Search brand, model, city…"
-                className="flex-1 text-[13px] outline-none placeholder:text-gray-400 bg-transparent"
-              />
-              {q && <button onClick={() => setQ('')}><X size={14} className="text-gray-400 hover:text-gray-700" /></button>}
-            </div>
-
-            <select value={sort} onChange={e => setSort(e.target.value)}
-              className="h-11 rounded-2xl border border-gray-200 bg-white px-4 text-[13px] text-gray-700 shadow-sm outline-none focus:border-green-400">
-              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-
-            <button onClick={() => setDrawer(true)}
-              className="flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 text-[13px] font-semibold text-gray-700 shadow-sm transition hover:border-green-400 lg:hidden">
-              <SlidersHorizontal size={15} />
-              Filters
-              {activeFiltersCount > 0 && (
-                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-green-600 px-1.5 text-[10px] font-black text-white">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
-
-            <p className="ml-auto text-[13px] text-gray-400">
-              {loading ? 'Loading…' : <><span className="font-bold text-gray-900">{data.total}</span> cars found</>}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Body ───────────────────────────────── */}
-      <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-        <div className="flex gap-7">
-
-          {/* Sidebar — desktop */}
-          <aside className="hidden w-[260px] shrink-0 lg:block">
-            <div className="sticky top-[84px] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <CarFilters
-                filters={{ ...filters, listingType: tab }}
-                onChange={f => setFilters({ ...EMPTY, ...f, listingType: undefined })}
-                onReset={() => setFilters({ ...EMPTY })}
-              />
-            </div>
-          </aside>
-
-          {/* Grid */}
-          <div className="min-w-0 flex-1">
-            {error ? (
-              <div className="flex flex-col items-center justify-center py-24 text-center">
-                <p className="text-[18px] font-bold text-red-500">Something went wrong</p>
-                <p className="mt-2 text-gray-400">{error}</p>
-                <button onClick={load} className="mt-5 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
-                  Try again
-                </button>
-              </div>
-            ) : loading ? (
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {Array.from({ length: 9 }).map((_, i) => (
-                  <div key={i} className="skeleton h-[340px] rounded-2xl" />
-                ))}
-              </div>
-            ) : data.items.length === 0 ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-24 text-center">
-                <div className="text-5xl">🚗</div>
-                <p className="mt-4 text-[18px] font-bold text-gray-800">No cars found</p>
-                <p className="mt-1 text-gray-400">Try adjusting your filters or search</p>
-                <button onClick={() => { setFilters({ ...EMPTY }); setQ('') }}
-                  className="mt-5 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
-                  Clear all filters
-                </button>
-              </motion.div>
-            ) : (
-              <>
-                <AnimatePresence mode="popLayout">
-                  <motion.div layout className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                    {data.items.map((car, i) => <CarCard key={car.id} car={car} index={i} />)}
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Pagination */}
-                {data.pages > 1 && (
-                  <div className="mt-10 flex items-center justify-center gap-2">
-                    <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition hover:border-green-400 hover:text-green-600 disabled:opacity-40">
-                      <ChevronLeft size={17} />
-                    </button>
-                    {Array.from({ length: data.pages }, (_, i) => i + 1).map(n => (
-                      <button key={n} onClick={() => setPage(n)}
-                        className={`flex h-10 w-10 items-center justify-center rounded-full text-[13px] font-bold transition ${
-                          n === page ? 'bg-green-600 text-white' : 'border border-gray-200 text-gray-600 hover:border-green-400'
-                        }`}>
-                        {n}
-                      </button>
-                    ))}
-                    <button onClick={() => setPage(p => Math.min(data.pages, p + 1))} disabled={page === data.pages}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition hover:border-green-400 hover:text-green-600 disabled:opacity-40">
-                      <ChevronRight size={17} />
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile filter drawer */}
-      <AnimatePresence>
-        {drawer && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={() => setDrawer(false)} />
-            <motion.div
-              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="fixed inset-y-0 left-0 z-50 w-[300px] overflow-y-auto bg-white shadow-2xl">
-              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-4">
-                <p className="font-bold text-gray-900">Filters</p>
-                <button onClick={() => setDrawer(false)}><X size={20} className="text-gray-400" /></button>
-              </div>
-              <div className="p-5">
-                <CarFilters
-                  filters={{ ...filters, listingType: tab }}
-                  onChange={f => setFilters({ ...EMPTY, ...f, listingType: undefined })}
-                  onReset={() => setFilters({ ...EMPTY })}
-                />
-                <button onClick={() => setDrawer(false)}
-                  className="mt-5 w-full rounded-2xl bg-green-600 py-3 text-[13px] font-bold text-white hover:bg-green-500 transition">
-                  Apply Filters
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
-  )
+function CarListRow({car,index}){
+  const {format}=useCurrency()
+  return <motion.a href={`/cars/${car.id}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:index*.035}} className="grid gap-4 rounded-[22px] border border-[#e2e6de] bg-white p-3 transition hover:-translate-y-0.5 hover:shadow-lg sm:grid-cols-[230px_1fr_auto] sm:items-center"><img src={car.images?.[0]} alt={`${car.brand} ${car.model}`} className="aspect-[1.65] w-full rounded-2xl object-cover"/><div className="min-w-0 px-1"><div className="flex flex-wrap gap-2"><span className="rounded-full bg-[#eef4df] px-2 py-1 text-[9px] font-black uppercase text-[#657f1b]">{car.listingType==='rent'?'For rent':car.condition||'For sale'}</span><span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] font-black uppercase text-slate-500">{car.bodyType}</span></div><h3 className="mt-3 text-xl font-black tracking-[-.03em] text-[#0f172a]">{car.brand} {car.model}</h3><p className="mt-2 text-xs text-[#64748b]">{car.year} · {car.city} · {car.transmission} · {car.fuelType} · {Number(car.mileage||0).toLocaleString()} km</p><p className="mt-3 line-clamp-1 text-xs leading-6 text-[#94a3b8]">{car.description}</p></div><div className="min-w-[150px] p-2 text-left sm:text-right"><p className="text-[10px] uppercase tracking-[.1em] text-[#94a3b8]">{car.listingType==='rent'?'From / day':'Price'}</p><p className="mt-1 text-xl font-black text-[#0f172a]">{format(car.price)}</p><span className="mt-4 inline-flex rounded-full bg-[#0e1418] px-4 py-2 text-[10px] font-black text-white">View details</span></div></motion.a>
 }
 
-export default function CarsPage() {
-  return <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><Loader2 className="animate-spin text-green-500" size={32} /></div>}><CarsContent /></Suspense>
+function CarsContent(){
+  const sp=useSearchParams()
+  const [tab,setTab]=useState(sp.get('listingType')||sp.get('type')||'all')
+  const [sort,setSort]=useState(sp.get('sort')||'newest')
+  const [q,setQ]=useState(sp.get('q')||'')
+  const [filters,setFilters]=useState(()=>({
+    ...EMPTY,
+    brand: sp.get('brand') || '',
+    bodyType: sp.get('bodyType') || sp.get('body') || '',
+    fuelType: sp.get('fuelType') || '',
+    transmission: sp.get('transmission') || '',
+    city: sp.get('city') || '',
+    seats: sp.get('seats') || '',
+    minYear: sp.get('minYear') || '',
+    maxYear: sp.get('maxYear') || '',
+    minPrice: sp.get('minPrice') || '',
+    maxPrice: sp.get('maxPrice') || '',
+    minMileage: sp.get('minMileage') || '',
+    maxMileage: sp.get('maxMileage') || '',
+    available: sp.get('available') === 'true' ? true : sp.get('available') === 'false' ? false : undefined,
+  }))
+  const [page,setPage]=useState(1)
+  const [drawer,setDrawer]=useState(false)
+  const [view,setView]=useState('grid')
+  const [data,setData]=useState({items:[],total:0,pages:1})
+  const [loading,setLoading]=useState(true)
+  const [error,setError]=useState(null)
+  const [suggestions,setSuggestions]=useState([])
+  const [meta,setMeta]=useState(null)
+  const debounced=useDebouncedValue(q,220)
+  const tokenRef=useRef(null)
+
+  const load=useCallback(async()=>{const token={};tokenRef.current=token;setLoading(true);setError(null);try{const res=await carService.getCars({...filters,listingType:tab==='all'?undefined:tab,q:q||undefined,sort,page,limit:9});if(token===tokenRef.current)setData(res)}catch(e){if(token===tokenRef.current)setError(e.message||'Failed to load cars.')}finally{if(token===tokenRef.current)setLoading(false)}},[filters,tab,q,sort,page])
+  useEffect(()=>{setPage(1)},[filters,tab,q,sort])
+  useEffect(()=>{let active=true;carService.getMeta().then(value=>active&&setMeta(value)).catch(()=>{});return()=>{active=false}},[])
+  useEffect(()=>{load()},[load])
+  useEffect(()=>{let active=true;if(debounced.trim().length<2){setSuggestions([]);return}carService.search(debounced).then(items=>active&&setSuggestions(items)).catch(()=>active&&setSuggestions([]));return()=>{active=false}},[debounced])
+  const activeCount=Object.entries(filters).filter(([,v])=>v!==''&&v!==undefined).length
+
+  return <main className="min-h-screen bg-[#F5F6F3]">
+    <PageHero eyebrow="Marketplace inventory" title={tab==='rent'?'Cars ready to rent.':tab==='sale'?'Cars ready to own.':'Find a car that fits the whole decision.'} description="Filter verified inventory by budget, year, body style, fuel, transmission, location and more—then compare or finance your shortlist." image="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=86"><div className="mt-6 inline-flex rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur">{[['all','All inventory'],['sale','For sale'],['rent','For rent']].map(([value,label])=><button key={value} onClick={()=>setTab(value)} className={`rounded-full px-4 py-2 text-xs font-black transition ${tab===value?'bg-[#B5E92E] text-[#071016]':'text-white/60 hover:text-white'}`}>{label}</button>)}</div></PageHero>
+
+    <section className="sticky top-[72px] z-30 border-b border-[#e2e6de] bg-[#F5F6F3]/92 backdrop-blur-xl"><div className="page-inner flex flex-wrap items-center gap-3 py-4"><div className="relative min-w-[240px] flex-1 max-w-xl"><div className="flex h-11 items-center gap-2 rounded-2xl border border-[#dfe5db] bg-white px-4 shadow-sm"><Search size={15} className="text-[#94a3b8]"/><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search make, model or city…" className="min-w-0 flex-1 bg-transparent text-sm outline-none"/>{q&&<button onClick={()=>setQ('')}><X size={14}/></button>}</div>{q.length>=2&&suggestions.length>0&&<div className="absolute inset-x-0 top-[50px] overflow-hidden rounded-2xl border border-[#dfe5db] bg-white p-2 shadow-xl">{suggestions.map(item=><a key={item.id} href={`/cars/${item.id}`} className="flex items-center gap-3 rounded-xl p-2 hover:bg-[#f6f8f3]"><img src={item.image} alt="" className="h-10 w-16 rounded-lg object-cover"/><div><p className="text-xs font-black text-[#0f172a]">{item.label}</p><p className="text-[10px] text-[#94a3b8]">{item.meta}</p></div></a>)}</div>}</div><select value={sort} onChange={e=>setSort(e.target.value)} className="h-11 rounded-2xl border border-[#dfe5db] bg-white px-4 text-xs font-bold outline-none">{SORT_OPTIONS.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select><div className="flex h-11 rounded-2xl border border-[#dfe5db] bg-white p-1"><button onClick={()=>setView('grid')} className={`grid w-9 place-items-center rounded-xl ${view==='grid'?'bg-[#0e1418] text-white':'text-[#94a3b8]'}`}><Grid2X2 size={15}/></button><button onClick={()=>setView('list')} className={`grid w-9 place-items-center rounded-xl ${view==='list'?'bg-[#0e1418] text-white':'text-[#94a3b8]'}`}><List size={15}/></button></div><button onClick={()=>setDrawer(true)} className="flex h-11 items-center gap-2 rounded-2xl border border-[#dfe5db] bg-white px-4 text-xs font-black lg:hidden"><SlidersHorizontal size={14}/>Filters{activeCount>0&&<span className="grid size-5 place-items-center rounded-full bg-[#B5E92E] text-[9px] text-[#071016]">{activeCount}</span>}</button><p className="ml-auto hidden text-xs text-[#64748b] md:block">{loading?'Searching…':<><b className="text-[#0f172a]">{data.total}</b> vehicles found</>}</p></div></section>
+
+    <section className="page-inner py-8"><div className="flex gap-7"><aside className="hidden w-[270px] shrink-0 lg:block"><div className="sticky top-[146px] rounded-[22px] border border-[#dfe5db] bg-white p-5 shadow-sm"><CarFilters meta={meta || undefined} filters={{...filters,listingType:tab}} onChange={f=>setFilters({...EMPTY,...f,listingType:undefined})} onReset={()=>setFilters({...EMPTY})}/></div></aside><div className="min-w-0 flex-1">{error?<div className="rounded-[24px] border border-red-100 bg-white py-20 text-center"><p className="font-black text-red-500">{error}</p><button onClick={load} className="mt-4 rounded-full bg-[#0e1418] px-5 py-2 text-xs font-black text-white">Try again</button></div>:loading?<div className={view==='grid'?'grid gap-5 sm:grid-cols-2 xl:grid-cols-3':'space-y-4'}>{Array.from({length:9}).map((_,i)=><div key={i} className="skeleton h-[330px] rounded-[22px]"/>)}</div>:data.items.length===0?<div className="rounded-[24px] border border-dashed border-[#cfd7c9] bg-white py-20 text-center"><div className="text-4xl">🚗</div><p className="mt-4 font-black text-[#0f172a]">No cars match this search.</p><button onClick={()=>{setFilters({...EMPTY});setQ('')}} className="mt-4 rounded-full bg-[#B5E92E] px-5 py-2.5 text-xs font-black text-[#071016]">Clear filters</button></div>:<>{view==='grid'?<AnimatePresence mode="popLayout"><motion.div layout className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{data.items.map((car,i)=><CarCard key={car.id} car={car} index={i}/>)}</motion.div></AnimatePresence>:<div className="space-y-4">{data.items.map((car,i)=><CarListRow key={car.id} car={car} index={i}/>)}</div>}{data.pages>1&&<div className="mt-10 flex items-center justify-center gap-2"><button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1} className="grid size-10 place-items-center rounded-full border border-[#dfe5db] bg-white disabled:opacity-30"><ChevronLeft size={16}/></button>{Array.from({length:data.pages},(_,i)=>i+1).map(n=><button key={n} onClick={()=>setPage(n)} className={`grid size-10 place-items-center rounded-full text-xs font-black ${n===page?'bg-[#0e1418] text-white':'border border-[#dfe5db] bg-white text-[#64748b]'}`}>{n}</button>)}<button onClick={()=>setPage(p=>Math.min(data.pages,p+1))} disabled={page===data.pages} className="grid size-10 place-items-center rounded-full border border-[#dfe5db] bg-white disabled:opacity-30"><ChevronRight size={16}/></button></div>}</>}</div></div></section>
+
+    <TrustBand/><FaqSection items={[["How often is inventory updated?","The UI reads from a single vehicle API contract. Connect that route to your production inventory source to control real-time freshness."],["Can I mix sale and rental inventory?","Yes. Use All inventory or switch between sale and rental listing types."],["Can I compare cars from search results?","Open the comparison workspace to build a four-car shortlist. Vehicle cards are structured to add a compare action when you connect shared compare state."],["What filters are supported?","Brand, body type, fuel, transmission, city, seats, year, mileage, price, availability, free-text search and sorting are supported by the current mock vehicle endpoint."]]}/>
+
+    <AnimatePresence>{drawer&&<><motion.button initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setDrawer(false)} className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm"/><motion.aside initial={{x:'-100%'}} animate={{x:0}} exit={{x:'-100%'}} transition={{type:'spring',stiffness:300,damping:32}} className="fixed inset-y-0 left-0 z-[60] w-[min(340px,90vw)] overflow-y-auto bg-white p-5"><div className="mb-5 flex items-center justify-between"><p className="font-black">Filters</p><button onClick={()=>setDrawer(false)}><X size={18}/></button></div><CarFilters meta={meta || undefined} filters={{...filters,listingType:tab}} onChange={f=>setFilters({...EMPTY,...f,listingType:undefined})} onReset={()=>setFilters({...EMPTY})}/><button onClick={()=>setDrawer(false)} className="mt-5 h-11 w-full rounded-full bg-[#0e1418] text-xs font-black text-white">Show results</button></motion.aside></>}</AnimatePresence>
+  </main>
 }
+
+export default function CarsPage(){return <Suspense fallback={<div className="grid min-h-screen place-items-center"><Loader2 className="animate-spin text-[#7d9f24]"/></div>}><CarsContent/></Suspense>}

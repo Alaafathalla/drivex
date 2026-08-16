@@ -2,6 +2,8 @@ import { Analytics } from '@vercel/analytics/next'
 import { LangProvider } from '@/context/LangContext'
 import { FavoritesProvider } from '@/context/FavoritesContext'
 import { ToastProvider } from '@/context/ToastContext'
+import { ThemeProvider } from '@/context/ThemeContext'
+import { CurrencyProvider } from '@/context/CurrencyContext'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import './globals.css'
@@ -29,14 +31,16 @@ export default function RootLayout({ children }) {
         No max-width here — every section controls its own inner column.
       */}
       <body className="antialiased flex flex-col min-h-screen w-full bg-white text-gray-900">
-        <LangProvider>
+        <ThemeProvider>
+          <LangProvider>
+          <CurrencyProvider>
           <FavoritesProvider>
             <ToastProvider>
               {/* Fixed header — full-width */}
               <SiteHeader />
 
               {/* Page content — fills remaining height, offset below the fixed header */}
-              <main className="flex-1 w-full pt-[68px]">
+              <main className="flex-1 w-full pt-[72px]">
                 {children}
               </main>
 
@@ -44,7 +48,9 @@ export default function RootLayout({ children }) {
               <SiteFooter />
             </ToastProvider>
           </FavoritesProvider>
+          </CurrencyProvider>
         </LangProvider>
+        </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

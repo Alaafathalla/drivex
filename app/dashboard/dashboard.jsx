@@ -1,156 +1,36 @@
-﻿'use client'
+'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import {
-  ArrowUpRight, CalendarDays, Car, CircleDollarSign, Gauge,
-  Heart, Plus, ShieldCheck, Wrench,
-} from 'lucide-react'
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion-section'
+import { ArrowRight, BellRing, CalendarDays, CarFront, Heart, Loader2, Settings2, Sparkles, WalletCards } from 'lucide-react'
+import { clientApi } from '@/lib/client-api'
+import { useCurrency } from '@/context/CurrencyContext'
+import { CarCard } from '@/features/cars/components/CarCard'
+import { FaqSection, NewsSection, SectionHeading, TrustBand } from '@/components/platform/rich-sections'
 
-const stats = [
-  { icon: Heart, label: 'Saved Cars', value: '12' },
-  { icon: CalendarDays, label: 'Upcoming Bookings', value: '03' },
-  { icon: CircleDollarSign, label: 'Total Spent', value: '$4,280' },
-  { icon: Gauge, label: 'Vehicle Health', value: 'Good' },
-]
+export default function DashboardPage(){
+  const {format}=useCurrency()
+  const [data,setData]=useState(null)
+  const [loading,setLoading]=useState(true)
+  useEffect(()=>{clientApi.get('/api/dashboard').then(setData).finally(()=>setLoading(false))},[])
+  if(loading)return <div className="grid min-h-[70vh] place-items-center bg-[#F5F6F3]"><Loader2 className="animate-spin text-[#7d9f24]" size={32}/></div>
+  if(!data)return <div className="grid min-h-[60vh] place-items-center">Dashboard unavailable.</div>
+  const stats=[['Saved cars',data.stats.savedCars,Heart],['Active bookings',data.stats.activeBookings,CalendarDays],['Active listings',data.stats.activeListings,CarFront],['Total spent',format(data.stats.totalSpent),WalletCards]]
+  return <main className="bg-[#F5F6F3] pb-16">
+    <section className="bg-[#071016] text-white"><div className="page-inner py-14 sm:py-16"><div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#B5E92E]">Member dashboard</p><h1 className="mt-3 text-4xl font-black tracking-[-.05em] sm:text-5xl">Welcome back, {data.profile.name.split(' ')[0]}.</h1><p className="mt-3 max-w-xl text-sm leading-7 text-white/50">Your saved vehicles, rental bookings, live listings and ownership activity in one place.</p></div><div className="flex gap-2"><a href="/profile" className="flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 text-xs font-black"><Settings2 size={14}/>Profile</a><a href="/cars" className="flex h-11 items-center gap-2 rounded-full bg-[#B5E92E] px-5 text-xs font-black text-[#071016]">Browse cars <ArrowRight size={14}/></a></div></div></div></section>
 
-const activity = [
-  { icon: Wrench, title: 'Annual service · Porsche Cayenne', sub: 'Thu, 14 August · 10:00 AM' },
-  { icon: Car, title: 'Rental pickup · Range Rover Sport', sub: 'Sat, 16 August · Dubai Mall' },
-  { icon: ShieldCheck, title: 'Inspection complete · BMW 5 Series', sub: 'Mon, 11 August · Certified' },
-]
+    <section className="page-inner -mt-5 relative z-10"><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">{stats.map(([label,value,Icon],i)=><motion.div key={label} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:i*.05}} className="rounded-[22px] border border-[#dfe5db] bg-white p-5 shadow-[0_14px_30px_rgba(15,23,42,.06)]"><div className="flex items-center justify-between"><span className="text-xs font-bold text-[#64748b]">{label}</span><span className="grid size-9 place-items-center rounded-xl bg-[#B5E92E]/18 text-[#6c891a]"><Icon size={16}/></span></div><p className="mt-5 text-3xl font-black tracking-[-.04em] text-[#0f172a]">{value}</p></motion.div>)}</div></section>
 
-export default function DashboardPage() {
-  return (
-    <main className="min-h-screen bg-[#070908] text-white">
-<div className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12">
-        {/* Header */}
-        <FadeIn direction="left">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[.12em] text-[#2ee52b]">Your dashboard</p>
-              <h1 className="mt-2 text-[clamp(28px,4vw,44px)] font-black tracking-tight">Good morning, Alex.</h1>
-            </div>
-            <div className="flex gap-3">
-              <a href="/sell" className="flex items-center gap-2 rounded-[5px] bg-[#2ee52b] px-4 py-2.5 text-[12px] font-bold text-black transition hover:bg-[#50f14d]">
-                <Plus size={14} /> List a Car
-              </a>
-              <a href="/profile" className="flex items-center gap-2 rounded-[5px] border border-white/15 px-4 py-2.5 text-[12px] font-semibold transition hover:border-white/30">
-                My Profile <ArrowUpRight size={14} />
-              </a>
-            </div>
-          </div>
-        </FadeIn>
+    <section className="page-inner py-12"><div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
+      <div className="rounded-[26px] border border-[#dfe5db] bg-white p-6"><div className="flex items-center justify-between"><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#7d9f24]">Next actions</p><h2 className="mt-2 text-2xl font-black tracking-[-.04em] text-[#0f172a]">Upcoming activity</h2></div><a href="/my-bookings" className="text-xs font-black text-[#7d9f24]">View all</a></div><div className="mt-5 space-y-3">{data.bookings.length?data.bookings.map((booking)=><div key={booking.id} className="flex items-center gap-4 rounded-2xl bg-[#f7f9f5] p-4"><span className="grid size-10 place-items-center rounded-xl bg-white text-[#7d9f24]"><CalendarDays size={17}/></span><div className="min-w-0 flex-1"><p className="truncate text-sm font-black text-[#0f172a]">Booking {booking.id}</p><p className="mt-1 text-xs text-[#64748b]">{booking.pickupDate||booking.startDate||'Upcoming'} · {booking.pickupLocation||'DriveX pickup'}</p></div><span className="rounded-full bg-[#B5E92E]/20 px-3 py-1 text-[10px] font-black text-[#657f1b]">{booking.status}</span></div>):<p className="py-8 text-center text-sm text-[#94a3b8]">No active bookings.</p>}</div></div>
+      <div className="rounded-[26px] bg-[#0b141b] p-6 text-white"><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-[#B5E92E] text-[#071016]"><Sparkles size={17}/></span><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#B5E92E]">DriveX intelligence</p><h2 className="text-xl font-black">Alerts worth your attention</h2></div></div><div className="mt-6 space-y-3">{data.alerts.map(alert=><div key={alert.id} className="rounded-2xl border border-white/10 bg-white/5 p-4"><div className="flex items-center gap-2"><BellRing size={14} className="text-[#B5E92E]"/><p className="text-sm font-black">{alert.title}</p></div><p className="mt-2 text-xs leading-6 text-white/50">{alert.text}</p></div>)}</div></div>
+    </div></section>
 
-        {/* Stats */}
-        <StaggerContainer className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map(({ icon: Icon, label, value }, i) => (
-            <StaggerItem key={label}>
-              <motion.div
-                whileHover={{ y: -3, borderColor: 'rgba(46,229,43,0.35)' }}
-                className="rounded-[7px] border border-white/10 bg-[#0b0d0c] p-6 transition"
-              >
-                <Icon className="text-[#2ee52b]" size={20} />
-                <p className="mt-6 text-[10px] uppercase tracking-[.1em] text-white/40">{label}</p>
-                <p className="mt-1 text-[26px] font-black">{value}</p>
-              </motion.div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+    <section className="page-inner py-4"><SectionHeading eyebrow="Saved shortlist" title="Cars you are watching." actionHref="/favorites" actionLabel="Open wishlist"/><div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">{data.saved.slice(0,4).map((car,i)=><CarCard key={car.id} car={car} index={i}/>)}</div></section>
 
-        {/* Main content */}
-        <div className="grid gap-6 lg:grid-cols-[1.3fr_.7fr]">
-          {/* Activity feed */}
-          <FadeIn direction="left">
-            <div className="rounded-[8px] border border-white/10 bg-[#0b0d0c] p-6">
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="font-black">Upcoming Activity</h2>
-                <a href="#" className="text-[11px] font-semibold text-[#2ee52b] hover:underline">View all</a>
-              </div>
-              <div className="space-y-1">
-                {activity.map(({ icon: Icon, title, sub }, i) => (
-                  <motion.div
-                    key={title}
-                    initial={{ opacity: 0, x: -16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className="flex items-center gap-4 rounded-[5px] p-3 transition hover:bg-white/[.03]"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/5">
-                      <Icon size={17} className="text-[#2ee52b]" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-[13px] font-semibold">{title}</p>
-                      <p className="text-[11px] text-white/45">{sub}</p>
-                    </div>
-                    <ArrowUpRight size={15} className="shrink-0 text-white/30" />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
+    <section className="page-inner py-14"><SectionHeading eyebrow="Listing performance" title="Your vehicles on DriveX." actionHref="/my-listings" actionLabel="Manage listings"/><div className="overflow-hidden rounded-[24px] border border-[#dfe5db] bg-white"><div className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-[#edf0ea] bg-[#fafbf9] px-5 py-3 text-[10px] font-black uppercase tracking-[.12em] text-[#64748b]"><span>Vehicle</span><span>Status</span><span>Views</span></div>{data.listings.length?data.listings.map(listing=><div key={listing.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-[#edf0ea] px-5 py-4 last:border-0"><div><p className="text-sm font-black text-[#0f172a]">{listing.brand} {listing.model}</p><p className="mt-1 text-xs text-[#94a3b8]">{listing.year} · {listing.city}</p></div><span className="rounded-full bg-[#eef4df] px-3 py-1 text-[10px] font-black text-[#657f1b]">{listing.status}</span><span className="min-w-12 text-right text-sm font-black text-[#0f172a]">{listing.views||0}</span></div>):<p className="p-8 text-center text-sm text-[#94a3b8]">No active listings yet.</p>}</div></section>
 
-          {/* Primary vehicle */}
-          <FadeIn direction="right">
-            <div className="overflow-hidden rounded-[8px] border border-white/10">
-              <div className="relative h-36">
-                <img
-                  src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80"
-                  alt="Cayenne"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d0c] via-[#0b0d0c]/40" />
-              </div>
-              <div className="bg-[#0b0d0c] p-5">
-                <p className="text-[10px] uppercase tracking-[.12em] text-white/35">My primary vehicle</p>
-                <h2 className="mt-1 text-[20px] font-black">Porsche Cayenne S</h2>
-                <p className="mt-1 text-[13px] text-white/45">18,200 km · Next service in 42 days</p>
-
-                {/* Health bar */}
-                <div className="mt-4">
-                  <div className="flex justify-between text-[11px] mb-1.5">
-                    <span className="text-white/40">Vehicle health</span>
-                    <span className="text-[#2ee52b] font-bold">Good (82%)</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-white/10">
-                    <motion.div
-                      className="h-full rounded-full bg-[#2ee52b]"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: '82%' }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: 0.3 }}
-                    />
-                  </div>
-                </div>
-
-                <a href="/my-cars" className="mt-5 flex items-center gap-2 text-[12px] font-semibold text-[#2ee52b] hover:underline">
-                  View vehicle profile <ArrowUpRight size={13} />
-                </a>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* Quick actions */}
-        <FadeIn direction="up" delay={0.1}>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              ['Buy a Car', '/cars'],
-              ['Rent a Car', '/rentals'],
-              ['Sell My Car', '/sell'],
-              ['My Listings', '/my-cars'],
-            ].map(([label, href]) => (
-              <a
-                key={label}
-                href={href}
-                className="flex items-center justify-between rounded-[6px] border border-white/10 bg-[#0b0d0c] px-4 py-3.5 text-[12px] font-semibold transition hover:border-[#2ee52b]/40 hover:text-[#2ee52b]"
-              >
-                {label} <ArrowUpRight size={13} className="text-white/30" />
-              </a>
-            ))}
-          </div>
-        </FadeIn>
-      </div></main>
-  )
+    <TrustBand/><FaqSection items={[["Where do saved cars come from?","The dashboard reads the same vehicle source used by marketplace search and favorites. Connect it to your authenticated backend user when available."],["Can I manage rental bookings here?","Yes. Active bookings can link into the existing booking management and cancellation flows."],["How are listing views calculated?","The mock dataset includes view counters. Replace them with analytics from your production listings endpoint."],["Can alerts be personalized?","Yes. The dashboard response is structured for inspection reminders, price changes, booking notices and ownership recommendations."]]}/>
+    <NewsSection/>
+  </main>
 }

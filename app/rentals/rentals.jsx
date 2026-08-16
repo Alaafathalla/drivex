@@ -3,14 +3,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowRight, CalendarDays, MapPin, Search, ShieldCheck, SlidersHorizontal } from 'lucide-react'
+import { ArrowRight, MapPin, Search, ShieldCheck, SlidersHorizontal } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { api } from '@/lib/api'
 import { RENTAL_CATEGORIES, RENTAL_LOCATIONS, getDefaultRentalDates } from '@/lib/rental-catalog'
+import { FaqSection, TestimonialsSection, TrustBand } from '@/components/platform/rich-sections'
+import { RentalDateRangePicker } from '@/components/platform/rental-date-range-picker'
+import { CarDrivingAnimation } from '@/components/platform/car-driving-animation'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const CATEGORIES = ['All', ...RENTAL_CATEGORIES.map((item) => item.name)]
 
 function RentalCard({ car, index, search }) {
+  const { format } = useCurrency()
   const href = `/rentals/${car.slug}?${search.toString()}`
   return (
     <motion.article
@@ -37,7 +42,7 @@ function RentalCard({ car, index, search }) {
             <p className="mt-1 text-xs text-[#64748B]">{car.year} · {car.seats} seats · {car.transmission} · {car.fuel}</p>
           </div>
           <div className="text-right">
-            <p className="text-xl font-black text-[#0F172A]">${car.pricePerDay}</p>
+            <p className="text-xl font-black text-[#0F172A]">{format(car.pricePerDay)}</p>
             <p className="text-[10px] font-semibold uppercase tracking-[.1em] text-[#94A3B8]">per day</p>
           </div>
         </div>
@@ -90,7 +95,7 @@ export default function RentalsPage() {
   return (
     <main className="min-h-screen bg-[#F5F6F3]">
       <PageHero eyebrow="Premium car rental" title="Rent the right car. In the right place." description="Choose your location and exact rental dates, then compare a verified fleet with transparent daily pricing." image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86">
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.2fr_1fr_1fr_auto]">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.1fr_1.35fr_auto]">
           <label className="rounded-[15px] bg-white/[.08] px-4 py-3 text-white">
             <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45"><MapPin size={13} className="text-[#B5E92E]" /> Pickup location</span>
             <select value={location} onChange={(e) => updateLocation(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none [&>option]:text-black">
@@ -98,19 +103,12 @@ export default function RentalsPage() {
               {RENTAL_LOCATIONS.map((item) => <option key={item.city} value={item.city}>{item.city}</option>)}
             </select>
           </label>
-          <label className="rounded-[15px] bg-white/[.08] px-4 py-3 text-white">
-            <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45"><CalendarDays size={13} className="text-[#B5E92E]" /> Rental start</span>
-            <input type="date" value={startDate} min={defaults.start} onChange={(e) => { setStartDate(e.target.value); syncUrl({ start: e.target.value }) }} className="mt-2 w-full bg-transparent text-sm font-bold outline-none [color-scheme:dark]" />
-          </label>
-          <label className="rounded-[15px] bg-white/[.08] px-4 py-3 text-white">
-            <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45"><CalendarDays size={13} className="text-[#B5E92E]" /> Rental end</span>
-            <input type="date" value={endDate} min={startDate || defaults.start} onChange={(e) => { setEndDate(e.target.value); syncUrl({ end: e.target.value }) }} className="mt-2 w-full bg-transparent text-sm font-bold outline-none [color-scheme:dark]" />
-          </label>
+          <RentalDateRangePicker start={startDate} end={endDate} minDate={defaults.start} onChange={({ start, end }) => { setStartDate(start); setEndDate(end); syncUrl({ start, end }) }} />
           <button onClick={() => syncUrl()} className="flex min-h-16 items-center justify-center gap-2 rounded-[15px] bg-[#B5E92E] px-6 text-xs font-black uppercase tracking-[.08em] text-[#091219] transition hover:brightness-105"><Search size={15} /> Find cars</button>
         </motion.div>
       </PageHero>
 
-      <section className="sticky top-[68px] z-30 border-b border-[#E2E6DE] bg-[#F5F6F3]/95 backdrop-blur-xl">
+      <section className="sticky top-[72px] z-30 border-b border-[#E2E6DE] bg-[#F5F6F3]/95 backdrop-blur-xl">
         <div className="page-inner flex items-center gap-2 overflow-x-auto py-3">
           <SlidersHorizontal size={15} className="mr-1 shrink-0 text-[#7C8B55]" />
           {CATEGORIES.map((item) => (
@@ -133,6 +131,11 @@ export default function RentalsPage() {
           <div className="rounded-[24px] border border-dashed border-[#CBD3C3] bg-white px-6 py-16 text-center"><h3 className="text-xl font-black text-[#0F172A]">No cars match these filters</h3><p className="mt-2 text-sm text-[#64748B]">Try another location or vehicle category.</p><button onClick={() => { setCategory('All'); setLocation(''); syncUrl({ category: 'All', location: '' }) }} className="mt-5 rounded-full bg-[#0E1418] px-5 py-3 text-xs font-black text-white">Reset filters</button></div>
         )}
       </section>
+
+      <section className="page-inner pb-16"><CarDrivingAnimation /></section>
+      <TrustBand />
+      <TestimonialsSection />
+      <FaqSection items={[["What is included in the displayed rental price?","The vehicle rate is shown before optional services, insurance add-ons, delivery and refundable deposits. The booking breakdown displays the full total before payment."],["Can I choose different pickup and drop-off locations?","Yes. The booking flow supports pickup and return location selection, subject to partner availability."],["How is rental duration calculated?","The booking flow uses your selected start and end dates and applies the configured daily, weekly or monthly pricing logic."],["Can I add insurance or services?","Yes. Eligible add-ons such as airport delivery, extra drivers and care packages are included in the rental booking flow."]]} />
     </main>
   )
 }

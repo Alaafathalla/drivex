@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -133,6 +133,32 @@ export default function AboutPage() {
             </motion.div>
           ))}
         </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24">
+        <div className="page-inner">
+          <div className="grid gap-8 lg:grid-cols-[.65fr_1.35fr]">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Company timeline</p>
+              <h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">Built one connected layer at a time.</h3>
+              <p className="mt-4 text-sm leading-7 text-[#64748b]">The platform evolves from marketplace discovery into a full ownership operating system.</p>
+            </div>
+            <div className="space-y-3">
+              {[['2023','Marketplace launch','Verified buying and selling with transparent listing data.'],['2024','Rental network','Location-aware bookings, add-ons and payment-ready rental flows.'],['2025','Ownership services','Inspection, maintenance, detailing and roadside support joined the same account.'],['2026','DriveX intelligence','Comparison, finance planning, recommendations and a unified member dashboard.']].map(([year,title,text],i)=><motion.div key={year} initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.06}} className="grid gap-4 rounded-[22px] border border-[#e2e6de] bg-[#fafbf9] p-5 sm:grid-cols-[80px_1fr]"><span className="text-xl font-black text-[#7d9f24]">{year}</span><div><h4 className="font-black text-[#111827]">{title}</h4><p className="mt-2 text-sm leading-6 text-[#64748b]">{text}</p></div></motion.div>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="page-inner py-20 sm:py-24">
+        <div className="mx-auto max-w-3xl text-center"><p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Leadership</p><h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">Automotive, product and operations under one roof.</h3></div>
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {[['Nadia Rahman','Chief Executive Officer','https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85'],['Karim Mansour','VP Automotive Operations','https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85'],['Leila Haddad','Chief Product Officer','https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85']].map(([name,role,image],i)=><motion.article key={name} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}} className="overflow-hidden rounded-[26px] border border-[#e2e6de] bg-white"><img src={image} alt={name} className="aspect-[1.15] w-full object-cover"/><div className="p-5"><h4 className="text-lg font-black text-[#111827]">{name}</h4><p className="mt-1 text-xs font-bold uppercase tracking-[.1em] text-[#7d9f24]">{role}</p></div></motion.article>)}
+        </div>
+      </section>
+
+      <section className="bg-[#eef2e9] py-16">
+        <div className="page-inner"><div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Press & recognition</p><h3 className="mt-3 text-3xl font-black tracking-[-.04em] text-[#111827]">A new standard for digital car ownership.</h3></div><p className="max-w-xl text-sm leading-7 text-[#64748b]">Sample press modules are API-ready so editorial coverage can later be managed from a CMS.</p></div><div className="mt-8 grid gap-4 md:grid-cols-3">{[['Gulf Mobility Review','“DriveX turns fragmented vehicle services into one premium workflow.”'],['AutoTech Middle East','“A marketplace thinking beyond the transaction.”'],['Future Transport','“One of the region’s most complete ownership-interface concepts.”']].map(([source,quote])=><article key={source} className="rounded-[22px] border border-[#d9e0d3] bg-white p-6"><p className="text-[10px] font-black uppercase tracking-[.16em] text-[#94a3b8]">{source}</p><p className="mt-5 text-base font-black leading-7 text-[#111827]">{quote}</p></article>)}</div></div>
       </section>
 
       <section className="page-inner pb-20 sm:pb-24 lg:pb-28">

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { use, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -10,6 +10,7 @@ import { CarCard } from '@/features/cars/components/CarCard'
 import { carService } from '@/services/carService'
 import { useFavorites } from '@/context/FavoritesContext'
 import { useToast } from '@/context/ToastContext'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const TAB = { overview: 'Overview', specs: 'Specifications', features: 'Features' }
 
@@ -36,6 +37,7 @@ export default function CarDetailPage({ params }) {
 
   const { toggle, isFav } = useFavorites()
   const toast = useToast()
+  const { format } = useCurrency()
   const fav = isFav(String(id))
 
   useEffect(() => {
@@ -184,21 +186,21 @@ export default function CarDetailPage({ params }) {
                   {isRent ? 'Rental price' : 'Sale price'}
                 </p>
                 <div className="mt-1 flex items-end gap-2">
-                  <p className="text-[36px] font-black text-green-600">${car.price?.toLocaleString()}</p>
+                  <p className="text-[36px] font-black text-green-600">{format(car.price)}</p>
                   {isRent && <p className="mb-1.5 text-[14px] text-gray-400">/day</p>}
                 </div>
                 {isRent && car.weeklyPrice && (
-                  <p className="text-[12px] text-gray-400">$${car.weeklyPrice}/week · ${car.monthlyPrice}/month</p>
+                  <p className="text-[12px] text-gray-400">{format(car.weeklyPrice)}/week · {format(car.monthlyPrice)}/month</p>
                 )}
                 {!isRent && car.financing?.available && (
-                  <p className="mt-1 text-[12px] text-gray-400">Finance from ${car.financing.monthlyFrom}/mo</p>
+                  <p className="mt-1 text-[12px] text-gray-400">Finance from {format(car.financing.monthlyFrom)}/mo</p>
                 )}
               </div>
 
               {/* Key info */}
               <div className="grid grid-cols-2 gap-px bg-gray-100 p-px">
                 {isRent ? [
-                  ['Deposit', `$${car.deposit}`],
+                  ['Deposit', format(car.deposit)],
                   ['Min. days', car.minRentalDays],
                   ['Pickup', car.location],
                   ['Availability', car.available ? '✓ Now' : '✗ Booked'],
@@ -229,7 +231,7 @@ export default function CarDetailPage({ params }) {
                       Contact Seller <ArrowRight size={16} />
                     </a>
                     {car.financing?.available && (
-                      <a href="/financing"
+                      <a href="/calculator"
                         className="flex h-11 items-center justify-center gap-2 rounded-2xl border border-gray-200 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
                         Apply for Finance
                       </a>
@@ -271,7 +273,7 @@ export default function CarDetailPage({ params }) {
         <div className="mx-auto flex max-w-lg items-center justify-between gap-4">
           <div>
             <p className="text-[11px] text-gray-400">{isRent ? 'from' : 'price'}</p>
-            <p className="text-[20px] font-black text-green-600">${car.price?.toLocaleString()}{isRent && <span className="text-[12px] text-gray-400 font-normal">/day</span>}</p>
+            <p className="text-[20px] font-black text-green-600">{format(car.price)}{isRent && <span className="text-[12px] text-gray-400 font-normal">/day</span>}</p>
           </div>
           <a href={isRent ? `/cars/${car.id}/rent` : `mailto:${car.owner?.email}`}
             className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-green-600 text-[14px] font-bold text-white">

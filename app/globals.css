@@ -206,3 +206,82 @@ input, textarea { direction: inherit; }
   border-color: #B5E92E !important;
   fill: #B5E92E !important;
 }
+
+/* ── DriveX v2 theme + interaction layer ───────────────────────── */
+[data-theme='dark'] {
+  --background: #071016;
+  --foreground: #f8fafc;
+  --card: #0d151c;
+  --card-foreground: #f8fafc;
+  --muted: #111c25;
+  --muted-foreground: #94a3b8;
+  --border: rgba(255,255,255,.10);
+  color-scheme: dark;
+}
+[data-theme='dark'] body { background: #071016; color: #f8fafc; }
+[data-theme='dark'] .theme-surface { background: #0d151c !important; color: #f8fafc !important; border-color: rgba(255,255,255,.10) !important; }
+
+.glass-panel {
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@keyframes road-dash { to { transform: translateX(-72px); } }
+@keyframes wheel-spin { to { transform: rotate(360deg); } }
+.road-dashes { animation: road-dash 1.1s linear infinite; }
+.wheel-spin { transform-origin: center; animation: wheel-spin .7s linear infinite; }
+
+.range-accent { accent-color: #B5E92E; }
+
+/* ── Global dark-mode compatibility for legacy page utilities ───────────── */
+/* The v1 screens used literal light utility values. These selectors let the
+   ThemeProvider dark toggle affect those existing surfaces without rewriting
+   every legacy class in one migration. */
+[data-theme='dark'] .bg-\[\#F5F6F3\],
+[data-theme='dark'] .bg-\[\#f5f6f3\] { background-color: #071016 !important; }
+[data-theme='dark'] .bg-white,
+[data-theme='dark'] .bg-\[\#FAFBF9\],
+[data-theme='dark'] .bg-\[\#fafbf9\] { background-color: #0d151c !important; }
+[data-theme='dark'] .bg-\[\#F3F5F1\],
+[data-theme='dark'] .bg-\[\#f3f5f1\],
+[data-theme='dark'] .bg-\[\#EEF2F4\],
+[data-theme='dark'] .bg-\[\#eef2f4\],
+[data-theme='dark'] .bg-slate-50,
+[data-theme='dark'] .bg-gray-50 { background-color: #111c25 !important; }
+
+[data-theme='dark'] .text-\[\#0F172A\],
+[data-theme='dark'] .text-\[\#0f172a\],
+[data-theme='dark'] .text-\[\#0E1418\],
+[data-theme='dark'] .text-\[\#0e1418\],
+[data-theme='dark'] .text-gray-900,
+[data-theme='dark'] .text-slate-950,
+[data-theme='dark'] .text-slate-900 { color: #f8fafc !important; }
+
+[data-theme='dark'] .text-\[\#64748B\],
+[data-theme='dark'] .text-\[\#64748b\],
+[data-theme='dark'] .text-\[\#475569\],
+[data-theme='dark'] .text-gray-700,
+[data-theme='dark'] .text-slate-700,
+[data-theme='dark'] .text-slate-600 { color: #b2bdca !important; }
+
+[data-theme='dark'] .text-\[\#94A3B8\],
+[data-theme='dark'] .text-\[\#94a3b8\],
+[data-theme='dark'] .text-gray-500,
+[data-theme='dark'] .text-slate-500,
+[data-theme='dark'] .text-slate-400 { color: #7f8d9c !important; }
+
+[data-theme='dark'] .border-\[\#E2E6DE\],
+[data-theme='dark'] .border-\[\#e2e6de\],
+[data-theme='dark'] .border-\[\#DFE5DB\],
+[data-theme='dark'] .border-\[\#dfe5db\],
+[data-theme='dark'] .border-\[\#E6E9E2\],
+[data-theme='dark'] .border-\[\#e6e9e2\],
+[data-theme='dark'] .border-gray-100,
+[data-theme='dark'] .border-gray-200,
+[data-theme='dark'] .border-slate-200 { border-color: rgba(255,255,255,.10) !important; }
+
+[data-theme='dark'] input,
+[data-theme='dark'] select,
+[data-theme='dark'] textarea { color-scheme: dark; }

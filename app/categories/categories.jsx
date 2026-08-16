@@ -1,63 +1,33 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, CarFront, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, BadgeCheck, CarFront, Fuel, ShieldCheck, Sparkles, Zap } from 'lucide-react'
 import { RENTAL_CATEGORIES } from '@/lib/rental-catalog'
+import { clientApi } from '@/lib/client-api'
+import { FaqSection, SectionHeading, TrustBand } from '@/components/platform/rich-sections'
 
-export default function CategoriesView() {
-  return (
-    <main className="min-h-screen bg-[#F5F6F3] text-[#0F172A]">
-      <section className="relative overflow-hidden bg-[#091219] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,233,46,.18),transparent_42%)]" />
-        <div className="page-inner relative py-20 sm:py-24 lg:py-28">
-          <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[.2em] text-[#B5E92E]">Browse the fleet</p>
-            <h1 className="mt-5 text-5xl font-black tracking-[-.055em] sm:text-6xl">Choose a car for the way you drive.</h1>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-white/65">Explore rentals by vehicle category, compare daily pricing and continue with your exact pickup location and rental dates.</p>
-          </div>
-          <div className="mt-10 flex flex-wrap gap-3 text-xs font-bold text-white/70">
-            <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><ShieldCheck size={15} className="text-[#B5E92E]" /> Verified fleet</span>
-            <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Sparkles size={15} className="text-[#B5E92E]" /> Premium options</span>
-            <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><CarFront size={15} className="text-[#B5E92E]" /> Flexible rental periods</span>
-          </div>
-        </div>
-      </section>
+const BODY_STYLES=[
+  {slug:'suv',name:'SUV',copy:'Space, comfort and all-round versatility.',image:'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=88'},
+  {slug:'sedan',name:'Sedan',copy:'Executive comfort and everyday refinement.',image:'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=88'},
+  {slug:'sports',name:'Sports',copy:'Performance-led cars built to be driven.',image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=88'},
+  {slug:'electric',name:'Electric',copy:'Quiet performance with modern charging tech.',image:'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=88'},
+  {slug:'luxury',name:'Luxury',copy:'Premium materials, technology and presence.',image:'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=88'},
+  {slug:'7-seater',name:'7 Seater',copy:'Flexible space for families and groups.',image:'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=88'},
+]
 
-      <section className="page-inner py-16 sm:py-20">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[.16em] text-[#7C8B55]">All categories</p>
-            <h2 className="mt-2 text-3xl font-black tracking-[-.04em]">Find your perfect class</h2>
-          </div>
-          <a href="/rentals" className="hidden items-center gap-2 text-sm font-black sm:flex">View all rentals <ArrowRight size={16} /></a>
-        </div>
+export default function CategoriesView(){
+  const [meta,setMeta]=useState({brands:[]})
+  useEffect(()=>{clientApi.get('/api/meta').then(setMeta).catch(()=>{})},[])
+  return <main className="min-h-screen bg-[#F5F6F3] text-[#0F172A]">
+    <section className="relative overflow-hidden bg-[#071016] text-white"><div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(181,233,46,.22),transparent_38%)]"/><div className="page-inner relative py-20 sm:py-24 lg:py-28"><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#B5E92E]">Explore the marketplace</p><h1 className="mt-5 max-w-4xl text-5xl font-black tracking-[-.055em] sm:text-6xl lg:text-7xl">Start with the kind of car you want to drive.</h1><p className="mt-6 max-w-2xl text-base leading-7 text-white/60">Browse by body style, powertrain, brand or rental class. Every collection routes into filterable, comparison-ready inventory.</p><div className="mt-9 flex flex-wrap gap-3 text-[10px] font-black uppercase tracking-[.1em] text-white/60"><span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><ShieldCheck size={14} className="text-[#B5E92E]"/>Verified inventory</span><span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><BadgeCheck size={14} className="text-[#B5E92E]"/>Sale & rental</span><span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Sparkles size={14} className="text-[#B5E92E]"/>Smart filters</span></div></div></section>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {RENTAL_CATEGORIES.map((category, index) => (
-            <motion.a
-              key={category.slug}
-              href={`/rentals?category=${encodeURIComponent(category.name)}`}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: .42, delay: index * .05 }}
-              whileHover={{ y: -6 }}
-              className="group overflow-hidden rounded-[26px] border border-[#E2E6DE] bg-white shadow-[0_18px_50px_rgba(15,23,42,.06)]"
-            >
-              <div className="relative aspect-[1.55] overflow-hidden">
-                <img src={category.image} alt={category.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#071016]/75 via-transparent to-transparent" />
-                <span className="absolute left-4 top-4 rounded-full bg-[#B5E92E] px-3 py-1 text-[10px] font-black uppercase tracking-[.12em] text-[#0B1220]">Rent</span>
-                <h3 className="absolute bottom-4 left-5 text-3xl font-black tracking-[-.04em] text-white">{category.name}</h3>
-              </div>
-              <div className="flex items-end justify-between gap-5 p-5">
-                <p className="max-w-[80%] text-sm leading-6 text-[#64748B]">{category.description}</p>
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#0E1418] text-white transition group-hover:bg-[#B5E92E] group-hover:text-[#0E1418]"><ArrowRight size={17} /></span>
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </section>
-    </main>
-  )
+    <section className="page-inner py-16 sm:py-20"><SectionHeading eyebrow="Body styles" title="Choose by how the car fits your life." description="Each card opens a dynamic collection page backed by the shared vehicle API."/><div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{BODY_STYLES.map((item,index)=><motion.a key={item.slug} href={`/categories/${item.slug}`} initial={{opacity:0,y:22}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:index*.045}} whileHover={{y:-5}} className="group overflow-hidden rounded-[26px] border border-[#e2e6de] bg-white shadow-[0_18px_45px_rgba(15,23,42,.05)]"><div className="relative aspect-[1.55] overflow-hidden"><img src={item.image} alt={item.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-gradient-to-t from-[#071016]/80 via-transparent to-transparent"/><h3 className="absolute bottom-5 left-5 text-3xl font-black tracking-[-.04em] text-white">{item.name}</h3></div><div className="flex items-center justify-between gap-4 p-5"><p className="text-sm leading-6 text-[#64748b]">{item.copy}</p><span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#0e1418] text-white transition group-hover:bg-[#B5E92E] group-hover:text-[#071016]"><ArrowRight size={16}/></span></div></motion.a>)}</div></section>
+
+    <section className="bg-white py-16"><div className="page-inner"><SectionHeading eyebrow="Brands" title="Shop the brands you already trust." description="Brand routes are dynamic and reuse the same collection component and API filters."/><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">{(meta.brands.length?meta.brands:['BMW','Mercedes-Benz','Audi','Porsche','Tesla','Range Rover']).map((brand,index)=><motion.a key={brand} href={`/brands/${encodeURIComponent(brand.toLowerCase().replaceAll(' ','-'))}`} initial={{opacity:0,scale:.96}} whileInView={{opacity:1,scale:1}} viewport={{once:true}} transition={{delay:index*.03}} className="group flex min-h-28 flex-col justify-between rounded-[22px] border border-[#e2e6de] bg-[#fafbf9] p-5 transition hover:border-[#B5E92E]"><CarFront size={20} className="text-[#7d9f24]"/><div className="flex items-center justify-between gap-2"><span className="text-sm font-black text-[#0f172a]">{brand}</span><ArrowRight size={14} className="text-[#c2c9bd] transition group-hover:translate-x-1 group-hover:text-[#7d9f24]"/></div></motion.a>)}</div></div></section>
+
+    <section className="page-inner py-16"><SectionHeading eyebrow="Rental classes" title="A class for every kind of trip." description="Rental categories keep location and date selection connected to the inventory experience."/><div className="grid gap-4 md:grid-cols-3">{RENTAL_CATEGORIES.slice(0,6).map((category,index)=><a key={category.slug} href={`/rentals?category=${encodeURIComponent(category.name)}`} className="group rounded-[24px] border border-[#e2e6de] bg-white p-5"><div className="flex items-center justify-between"><span className="grid size-10 place-items-center rounded-xl bg-[#B5E92E]/18 text-[#6b861c]">{category.slug==='electric'?<Zap size={17}/>:category.slug==='sedan'?<Fuel size={17}/>:<CarFront size={17}/>}</span><ArrowRight size={15} className="text-[#c2c9bd] transition group-hover:translate-x-1"/></div><h3 className="mt-8 text-xl font-black text-[#0f172a]">{category.name}</h3><p className="mt-2 text-sm leading-6 text-[#64748b]">{category.description}</p></a>)}</div></section>
+
+    <TrustBand/><FaqSection/>
+  </main>
 }

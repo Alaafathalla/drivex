@@ -1,63 +1,35 @@
-﻿import { BatteryCharging, Fuel, KeyRound, MapPin, Route, Truck } from 'lucide-react'
-
-const help = [
-  ['Tow truck', Truck],
-  ['Battery jump', BatteryCharging],
-  ['Fuel delivery', Fuel],
-  ['Lockout', KeyRound],
-]
+import { ServiceDetailPage } from '@/components/platform/service-detail-page'
 
 export default function RoadsidePage() {
-  return (
-    <main className="bg-[#070908] text-white">
-      {/* Hero */}
-      <section className="w-full border-b border-white/8">
-        <div className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
-          <p className="text-[11px] font-bold uppercase tracking-[.14em] text-[#2ee52b]">24/7 Roadside Assistance</p>
-          <h1 className="mt-3 text-[clamp(36px,5vw,64px)] font-black leading-[.92] tracking-tight">Help is on the way.</h1>
-          <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/55">
-            Tell us where you are and what happened. We'll connect you with the nearest available provider.
-          </p>
-        </div>
-      </section>
-
-      <section className="w-full px-4 py-14 sm:px-6 lg:px-8 xl:px-12">
-        <div className="grid gap-5 lg:grid-cols-2">
-          {/* Map placeholder */}
-          <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-4 overflow-hidden rounded-[8px] border border-white/10 bg-[radial-gradient(circle_at_55%_45%,rgba(46,229,43,.12),transparent_35%)]">
-            <div className="flex items-center gap-2 text-[11px] text-white/40">
-              <MapPin size={14} className="text-[#2ee52b]" /> Live location
-            </div>
-            <div className="relative flex h-32 w-32 items-center justify-center rounded-full border border-[#2ee52b]/25">
-              <div className="absolute h-48 w-48 rounded-full border border-[#2ee52b]/12" />
-              <div className="absolute h-64 w-64 rounded-full border border-[#2ee52b]/6" />
-              <span className="grid h-14 w-14 place-items-center rounded-full bg-[#2ee52b] text-black">
-                <Route size={22} />
-              </span>
-            </div>
-            <p className="text-[13px] font-semibold text-white/60">Your location detected</p>
-          </div>
-
-          {/* Request form */}
-          <div className="rounded-[8px] border border-white/10 bg-[#0b0d0c] p-7">
-            <p className="text-[11px] font-bold uppercase tracking-[.14em] text-[#2ee52b]">What do you need?</p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              {help.map(([name, Icon]) => (
-                <button
-                  key={name}
-                  className="cursor-pointer rounded-[6px] border border-white/10 p-5 text-left transition hover:border-[#2ee52b]/50 hover:bg-[#2ee52b]/5"
-                >
-                  <Icon className="text-[#2ee52b]" size={20} />
-                  <p className="mt-4 text-[13px] font-black">{name}</p>
-                </button>
-              ))}
-            </div>
-            <button className="mt-5 w-full cursor-pointer rounded-[5px] bg-[#2ee52b] py-4 text-[13px] font-bold text-black transition hover:bg-[#50f14d]">
-              Request assistance
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
-  )
+  return <ServiceDetailPage
+    slug="roadside"
+    eyebrow="24/7 roadside assistance"
+    title="Help is on the way."
+    description="Request roadside support with location, vehicle context and incident details structured for fast provider dispatch and status tracking."
+    heroImage="https://images.unsplash.com/photo-1597404294360-feeeda04612e?auto=format&fit=crop&w=2200&q=86"
+    startingPrice="From AED 99"
+    packages={[
+      ['Tow truck', 'Recovery and transport when the vehicle cannot continue safely.', 'From AED 199'],
+      ['Battery jump', 'On-site jump start and basic battery/charging assessment.', 'From AED 99'],
+      ['Fuel delivery', 'Emergency fuel support to get the vehicle moving again.', 'From AED 119'],
+      ['Lockout support', 'Assistance for supported vehicle lockout situations.', 'From AED 149'],
+    ]}
+    benefits={[
+      ['Location-led dispatch', 'Use the request location to route support to the nearest eligible provider.'],
+      ['Incident context', 'Capture the problem before dispatch so the right equipment can be assigned.'],
+      ['Status-ready API', 'Service request IDs are ready for assigned, en-route and completed states.'],
+      ['Connected support', 'Link roadside incidents to the vehicle and user dashboard history.'],
+    ]}
+    process={[
+      ['Send location and issue', 'Share where the car is and describe what happened.'],
+      ['Provider is assigned', 'A suitable roadside partner can be selected by location and capability.'],
+      ['Track resolution', 'Use the request ID for future live status, arrival estimate and completion records.'],
+    ]}
+    faq={[
+      ['Is roadside assistance available 24/7?', 'The experience is designed around 24/7 request intake. Real production coverage depends on the connected provider network.'],
+      ['Can I request a tow and battery help?', 'Yes. The service catalog supports towing, battery, fuel and lockout-style assistance.'],
+      ['Does the app use my live GPS?', 'The current mock flow accepts a location field. A production build can connect browser/device geolocation with explicit permission.'],
+      ['Can I track the driver or tow truck?', 'The request ID and status model are ready for a future real-time provider location feed.'],
+    ]}
+  />
 }

@@ -1,5 +1,35 @@
-﻿import { ArrowRight, Droplets, Sparkles, Timer } from 'lucide-react'
-import { PageHero } from '@/components/page-hero'
-const packs=[['Express Wash','49','25 min'],['Premium Wash','99','45 min'],['Full Detailing','249','2–3 hrs'],['Ceramic Care','699','4–5 hrs']]
-export default function WashPage(){return <main>
-<PageHero eyebrow="Wash & detailing" title="Bring back the showroom feeling." description="From a fast refresh to full detailing and ceramic protection, book premium car care at a branch or at your location." image="https://images.unsplash.com/photo-1552930294-6b595f4c2974?auto=format&fit=crop&w=2200&q=86"/><section className="w-full px-4 py-20 sm:px-6 lg:px-8 lg:py-24 xl:px-12"><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">{packs.map(([name,price,time],i)=><article key={name} className={`border p-6 ${i===2?'border-accent bg-[#0b1017] text-white':'border-border bg-card'}`}><Droplets className="text-accent"/><p className="mt-10 text-[10px] uppercase tracking-[.15em] opacity-50">Package 0{i+1}</p><h2 className="mt-2 text-2xl font-black tracking-[-.03em]">{name}</h2><div className="mt-8 flex items-center justify-between border-t border-current/10 pt-5"><p className="text-2xl font-black">AED {price}</p><span className="flex items-center gap-1.5 text-xs opacity-60"><Timer size={14}/>{time}</span></div><button className={`mt-6 flex w-full items-center justify-between px-4 py-3 text-xs font-black ${i===2?'bg-accent text-accent-foreground':'bg-primary text-primary-foreground'}`}>Book package <ArrowRight size={15}/></button></article>)}</div></section><section className="w-full bg-[#eef2f4] py-20"><div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12"><div className="grid gap-8 lg:grid-cols-2"><div className="min-h-[440px] bg-[url('https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=1200&q=85')] bg-cover bg-center"/><div className="flex flex-col justify-center"><Sparkles className="text-accent"/><p className="mt-8 text-[10px] font-black uppercase tracking-[.2em] text-accent">Premium detailing</p><h2 className="mt-4 text-4xl font-black tracking-[-.05em]">More than clean. Restored.</h2><p className="mt-5 max-w-lg leading-7 text-muted-foreground">Paint correction, interior deep cleaning, leather treatment and protection packages designed for owners who care about every detail.</p><button className="mt-8 inline-flex items-center gap-2 bg-primary px-6 py-3 text-xs font-black text-primary-foreground">Explore packages <ArrowRight size={15}/></button></div></div></div></section></main>}
+import { ServiceDetailPage } from '@/components/platform/service-detail-page'
+
+export default function WashPage() {
+  return <ServiceDetailPage
+    slug="wash"
+    eyebrow="Wash & detailing"
+    title="Bring back the showroom feeling."
+    description="Book premium car care from a quick refresh to full detailing, paint correction and protection—at a branch or your preferred location."
+    heroImage="https://images.unsplash.com/photo-1552930294-6b595f4c2974?auto=format&fit=crop&w=2200&q=86"
+    startingPrice="From AED 49"
+    packages={[
+      ['Express wash', 'Exterior wash, wheels, glass and quick dry.', 'AED 49 · ~25 min'],
+      ['Premium wash', 'Exterior plus interior vacuum, surfaces and finishing.', 'AED 99 · ~45 min'],
+      ['Full detailing', 'Deep interior/exterior treatment and restorative finishing.', 'AED 249 · 2–3 hrs'],
+      ['Ceramic care', 'Preparation and protection package for longer-lasting finish.', 'From AED 699'],
+    ]}
+    benefits={[
+      ['Clear package scope', 'Know what is included before the vehicle is handed over.'],
+      ['Mobile or branch', 'The booking model supports destination care and physical locations.'],
+      ['Vehicle-specific notes', 'Capture paint, trim, stain or access details before the appointment.'],
+      ['Repeat bookings', 'Service history can support recurring detailing schedules in the dashboard.'],
+    ]}
+    process={[
+      ['Choose a package', 'Pick the care level and tell us about the vehicle.'],
+      ['Choose time and place', 'Request a branch slot or supported mobile-service location.'],
+      ['Inspect and hand back', 'Complete the care service and keep the booking record connected to the car.'],
+    ]}
+    faq={[
+      ['Can detailing be done at my location?', 'The booking schema supports location-based requests. Final mobile-service availability depends on partner coverage.'],
+      ['How long does full detailing take?', 'The current package guidance is roughly two to three hours, depending on vehicle size and condition.'],
+      ['Is ceramic coating included in detailing?', 'Ceramic care is presented as a separate protection package so scope and price remain clear.'],
+      ['Can I add notes about stains or paint defects?', 'Yes. The API-ready booking form includes free-text vehicle and service notes.'],
+    ]}
+  />
+}

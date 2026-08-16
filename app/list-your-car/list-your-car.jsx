@@ -1,6 +1,6 @@
-﻿'use client'
+'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react'
 import { Stepper } from '@/features/cars/components/Stepper'
@@ -27,7 +27,7 @@ const INITIAL = {
   images: [],
   price: '', weeklyPrice: '', monthlyPrice: '', salePrice: '', negotiable: false,
   deposit: '', minRentalDays: '1',
-  country: 'UAE', city: '', area: '', address: '',
+  country: 'UAE', city: '', area: '', address: '', latitude: null, longitude: null,
   description: '', features: [],
   ownerName: '', ownerEmail: '', ownerPhone: '', preferredContact: 'phone',
 }
@@ -37,12 +37,52 @@ export default function ListYourCarPage() {
   const router = useRouter()
   const [step,      setStep]      = useState(1)
   const [data,      setData]      = useState({ ...INITIAL })
+  const [draftReady, setDraftReady] = useState(false)
   const [submitting,setSubmitting] = useState(false)
   const [done,      setDone]      = useState(false)
   const [createdId, setCreatedId] = useState(null)
   const dir = useRef(1) // 1 forward, -1 back
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('drivex_listing_draft')
+      if (raw) setData({ ...INITIAL, ...JSON.parse(raw) })
+    } catch {}
+    setDraftReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (!draftReady) return
+    try { localStorage.setItem('drivex_listing_draft', JSON.stringify(data)) } catch {}
+  }, [data, draftReady])
+
   const update = (patch) => setData(d => ({ ...d, ...patch }))
+
+  const validateStep = (n) => {
+    const missing = []
+    if (n === 2) {
+      if (!data.brand) missing.push('brand')
+      if (!data.model) missing.push('model')
+      if (!data.year) missing.push('year')
+      if (!data.bodyType) missing.push('body type')
+      if (!data.transmission) missing.push('transmission')
+      if (!data.fuelType) missing.push('fuel type')
+    }
+    if (n === 3 && !data.images.length) missing.push('at least one photo')
+    if (n === 4 && data.listingType === 'rent' && !data.price) missing.push('daily rental price')
+    if (n === 4 && data.listingType === 'sale' && !data.salePrice) missing.push('sale price')
+    if (n === 5 && !data.city) missing.push('city')
+    if (n === 7) {
+      if (!data.ownerName) missing.push('owner name')
+      if (!data.ownerEmail) missing.push('email')
+      if (!data.ownerPhone) missing.push('phone')
+    }
+    if (missing.length) {
+      toast({ message: `Please complete: ${missing.join(', ')}.`, type: 'error' })
+      return false
+    }
+    return true
+  }
 
   const go = (n) => {
     dir.current = n > step ? 1 : -1
@@ -50,7 +90,7 @@ export default function ListYourCarPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const next = () => go(Math.min(8, step + 1))
+  const next = () => { if (validateStep(step)) go(Math.min(8, step + 1)) }
   const back = () => go(Math.max(1, step - 1))
 
   const handleSubmit = async () => {
@@ -72,11 +112,12 @@ export default function ListYourCarPage() {
         minRentalDays: Number(data.minRentalDays) || 1,
         country: data.country, city: data.city, area: data.area,
         location: `${data.area ? data.area + ', ' : ''}${data.city}`,
-        address: data.address, description: data.description,
+        address: data.address, latitude: data.latitude, longitude: data.longitude, description: data.description,
         features: data.features,
         owner: { name: data.ownerName, email: data.ownerEmail, phone: data.ownerPhone, preferredContact: data.preferredContact },
       })
       setCreatedId(listing.id)
+      try { localStorage.removeItem('drivex_listing_draft') } catch {}
       setDone(true)
       toast({ message: 'Listing submitted for review!', type: 'success' })
     } catch (e) {
@@ -122,7 +163,10 @@ export default function ListYourCarPage() {
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
         <div className="mx-auto max-w-[820px] px-4 py-6 sm:px-6">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">List Your Car</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">List Your Car</p>
+            <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[10px] font-bold text-gray-400">Draft auto-saved</span>
+          </div>
           <h1 className="mt-1 text-[24px] font-black text-gray-900">
             {step === 8 ? 'Review & Submit' : STEP_LABELS[step - 1]}
           </h1>

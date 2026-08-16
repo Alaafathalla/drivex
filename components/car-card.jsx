@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GitCompare, Heart } from 'lucide-react'
 import { useFavorites } from '@/context/FavoritesContext'
+import { useCurrency } from '@/context/CurrencyContext'
 
 /**
  * Shared animated car card used across Home, Buy Cars, Rentals pages.
@@ -12,12 +13,13 @@ import { useFavorites } from '@/context/FavoritesContext'
  */
 export function CarCard({ car, index = 0, showCompare = false, className = '' }) {
   const { toggle, isFav } = useFavorites()
+  const { format } = useCurrency()
   const isRent = car.type === 'rent'
   const fav = isFav(car.slug)
   const href = isRent ? `/rentals/${car.slug}` : `/cars/${car.slug}`
   const priceLabel = isRent
-    ? `$${car.pricePerDay}/day`
-    : `$${(car.price || 0).toLocaleString()}`
+    ? `${format(car.pricePerDay)}/day`
+    : format(car.price || 0)
 
   return (
     <motion.article
@@ -110,7 +112,7 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
             <p className="text-[15px] font-black text-[#2ee52b]">{priceLabel}</p>
             {!isRent && car.price && (
               <p className="text-[9px] text-white/30 mt-0.5">
-                ~${Math.round(car.price / 60).toLocaleString()}/mo
+                ~{format(Math.round(car.price / 60))}/mo
               </p>
             )}
           </div>

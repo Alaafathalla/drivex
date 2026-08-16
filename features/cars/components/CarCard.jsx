@@ -3,10 +3,12 @@ import { motion } from 'framer-motion'
 import { Fuel, Heart, MapPin, Settings2, Star, Users } from 'lucide-react'
 import { useFavorites } from '@/context/FavoritesContext'
 import { useToast } from '@/context/ToastContext'
+import { useCurrency } from '@/context/CurrencyContext'
 
 export function CarCard({ car, index = 0 }) {
   const { toggle, isFav } = useFavorites()
   const toast = useToast()
+  const { format } = useCurrency()
   const fav = isFav(String(car.id))
   const isRent = car.listingType === 'rent'
   const href = `/cars/${car.id}`
@@ -95,7 +97,7 @@ export function CarCard({ car, index = 0 }) {
           <div>
             <p className="text-[11px] text-gray-400">{isRent ? 'from' : 'price'}</p>
             <p className="text-[18px] font-black text-green-600">
-              ${car.price?.toLocaleString()}
+              {format(car.price)}
               {isRent && <span className="text-[11px] font-normal text-gray-400">/day</span>}
             </p>
           </div>

@@ -1,23 +1,31 @@
 'use client'
-import { ChevronDown } from 'lucide-react'
 
-const BRANDS = ['BMW', 'Mercedes-Benz', 'Audi', 'Porsche', 'Range Rover', 'Tesla', 'Toyota', 'Lexus', 'Nissan']
-const BODIES = ['Sedan', 'SUV', 'Coupe', 'Hatchback', 'Convertible', 'Pickup']
-const FUELS = ['Petrol', 'Diesel', 'Electric', 'Hybrid']
+import { ChevronDown, Gauge, RotateCcw } from 'lucide-react'
+
+const DEFAULT_META = {
+  brands: ['BMW', 'Mercedes-Benz', 'Audi', 'Porsche', 'Range Rover', 'Tesla', 'Toyota', 'Lexus', 'Nissan'],
+  bodyTypes: ['Sedan', 'SUV', 'Coupe', 'Hatchback', 'Convertible', 'Pickup'],
+  fuelTypes: ['Petrol', 'Diesel', 'Electric', 'Hybrid'],
+  cities: ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman'],
+}
 const TRANS = ['Automatic', 'Manual']
-const CITIES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman']
 const SEATS = ['2', '4', '5', '6', '7']
-const YEARS = Array.from({ length: 10 }, (_, i) => String(2024 - i))
+const YEARS = Array.from({ length: 16 }, (_, i) => String(new Date().getFullYear() - i))
 
 function Sel({ label, options, value, onChange }) {
   return (
     <div className="border-b border-gray-100 py-3">
-      <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-gray-500">{label}</p>
+      <p className="mb-2 text-[11px] font-black uppercase tracking-[.12em] text-gray-500">{label}</p>
       <div className="relative">
-        <select value={value} onChange={e => onChange(e.target.value)}
-          className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-3 py-2 text-[13px] text-gray-700 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-100">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="h-10 w-full appearance-none rounded-xl border border-gray-200 bg-white px-3 pr-9 text-[13px] font-semibold text-gray-700 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
+        >
           <option value="">Any</option>
-          {options.map(o => <option key={o} value={o}>{o}</option>)}
+          {options.map((option) => (
+            <option key={option} value={option}>{option}</option>
+          ))}
         </select>
         <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
       </div>
@@ -25,50 +33,113 @@ function Sel({ label, options, value, onChange }) {
   )
 }
 
-export function CarFilters({ filters, onChange, onReset }) {
-  const set = (k, v) => onChange({ ...filters, [k]: v })
-  const active = Object.entries(filters).filter(([k, v]) => v && k !== 'q' && k !== 'listingType').length
+function RangeInputs({ label, minValue, maxValue, onMinChange, onMaxChange, minPlaceholder = 'Min', maxPlaceholder = 'Max', step = 1 }) {
+  return (
+    <div className="border-b border-gray-100 py-3">
+      <p className="mb-2 text-[11px] font-black uppercase tracking-[.12em] text-gray-500">{label}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          type="number"
+          min="0"
+          step={step}
+          placeholder={minPlaceholder}
+          value={minValue || ''}
+          onChange={(event) => onMinChange(event.target.value)}
+          className="h-10 rounded-xl border border-gray-200 bg-white px-3 text-[13px] outline-none focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
+        />
+        <input
+          type="number"
+          min="0"
+          step={step}
+          placeholder={maxPlaceholder}
+          value={maxValue || ''}
+          onChange={(event) => onMaxChange(event.target.value)}
+          className="h-10 rounded-xl border border-gray-200 bg-white px-3 text-[13px] outline-none focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
+        />
+      </div>
+    </div>
+  )
+}
+
+export function CarFilters({ filters, onChange, onReset, meta = DEFAULT_META }) {
+  const set = (key, value) => onChange({ ...filters, [key]: value })
+  const active = Object.entries(filters).filter(
+    ([key, value]) => value !== '' && value !== undefined && key !== 'q' && key !== 'listingType'
+  ).length
 
   return (
     <div>
       <div className="flex items-center justify-between pb-2">
-        <p className="font-bold text-gray-900">Filters</p>
+        <div>
+          <p className="font-black text-gray-900">Filters</p>
+          <p className="mt-0.5 text-[10px] font-medium text-gray-400">API-driven inventory facets</p>
+        </div>
         {active > 0 && (
-          <button onClick={onReset}
-            className="flex items-center gap-1 rounded-full bg-red-50 px-3 py-1 text-[11px] font-semibold text-red-500 hover:bg-red-100 transition">
-            Reset ({active})
+          <button
+            type="button"
+            onClick={onReset}
+            className="flex items-center gap-1 rounded-full bg-red-50 px-3 py-1.5 text-[10px] font-black text-red-500 transition hover:bg-red-100"
+          >
+            <RotateCcw size={11} /> Reset ({active})
           </button>
         )}
       </div>
-      <Sel label="Brand"        options={BRANDS} value={filters.brand || ''}        onChange={v => set('brand', v)} />
-      <Sel label="Body Type"    options={BODIES} value={filters.bodyType || ''}     onChange={v => set('bodyType', v)} />
-      <Sel label="Fuel Type"    options={FUELS}  value={filters.fuelType || ''}     onChange={v => set('fuelType', v)} />
-      <Sel label="Transmission" options={TRANS}  value={filters.transmission || ''} onChange={v => set('transmission', v)} />
-      <Sel label="Location"     options={CITIES} value={filters.city || ''}         onChange={v => set('city', v)} />
-      <Sel label="Min Seats"    options={SEATS}  value={filters.seats || ''}        onChange={v => set('seats', v)} />
-      <Sel label="Year From"    options={YEARS}  value={filters.minYear || ''}      onChange={v => set('minYear', v)} />
-      <Sel label="Year To"      options={YEARS}  value={filters.maxYear || ''}      onChange={v => set('maxYear', v)} />
 
-      {/* Price range */}
+      <Sel label="Make / Brand" options={meta.brands || DEFAULT_META.brands} value={filters.brand || ''} onChange={(value) => set('brand', value)} />
+      <Sel label="Body Type" options={meta.bodyTypes || DEFAULT_META.bodyTypes} value={filters.bodyType || ''} onChange={(value) => set('bodyType', value)} />
+      <Sel label="Fuel Type" options={meta.fuelTypes || DEFAULT_META.fuelTypes} value={filters.fuelType || ''} onChange={(value) => set('fuelType', value)} />
+      <Sel label="Transmission" options={TRANS} value={filters.transmission || ''} onChange={(value) => set('transmission', value)} />
+      <Sel label="Location" options={meta.cities || DEFAULT_META.cities} value={filters.city || ''} onChange={(value) => set('city', value)} />
+      <Sel label="Min Seats" options={SEATS} value={filters.seats || ''} onChange={(value) => set('seats', value)} />
+      <Sel label="Year From" options={YEARS} value={filters.minYear || ''} onChange={(value) => set('minYear', value)} />
+      <Sel label="Year To" options={YEARS} value={filters.maxYear || ''} onChange={(value) => set('maxYear', value)} />
+
+      <RangeInputs
+        label="Price Range"
+        minValue={filters.minPrice}
+        maxValue={filters.maxPrice}
+        onMinChange={(value) => set('minPrice', value)}
+        onMaxChange={(value) => set('maxPrice', value)}
+        minPlaceholder="Min price"
+        maxPlaceholder="Max price"
+        step={100}
+      />
+
       <div className="border-b border-gray-100 py-3">
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-gray-500">Price Range</p>
+        <div className="mb-2 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[.12em] text-gray-500">
+          <Gauge size={13} /> Mileage (km)
+        </div>
         <div className="grid grid-cols-2 gap-2">
-          <input type="number" placeholder="Min" value={filters.minPrice || ''}
-            onChange={e => set('minPrice', e.target.value)}
-            className="rounded-xl border border-gray-200 px-3 py-2 text-[13px] outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100" />
-          <input type="number" placeholder="Max" value={filters.maxPrice || ''}
-            onChange={e => set('maxPrice', e.target.value)}
-            className="rounded-xl border border-gray-200 px-3 py-2 text-[13px] outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100" />
+          <input
+            type="number"
+            min="0"
+            step="1000"
+            placeholder="Min km"
+            value={filters.minMileage || ''}
+            onChange={(event) => set('minMileage', event.target.value)}
+            className="h-10 rounded-xl border border-gray-200 bg-white px-3 text-[13px] outline-none focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
+          />
+          <input
+            type="number"
+            min="0"
+            step="1000"
+            placeholder="Max km"
+            value={filters.maxMileage || ''}
+            onChange={(event) => set('maxMileage', event.target.value)}
+            className="h-10 rounded-xl border border-gray-200 bg-white px-3 text-[13px] outline-none focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
+          />
         </div>
       </div>
 
-      {/* Availability (rental) */}
       {filters.listingType === 'rent' && (
-        <div className="py-3">
-          <label className="flex items-center gap-2 text-[13px] text-gray-700">
-            <input type="checkbox" checked={filters.available === true}
-              onChange={e => set('available', e.target.checked ? true : undefined)}
-              className="h-4 w-4 accent-green-600 rounded" />
+        <div className="py-4">
+          <label className="flex items-center gap-2 text-[13px] font-semibold text-gray-700">
+            <input
+              type="checkbox"
+              checked={filters.available === true}
+              onChange={(event) => set('available', event.target.checked ? true : undefined)}
+              className="size-4 rounded accent-[#B5E92E]"
+            />
             Available now only
           </label>
         </div>

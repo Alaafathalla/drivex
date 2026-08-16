@@ -1,6 +1,6 @@
 const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-100"
 
-function PriceField({ label, prefix = '$', value, onChange, placeholder, hint }) {
+function PriceField({ label, prefix = 'AED', value, onChange, placeholder, hint }) {
   return (
     <label className="block">
       <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{label}</p>
@@ -8,7 +8,7 @@ function PriceField({ label, prefix = '$', value, onChange, placeholder, hint })
         <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[14px] font-bold text-gray-400">{prefix}</span>
         <input type="number" min="0" value={value} onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`${cl} pl-8`} />
+          className={`${cl} pl-14`} />
       </div>
       {hint && <p className="mt-1 text-[11px] text-gray-400">{hint}</p>}
     </label>
@@ -38,7 +38,7 @@ export function StepPricing({ data, update }) {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          <PriceField label="Sale Price *" value={data.salePrice} onChange={v => update({ salePrice: v })} placeholder="e.g. 55000" hint="Your asking price in USD" />
+          <PriceField label="Sale Price *" value={data.salePrice} onChange={v => update({ salePrice: v })} placeholder="e.g. 55000" hint="Your asking price in AED" />
           <div className="flex flex-col justify-end">
             <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4">
               <input type="checkbox" checked={data.negotiable} onChange={e => update({ negotiable: e.target.checked })}
@@ -59,7 +59,7 @@ export function StepPricing({ data, update }) {
           <div className="grid grid-cols-3 gap-3 text-center">
             {[['Weekly', 7], ['Monthly', 30], ['Yearly', 365]].map(([label, d]) => (
               <div key={label} className="rounded-xl bg-white border border-green-100 py-3">
-                <p className="text-[18px] font-black text-green-600">${Math.round(Number(data.price) * d * 0.75).toLocaleString()}</p>
+                <p className="text-[18px] font-black text-green-600">AED {Math.round(Number(data.price) * d * 0.75).toLocaleString()}</p>
                 <p className="text-[10px] text-gray-400">{label} (75% occupancy)</p>
               </div>
             ))}

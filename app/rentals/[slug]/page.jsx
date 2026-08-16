@@ -7,9 +7,11 @@ import { CalendarDays, Check, CheckCircle2, Fuel, Gauge, MapPin, Settings2, Spar
 import { api } from '@/lib/api'
 import { calcRental } from '@/lib/booking-service'
 import { RENTAL_ADDONS, RENTAL_LOCATIONS, getDefaultRentalDates } from '@/lib/rental-catalog'
+import { useCurrency } from '@/context/CurrencyContext'
 
 export default function RentalDetailsPage({ params }) {
   const { slug } = use(params)
+  const { format } = useCurrency()
   const router = useRouter()
   const query = useSearchParams()
   const defaults = useMemo(() => getDefaultRentalDates(), [])
@@ -98,12 +100,12 @@ export default function RentalDetailsPage({ params }) {
 
             <div className="mt-8 grid gap-6 rounded-[26px] border border-[#E2E6DE] bg-white p-6 md:grid-cols-2">
               <div><h2 className="font-black text-[#0F172A]">Included with your rental</h2><div className="mt-4 space-y-3">{car.features?.map((feature) => <p key={feature} className="flex items-center gap-2 text-sm text-[#64748B]"><Check size={15} className="text-[#7C8B55]" /> {feature}</p>)}</div></div>
-              <div><h2 className="font-black text-[#0F172A]">Service add-ons</h2><p className="mt-1 text-xs text-[#94A3B8]">Select extras for this booking.</p><div className="mt-4 space-y-2">{RENTAL_ADDONS.slice(0, 4).map((addon) => { const active = selectedAddons.includes(addon.id); return <button key={addon.id} onClick={() => toggleAddon(addon.id)} className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left transition ${active ? 'border-[#B5E92E] bg-[#F7FBEA]' : 'border-[#E6E9E2] bg-[#FAFBF9]'}`}><span><span className="block text-xs font-black text-[#0F172A]">{addon.name}</span><span className="mt-0.5 block text-[10px] text-[#94A3B8]">{addon.description}</span></span><span className="ml-4 shrink-0 text-xs font-black">+${addon.price}</span></button> })}</div></div>
+              <div><h2 className="font-black text-[#0F172A]">Service add-ons</h2><p className="mt-1 text-xs text-[#94A3B8]">Select extras for this booking.</p><div className="mt-4 space-y-2">{RENTAL_ADDONS.slice(0, 4).map((addon) => { const active = selectedAddons.includes(addon.id); return <button key={addon.id} onClick={() => toggleAddon(addon.id)} className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left transition ${active ? 'border-[#B5E92E] bg-[#F7FBEA]' : 'border-[#E6E9E2] bg-[#FAFBF9]'}`}><span><span className="block text-xs font-black text-[#0F172A]">{addon.name}</span><span className="mt-0.5 block text-[10px] text-[#94A3B8]">{addon.description}</span></span><span className="ml-4 shrink-0 text-xs font-black">+{format(addon.price)}</span></button> })}</div></div>
             </div>
           </div>
 
           <motion.aside initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="h-fit rounded-[28px] border border-[#E2E6DE] bg-white p-6 shadow-[0_24px_60px_rgba(15,23,42,.08)] lg:sticky lg:top-24">
-            <div className="flex items-end justify-between"><div><p className="text-xs font-bold text-[#94A3B8]">Daily rate</p><p className="mt-1 text-4xl font-black tracking-[-.04em] text-[#0F172A]">${car.pricePerDay}<span className="text-xs font-bold text-[#94A3B8]"> / day</span></p></div><Sparkles className="text-[#7C8B55]" size={20} /></div>
+            <div className="flex items-end justify-between"><div><p className="text-xs font-bold text-[#94A3B8]">Daily rate</p><p className="mt-1 text-4xl font-black tracking-[-.04em] text-[#0F172A]">{format(car.pricePerDay)}<span className="text-xs font-bold text-[#94A3B8]"> / day</span></p></div><Sparkles className="text-[#7C8B55]" size={20} /></div>
 
             <div className="mt-6 grid gap-3">
               <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><CalendarDays size={13} /> Rental start</span><input type="date" value={pickup} min={defaults.start} onChange={(e) => setPickup(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none" /></label>
@@ -112,11 +114,11 @@ export default function RentalDetailsPage({ params }) {
               <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><MapPin size={13} /> Return location</span><select value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none"><option value="">Same as pickup</option>{RENTAL_LOCATIONS.map((item) => <option key={item.city}>{item.city}</option>)}</select></label>
             </div>
 
-            {breakdown && <div className="mt-5 rounded-2xl bg-[#F3F5F1] p-4"><div className="flex justify-between text-xs text-[#64748B]"><span>{days} day{days !== 1 ? 's' : ''} × ${car.pricePerDay}</span><span className="font-black text-[#0F172A]">${breakdown.base}</span></div>{addOnTotal > 0 && <div className="mt-2 flex justify-between text-xs text-[#64748B]"><span>Selected services</span><span className="font-black text-[#0F172A]">${addOnTotal}</span></div>}<div className="mt-3 flex items-end justify-between border-t border-[#DDE2D8] pt-3"><span className="text-xs font-black uppercase tracking-[.12em] text-[#64748B]">Estimated total</span><span className="text-2xl font-black text-[#0F172A]">${breakdown.total}</span></div></div>}
+            {breakdown && <div className="mt-5 rounded-2xl bg-[#F3F5F1] p-4"><div className="flex justify-between text-xs text-[#64748B]"><span>{days} day{days !== 1 ? 's' : ''} × {format(car.pricePerDay)}</span><span className="font-black text-[#0F172A]">{format(breakdown.base)}</span></div>{addOnTotal > 0 && <div className="mt-2 flex justify-between text-xs text-[#64748B]"><span>Selected services</span><span className="font-black text-[#0F172A]">{format(addOnTotal)}</span></div>}<div className="mt-3 flex items-end justify-between border-t border-[#DDE2D8] pt-3"><span className="text-xs font-black uppercase tracking-[.12em] text-[#64748B]">Estimated total</span><span className="text-2xl font-black text-[#0F172A]">{format(breakdown.total)}</span></div></div>}
 
             {error && <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600">{error}</p>}
             <button onClick={handleBook} disabled={!car.available} className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0E1418] text-xs font-black uppercase tracking-[.08em] text-white transition hover:bg-[#B5E92E] hover:text-[#0E1418] disabled:opacity-45"><CheckCircle2 size={15} /> Continue booking</button>
-            <p className="mt-4 text-center text-[11px] leading-5 text-[#94A3B8]">Free cancellation up to 24 hours before pickup. Security deposit: ${car.deposit}.</p>
+            <p className="mt-4 text-center text-[11px] leading-5 text-[#94A3B8]">Free cancellation up to 24 hours before pickup. Security deposit: {format(car.deposit)}.</p>
           </motion.aside>
         </div>
       </section>

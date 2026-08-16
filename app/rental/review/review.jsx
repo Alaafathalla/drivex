@@ -107,7 +107,7 @@ export default function ReviewPage() {
               <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                 className="mt-0.5 h-5 w-5 shrink-0 accent-green-600 rounded" />
               <span className="text-[13px] leading-6 text-gray-700">
-                I agree to the <a href="#" className="text-green-600 hover:underline font-semibold">rental terms and conditions</a>, <a href="#" className="text-green-600 hover:underline font-semibold">privacy policy</a>, and confirm that all the information provided is accurate.
+                I agree to the <a href="/terms" className="text-green-600 hover:underline font-semibold">rental terms and conditions</a>, <a href="/privacy" className="text-green-600 hover:underline font-semibold">privacy policy</a>, and confirm that all the information provided is accurate.
               </span>
             </label>
 
