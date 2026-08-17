@@ -10,14 +10,17 @@ import {
   GitCompare,
   Heart,
   Menu,
+  Moon,
   Search,
   Sparkles,
+  Sun,
   UserRound,
   Wrench,
   X,
 } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 import { useFavorites } from '@/context/FavoritesContext'
+import { useTheme } from '@/context/ThemeContext'
 import { LanguageToggle } from '@/components/language-toggle'
 import { CurrencySwitcher } from '@/components/currency-switcher'
 import { ScrollProgress } from '@/components/scroll-progress'
@@ -54,12 +57,12 @@ const SERVICE_LINKS = [
 ]
 
 const CATEGORY_LINKS = [
-  ['SUV', '/categories/suv'],
-  ['Sedan', '/categories/sedan'],
-  ['Electric', '/categories/electric'],
-  ['Sports', '/categories/sports'],
-  ['Luxury', '/categories/luxury'],
-  ['7-seater', '/categories/7-seater'],
+  { label: 'SUV',       href: '/categories/suv',       img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '340+' },
+  { label: 'Sedan',     href: '/categories/sedan',     img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=300&q=80', count: '210+' },
+  { label: 'Electric',  href: '/categories/electric',  img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=300&q=80', count: '95+' },
+  { label: 'Sports',    href: '/categories/sports',    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80', count: '78+' },
+  { label: 'Luxury',    href: '/categories/luxury',    img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80', count: '130+' },
+  { label: '7-Seater',  href: '/categories/7-seater',  img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '60+' },
 ]
 
 const BRAND_LINKS = [
@@ -86,11 +89,17 @@ function MegaMenu({ type, onClose }) {
         <div className="grid gap-3 lg:grid-cols-2">
           <div className="rounded-[24px] bg-[#F8FAFC] p-3">
             <p className="px-3 pb-2 pt-2 text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Body styles</p>
-            <div className="grid grid-cols-2 gap-1">
-              {CATEGORY_LINKS.map(([title, href]) => (
-                <a key={href} href={href} onClick={onClose} className="group flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-bold text-slate-800 transition hover:bg-white">
-                  <span>{title}</span>
-                  <ArrowRight size={12} className="text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#7f9f1b]" />
+            <div className="grid grid-cols-3 gap-2">
+              {CATEGORY_LINKS.map(({ label, href, img, count }) => (
+                <a key={href} href={href} onClick={onClose}
+                  className="group relative overflow-hidden rounded-2xl border border-transparent transition hover:border-[#B5E92E]"
+                  style={{ aspectRatio: '4/3' }}>
+                  <img src={img} alt={label} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b1220]/80 via-[#0b1220]/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-2.5">
+                    <p className="text-[12px] font-black text-white leading-tight">{label}</p>
+                    <p className="text-[10px] text-white/60">{count} cars</p>
+                  </div>
                 </a>
               ))}
             </div>
@@ -135,6 +144,7 @@ function MegaMenu({ type, onClose }) {
 export function SiteHeader() {
   const { t, isRTL } = useLang()
   const { count } = useFavorites()
+  const { toggle: toggleTheme, isDark } = useTheme()
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -243,6 +253,20 @@ export function SiteHeader() {
             <a href="/compare" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] sm:grid" aria-label="Compare"><GitCompare size={17} /></a>
             <div className="hidden lg:block"><CurrencySwitcher compact /></div>
             <div className="hidden sm:block"><LanguageToggle /></div>
+            {/* Dark / Light mode toggle */}
+            <motion.button
+              onClick={toggleTheme}
+              whileTap={{ scale: 0.88, rotate: 15 }}
+              className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC]"
+              aria-label="Toggle theme"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDark
+                  ? <motion.span key="sun"  initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: .2 }}><Sun size={17} className="text-[#B5E92E]" /></motion.span>
+                  : <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: .2 }}><Moon size={17} /></motion.span>
+                }
+              </AnimatePresence>
+            </motion.button>
             <a href="/dashboard" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] lg:grid" aria-label="Dashboard"><UserRound size={17} /></a>
             <a href="/list-your-car" className="ml-1 hidden h-11 items-center gap-2 rounded-full bg-[#B5E92E] px-5 text-xs font-black text-[#0E1418] shadow-[0_10px_24px_rgba(181,233,46,.28)] transition hover:-translate-y-0.5 hover:brightness-105 md:flex"><Sparkles size={14} />List Your Car</a>
             <button onClick={() => setDrawerOpen((value) => !value)} className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-700 xl:hidden">{drawerOpen ? <X size={19} /> : <Menu size={19} />}</button>

@@ -4,8 +4,10 @@ import { FavoritesProvider } from '@/context/FavoritesContext'
 import { ToastProvider } from '@/context/ToastContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { CurrencyProvider } from '@/context/CurrencyContext'
+import { CompareProvider } from '@/context/CompareContext'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { CompareBar } from '@/components/compare-bar'
 import './globals.css'
 
 export const metadata = {
@@ -34,6 +36,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <LangProvider>
           <CurrencyProvider>
+          <CompareProvider>
           <FavoritesProvider>
             <ToastProvider>
               {/* Fixed header — full-width */}
@@ -46,8 +49,11 @@ export default function RootLayout({ children }) {
 
               {/* Footer — full-width */}
               <SiteFooter />
+              {/* Global compare floating bar */}
+              <CompareBar />
             </ToastProvider>
           </FavoritesProvider>
+          </CompareProvider>
           </CurrencyProvider>
         </LangProvider>
         </ThemeProvider>
