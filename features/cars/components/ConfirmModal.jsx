@@ -25,7 +25,7 @@ export function ConfirmModal({ open, title, message, confirmLabel = 'Confirm', d
               </button>
               <button onClick={onConfirm} disabled={loading}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white transition disabled:opacity-60 ${
-                  danger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-500'
+                  danger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-[#f0fdf4]0'
                 }`}>
                 {loading ? <><Loader2 size={15} className="animate-spin" /> Working…</> : confirmLabel}
               </button>

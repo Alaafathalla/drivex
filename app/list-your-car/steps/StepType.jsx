@@ -16,18 +16,18 @@ export function StepType({ data, update }) {
             whileTap={{ scale: .97 }}
             className={`flex flex-col items-start gap-4 rounded-2xl border-2 p-6 text-left transition ${
               data.listingType === id
-                ? 'border-green-500 bg-green-50 shadow-sm shadow-green-100'
+                ? 'border-[#B5E92E] bg-[#f5fde7] shadow-sm shadow-[#B5E92E]/20'
                 : 'border-gray-200 bg-white hover:border-gray-300'
             }`}>
-            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${data.listingType === id ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <Icon size={22} className={data.listingType === id ? 'text-green-600' : 'text-gray-500'} />
+            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${data.listingType === id ? 'bg-[#e8f9b0]' : 'bg-gray-100'}`}>
+              <Icon size={22} className={data.listingType === id ? 'text-[#4a7000]' : 'text-gray-500'} />
             </div>
             <div>
-              <p className={`text-[16px] font-black ${data.listingType === id ? 'text-green-700' : 'text-gray-900'}`}>{title}</p>
+              <p className={`text-[16px] font-black ${data.listingType === id ? 'text-[#3a5500]' : 'text-gray-900'}`}>{title}</p>
               <p className="mt-1 text-[13px] leading-6 text-gray-500">{desc}</p>
             </div>
             {data.listingType === id && (
-              <div className="mt-1 h-2 w-2 rounded-full bg-green-500" />
+              <div className="mt-1 h-2 w-2 rounded-full bg-[#B5E92E]" />
             )}
           </motion.button>
         ))}

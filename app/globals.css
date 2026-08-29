@@ -41,24 +41,7 @@
   --page-px:   clamp(16px, 4vw, 48px);
 }
 
-/* ── Dark theme ──────────────────────────────── */
-[data-theme='dark'] {
-  --background: #071016;
-  --foreground: #f8fafc;
-  --card: #0d1922;
-  --card-foreground: #f8fafc;
-  --muted: #111c25;
-  --muted-foreground: #94a3b8;
-  --border: rgba(255,255,255,.10);
-  --surface: #0d1922;
-  --surface-2: #111c25;
-  --header-bg: rgba(7,16,22,0.96);
-  --header-border: rgba(255,255,255,.08);
-  color-scheme: dark;
-}
-
-[data-theme='dark'] body   { background: #071016; color: #f8fafc; }
-[data-theme='dark'] html   { background: #071016; }
+/* ── Dark theme disabled — DriveX is light-only ── */
 
 /* ── Full-width baseline ─────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
@@ -141,7 +124,6 @@ input[type="submit"], input[type="button"], label[for] {
   background: var(--border);
   border-radius: 6px;
 }
-[data-theme='dark'] .skeleton { background: rgba(255,255,255,.08); }
 
 /* ── RTL ─────────────────────────────────────── */
 [dir='rtl'] body { letter-spacing: 0; line-height: 1.8; }
@@ -180,25 +162,13 @@ input, textarea { direction: inherit; }
 .auto-grid-lg  { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 1.5rem; }
 
 /* ── Brand color override ─────────────────────
-   Forces all Tailwind green/emerald/lime utilities to
-   the DriveX brand lime. Opt-out by using inline style
-   or a CSS variable directly.
+   Only background utilities are remapped to the DriveX brand lime.
+   Text and border colors are NOT remapped — use explicit hex values
+   (e.g. text-[#B5E92E]) wherever the brand lime is needed for text.
 ──────────────────────────────────────────────── */
 [class*='bg-green-'],
 [class*='bg-emerald-'],
 [class*='bg-lime-'] { background-color: #B5E92E !important; }
-
-[class*='text-green-'],
-[class*='text-emerald-'],
-[class*='text-lime-'] { color: #B5E92E !important; }
-
-[class*='border-green-'],
-[class*='border-emerald-'],
-[class*='border-lime-'] { border-color: #B5E92E !important; }
-
-[class*='ring-green-'],
-[class*='ring-emerald-'],
-[class*='ring-lime-'] { --tw-ring-color: #B5E92E !important; }
 
 /* ── Glass panel ─────────────────────────────── */
 .glass-panel {
@@ -206,10 +176,6 @@ input, textarea { direction: inherit; }
   background: rgba(255,255,255,.08);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-}
-[data-theme='dark'] .glass-panel {
-  background: rgba(13,25,34,.65);
-  border-color: rgba(255,255,255,.10);
 }
 
 /* ── Driving animation ───────────────────────── */
@@ -277,64 +243,6 @@ input, textarea { direction: inherit; }
 }
 .swiper-button-next::after,
 .swiper-button-prev::after { font-size: 16px !important; font-weight: 900 !important; }
-
-/* ── Dark mode surface remaps ────────────────── */
-[data-theme='dark'] .bg-white          { background-color: #0d1922 !important; }
-[data-theme='dark'] .bg-gray-50,
-[data-theme='dark'] .bg-slate-50       { background-color: #111c25 !important; }
-[data-theme='dark'] .bg-\[\#F5F6F3\],
-[data-theme='dark'] .bg-\[\#f5f6f3\]  { background-color: #071016 !important; }
-[data-theme='dark'] .bg-\[\#F7F8F5\],
-[data-theme='dark'] .bg-\[\#f7f8f5\]  { background-color: #071016 !important; }
-[data-theme='dark'] .bg-\[\#F8FAFC\],
-[data-theme='dark'] .bg-\[\#f8fafc\]  { background-color: #111c25 !important; }
-[data-theme='dark'] .bg-\[\#FAFBF9\],
-[data-theme='dark'] .bg-\[\#fafbf9\]  { background-color: #0d1922 !important; }
-
-[data-theme='dark'] .text-\[\#0F172A\],
-[data-theme='dark'] .text-\[\#0f172a\],
-[data-theme='dark'] .text-\[\#0E1418\],
-[data-theme='dark'] .text-\[\#0e1418\],
-[data-theme='dark'] .text-gray-900,
-[data-theme='dark'] .text-slate-950,
-[data-theme='dark'] .text-slate-900   { color: #f8fafc !important; }
-
-[data-theme='dark'] .text-\[\#475569\],
-[data-theme='dark'] .text-gray-700,
-[data-theme='dark'] .text-slate-700,
-[data-theme='dark'] .text-slate-600   { color: #b2bdca !important; }
-
-[data-theme='dark'] .text-\[\#94A3B8\],
-[data-theme='dark'] .text-\[\#94a3b8\],
-[data-theme='dark'] .text-gray-500,
-[data-theme='dark'] .text-slate-500,
-[data-theme='dark'] .text-slate-400   { color: #7f8d9c !important; }
-
-[data-theme='dark'] .border-gray-100,
-[data-theme='dark'] .border-gray-200,
-[data-theme='dark'] .border-slate-100,
-[data-theme='dark'] .border-slate-200,
-[data-theme='dark'] .border-\[\#E5E7EB\],
-[data-theme='dark'] .border-\[\#e5e7eb\],
-[data-theme='dark'] .border-\[\#DFE5DB\],
-[data-theme='dark'] .border-\[\#dfe5db\],
-[data-theme='dark'] .border-\[\#E2E6DE\],
-[data-theme='dark'] .border-\[\#e2e6de\] { border-color: rgba(255,255,255,.10) !important; }
-
-[data-theme='dark'] input:not([type='range']),
-[data-theme='dark'] select,
-[data-theme='dark'] textarea {
-  color-scheme: dark;
-  background-color: #111c25 !important;
-  border-color: rgba(255,255,255,.12) !important;
-  color: #f8fafc !important;
-}
-
-/* ── Theme-aware header ──────────────────────── */
-[data-theme='dark'] header {
-  background-color: var(--header-bg) !important;
-  border-color: var(--header-border) !important;
-}
 
 /* ── Configurator swatch ring ────────────────── */
 .swatch-ring { box-shadow: 0 0 0 3px #B5E92E, 0 0 0 5px rgba(181,233,46,.25); }

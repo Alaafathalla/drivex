@@ -1,4 +1,4 @@
-﻿import { Car, CheckCircle2, MapPin, Phone, Tag } from 'lucide-react'
+import { Car, CheckCircle2, MapPin, Phone, Tag } from 'lucide-react'
 
 function Row({ label, value }) {
   if (!value) return null
@@ -14,7 +14,7 @@ function Section({ icon: Icon, title, children }) {
   return (
     <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
       <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3">
-        <Icon size={16} className="text-green-500" />
+        <Icon size={16} className="text-[#22c55e]" />
         <p className="text-[13px] font-bold text-gray-900">{title}</p>
       </div>
       <div className="px-4 py-2">{children}</div>
@@ -26,9 +26,9 @@ export function StepReview({ data }) {
   const isRent = data.listingType === 'rent'
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-4">
+      <div className="rounded-2xl border border-[#d9f99d] bg-[#f0fdf4] px-4 py-4">
         <p className="font-bold text-green-800">Almost done! Review your listing before submitting.</p>
-        <p className="mt-0.5 text-[12px] text-green-700">Your listing will be reviewed by our team and published within 24 hours.</p>
+        <p className="mt-0.5 text-[12px] text-[#15803d]">Your listing will be reviewed by our team and published within 24 hours.</p>
       </div>
 
       {/* Photos preview */}
@@ -90,7 +90,7 @@ export function StepReview({ data }) {
           : (
             <div className="flex flex-wrap gap-1.5 py-3">
               {data.features.map(f => (
-                <span key={f} className="rounded-full border border-green-200 bg-green-50 px-2.5 py-0.5 text-[11px] font-medium text-green-700">{f}</span>
+                <span key={f} className="rounded-full border border-[#d9f99d] bg-[#f0fdf4] px-2.5 py-0.5 text-[11px] font-medium text-[#15803d]">{f}</span>
               ))}
             </div>
           )

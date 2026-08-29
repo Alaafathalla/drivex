@@ -18,8 +18,8 @@ export function CarSpecifications({ car }) {
     <div className="grid gap-px bg-gray-100 overflow-hidden rounded-2xl sm:grid-cols-2">
       {specs.map(({ icon: Icon, label, value }) => (
         <div key={label} className="flex items-center gap-3 bg-white px-4 py-4">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-50">
-            <Icon size={16} className="text-green-600" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#f0fdf4]">
+            <Icon size={16} className="text-[#16a34a]" />
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{label}</p>

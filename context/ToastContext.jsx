@@ -7,14 +7,14 @@ import { createContext, useCallback, useContext, useState } from 'react'
 const ToastCtx = createContext(null)
 
 const ICONS = {
-  success: <CheckCircle2 size={17} className="text-green-600" />,
+  success: <CheckCircle2 size={17} className="text-[#22c55e]" />,
   fav:     <Heart        size={17} className="text-rose-500 fill-rose-500" />,
   info:    <Info         size={17} className="text-blue-500" />,
   error:   <TriangleAlert size={17} className="text-red-500" />,
 }
 
 const COLORS = {
-  success: 'border-l-green-500 bg-white',
+  success: 'border-l-[#22c55e] bg-white',
   fav:     'border-l-rose-400 bg-white',
   info:    'border-l-blue-400 bg-white',
   error:   'border-l-red-400 bg-white',

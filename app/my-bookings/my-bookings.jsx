@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext'
 const STATUS_CONFIG = {
   pending:   { label: 'Pending',   bg: 'bg-amber-100',  text: 'text-amber-700'  },
   confirmed: { label: 'Confirmed', bg: 'bg-blue-100',   text: 'text-blue-700'   },
-  active:    { label: 'Active',    bg: 'bg-green-100',  text: 'text-green-700'  },
+  active:    { label: 'Active',    bg: 'bg-[#ecfccb]',  text: 'text-[#3a5a00]'  },
   completed: { label: 'Completed', bg: 'bg-gray-100',   text: 'text-gray-600'   },
   cancelled: { label: 'Cancelled', bg: 'bg-red-100',    text: 'text-red-600'    },
 }
@@ -41,7 +41,7 @@ function BookingCard({ booking, onCancel }) {
           <div className="flex items-start justify-between gap-2 flex-wrap">
             <div>
               <p className="font-bold text-gray-900">
-                {booking.car?.brand} {booking.car?.model} {booking.car?.year && `· ${booking.car.year}`}
+                {booking.car?.brand} {booking.car?.model} {booking.car?.year && `� ${booking.car.year}`}
               </p>
               <p className="mt-0.5 text-[12px] text-gray-400">Booking #{booking.id}</p>
             </div>
@@ -53,7 +53,7 @@ function BookingCard({ booking, onCancel }) {
           {/* Dates */}
           <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
             <div className="flex items-center gap-1.5 text-gray-500">
-              <CalendarDays size={12} className="shrink-0 text-green-500" />
+              <CalendarDays size={12} className="shrink-0 text-[#22c55e]" />
               <span>Pickup: <strong className="text-gray-800">{booking.pickupDate}</strong></span>
             </div>
             <div className="flex items-center gap-1.5 text-gray-500">
@@ -62,7 +62,7 @@ function BookingCard({ booking, onCancel }) {
             </div>
             <div className="flex items-center gap-1.5 text-gray-500 col-span-2">
               <MapPin size={12} className="shrink-0 text-gray-400" />
-              <span className="truncate">{booking.pickupLocation} → {booking.dropoffLocation}</span>
+              <span className="truncate">{booking.pickupLocation} ? {booking.dropoffLocation}</span>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@ function BookingCard({ booking, onCancel }) {
         <div className="flex items-center gap-4">
           <div>
             <p className="text-[10px] text-gray-400">Total</p>
-            <p className="font-black text-green-600 text-[18px]">${booking.total}</p>
+            <p className="font-black text-[#16a34a] text-[18px]">${booking.total}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-400">Payment</p>
@@ -89,12 +89,12 @@ function BookingCard({ booking, onCancel }) {
 
         <div className="flex gap-2">
           <button onClick={() => window.print()}
-            className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-[11px] font-semibold text-gray-600 transition hover:border-green-300 hover:text-green-700">
+            className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-[11px] font-semibold text-gray-600 transition hover:border-[#B5E92E] hover:text-[#15803d]">
             <Download size={13} /> Invoice
           </button>
           {booking.status === 'completed' && (
             <a href="/cars"
-              className="flex items-center gap-1.5 rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-[11px] font-bold text-green-700 transition hover:bg-green-100">
+              className="flex items-center gap-1.5 rounded-xl border border-[#d9f99d] bg-[#f0fdf4] px-3 py-2 text-[11px] font-bold text-[#15803d] transition hover:bg-[#ecfccb]">
               <RotateCcw size={13} /> Rent Again
             </a>
           )}
@@ -105,7 +105,7 @@ function BookingCard({ booking, onCancel }) {
             </button>
           )}
           <a href={`/rental/success/${booking.id}`}
-            className="flex items-center gap-1.5 rounded-xl bg-green-600 px-3 py-2 text-[11px] font-bold text-white transition hover:bg-green-500">
+            className="flex items-center gap-1.5 rounded-xl bg-green-600 px-3 py-2 text-[11px] font-bold text-white transition hover:bg-[#f0fdf4]0">
             Details <ArrowRight size={13} />
           </a>
         </div>
@@ -152,7 +152,7 @@ export default function MyBookingsPage() {
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
         <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#16a34a]">Account</p>
           <h1 className="mt-1 text-[28px] font-black text-gray-900">My Bookings</h1>
           <p className="mt-1 text-[14px] text-gray-500">{bookings.length} total booking{bookings.length !== 1 ? 's' : ''}</p>
         </div>
@@ -176,7 +176,7 @@ export default function MyBookingsPage() {
 
       <div className="w-full px-4 py-7 sm:px-6 lg:px-8 xl:px-12">
         {loading ? (
-          <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
+          <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-[#22c55e]" /></div>
         ) : error ? (
           <div className="py-24 text-center">
             <p className="font-bold text-red-500">{error}</p>
@@ -184,10 +184,10 @@ export default function MyBookingsPage() {
           </div>
         ) : visible.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="text-5xl mb-4">🗓️</div>
+            <div className="text-5xl mb-4">???</div>
             <p className="text-[18px] font-bold text-gray-800">No {tab === 'all' ? '' : tab + ' '}bookings</p>
             <p className="mt-1 text-[14px] text-gray-400">Ready to plan your next trip?</p>
-            <a href="/cars" className="mt-5 inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
+            <a href="/cars" className="mt-5 inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-[#f0fdf4]0 transition">
               Browse cars <ArrowRight size={15} />
             </a>
           </motion.div>

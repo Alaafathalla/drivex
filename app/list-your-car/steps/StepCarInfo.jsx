@@ -4,7 +4,7 @@ const FUELS   = ['Petrol','Diesel','Electric','Hybrid']
 const TRANS   = ['Automatic','Manual']
 const YEARS   = Array.from({ length: 15 }, (_, i) => String(2025 - i))
 
-const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-100"
+const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-green-100"
 
 function Row({ label, required, children }) {
   return (

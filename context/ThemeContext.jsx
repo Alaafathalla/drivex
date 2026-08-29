@@ -9,14 +9,8 @@ export function ThemeProvider({ children }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('drivex_theme')
-      if (stored === 'dark' || stored === 'light') {
-        setThemeState(stored)
-      } else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-        setThemeState('dark')
-      }
-    } catch {}
+    // DriveX is light-mode only — always force light
+    setThemeState('light')
     setMounted(true)
   }, [])
 
