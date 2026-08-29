@@ -17,6 +17,25 @@
   --font-sans: 'Inter', 'Segoe UI', 'Arial', sans-serif;
 }
 
+/* ── Font families ────────────────────────────── */
+.font-latin  { font-family: var(--font-latin,  'Inter', 'Segoe UI', sans-serif); }
+.font-arabic { font-family: var(--font-arabic, 'Noto Sans Arabic', 'Arial', sans-serif); letter-spacing: 0; line-height: 1.8; }
+
+/* Arabic-specific overrides */
+[dir='rtl'] {
+  font-family: var(--font-arabic, 'Noto Sans Arabic', 'Arial', sans-serif);
+  letter-spacing: 0;
+  line-height: 1.8;
+}
+/* Tight tracking classes look bad in Arabic — reset them */
+[dir='rtl'] .tracking-tight,
+[dir='rtl'] .tracking-tighter,
+[dir='rtl'] [class*='tracking-[-'] { letter-spacing: 0 !important; }
+/* Leading also needs more space in Arabic */
+[dir='rtl'] .leading-none,
+[dir='rtl'] .leading-tight { line-height: 1.6 !important; }
+[dir='rtl'] h1, [dir='rtl'] h2, [dir='rtl'] h3 { line-height: 1.5; }
+
 /* ── Light theme (default) ───────────────────── */
 :root {
   --background: #ffffff;

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useSpring, useTransform, useInView } from 'framer-motion'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import {
   ArrowRight, CalendarDays, CarFront, CheckCircle2, ChevronDown,
   ChevronLeft, ChevronRight, Gauge, GitCompare, Headphones,
@@ -16,33 +16,6 @@ import { api } from '@/lib/api'
 import { carService } from '@/services/carService'
 
 // ─── Data constants ────────────────────────────────────────────────────────
-const HERO_SLIDES = [
-  {
-    eyebrow: 'Premium marketplace',
-    title: 'Find your\nnext car\nwith confidence.',
-    description: 'Verified inventory, transparent pricing and a professional experience from first search to final signature.',
-    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=90',
-    cta: '/cars', ctaLabel: 'Browse inventory',
-    accent: '#B5E92E',
-  },
-  {
-    eyebrow: 'Luxury rentals',
-    title: 'Rent an\ninspiring\nvehicle.',
-    description: 'Executive sedans, standout SUVs and supercar experiences — clear rates, trusted partners, fast booking.',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=90',
-    cta: '/cars?listingType=rent', ctaLabel: 'Explore rentals',
-    accent: '#38bdf8',
-  },
-  {
-    eyebrow: 'Ownership services',
-    title: 'One platform\nfor every\nautomotive need.',
-    description: 'Inspection, maintenance, roadside and airport transfers — all under the same professional experience.',
-    image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=1800&q=90',
-    cta: '/services', ctaLabel: 'Explore services',
-    accent: '#fb923c',
-  },
-]
-
 const BRANDS = [
   { name: 'BMW', logo: '🔵' }, { name: 'Mercedes-Benz', logo: '⭐' },
   { name: 'Audi', logo: '◎' }, { name: 'Porsche', logo: '🏎' },
@@ -51,49 +24,18 @@ const BRANDS = [
   { name: 'Ferrari', logo: '🐎' }, { name: 'Lamborghini', logo: '🐂' },
 ]
 
-const STATS = [
-  { value: '18K+', label: 'Verified listings', icon: CheckCircle2 },
-  { value: '5K+',  label: 'Happy drivers',     icon: Star },
-  { value: '50+',  label: 'Dealer partners',   icon: ShieldCheck },
-  { value: '12',   label: 'Cities covered',    icon: MapPin },
-]
-
-const SERVICES_LIST = [
-  { title: 'Inspection',       desc: 'Pre-purchase condition reports.',           href: '/services/inspection', icon: ShieldCheck,   bg: 'from-[#e8f5e9] to-[#c8e6c9]', fg: '#2e7d32', dot: '#4caf50' },
-  { title: 'Maintenance',      desc: 'Workshop care and routine service.',         href: '/services/maintenance', icon: Wrench,        bg: 'from-[#ede7f6] to-[#d1c4e9]', fg: '#4527a0', dot: '#7c4dff' },
-  { title: 'Roadside',         desc: 'Fast help when your journey pauses.',        href: '/services/roadside',   icon: HeartHandshake, bg: 'from-[#fff3e0] to-[#ffe0b2]', fg: '#e65100', dot: '#ff9800' },
-  { title: 'Airport Transfer', desc: 'Business-class mobility on time.',           href: '/services/airport',    icon: Users,          bg: 'from-[#e3f2fd] to-[#bbdefb]', fg: '#1565c0', dot: '#2196f3' },
-  { title: 'Test Drive',       desc: 'Book at your nearest showroom.',             href: '/test-drive',          icon: CarFront,       bg: 'from-[#f3e5f5] to-[#e1bee7]', fg: '#6a1b9a', dot: '#ab47bc' },
-  { title: 'Trade-In',         desc: 'Instant estimate for your car.',             href: '/trade-in',            icon: Tag,            bg: 'from-[#fce4ec] to-[#f8bbd0]', fg: '#880e4f', dot: '#e91e63' },
-  { title: 'Accessories',      desc: 'Genuine parts, upgrades and car care kits.', href: '/accessories',         icon: ShoppingBag,    bg: 'from-[#fffde7] to-[#fff9c4]', fg: '#f57f17', dot: '#ffc107' },
-]
-
-const PROCESS = [
-  { n: '01', title: 'Search smarter',      text: 'Filters for body type, brand, price, range and city.',  icon: Search },
-  { n: '02', title: 'Compare confidently', text: 'Stack up to 4 vehicles side by side on every spec.',    icon: GitCompare },
-  { n: '03', title: 'Book or enquire',     text: 'Straight into checkout, contact or service flows.',      icon: Zap },
-]
-
-const QUOTES = [
-  { q: '"The filters made it easy to narrow 200+ cars to the three that actually fit my budget."', name: 'Maya H.', role: 'Buyer · Dubai', avatar: 'M', color: '#B5E92E' },
-  { q: '"Booked an SUV, airport delivery and insurance in one flow. Pricing was completely clear."', name: 'Omar R.', role: 'Renter · Abu Dhabi', avatar: 'O', color: '#38bdf8' },
-  { q: '"DriveX gave my listing better structure and helped me price it right. Sold in a week."', name: 'Daniel K.', role: 'Seller · Dubai', avatar: 'D', color: '#fb923c' },
-]
-
-const FAQS = [
-  ['How are vehicles verified?', 'Listings include identity, dealer, inspection and ownership checks. The badge on each vehicle tells you exactly which checks were completed.'],
-  ['Can I finance a vehicle through DriveX?', 'The calculator provides a real-time estimate and finance-ready enquiry flow. Final rates come from the selected lender or dealer.'],
-  ['Can I cancel a rental?', 'Cancellation terms are shown before checkout and may vary by partner, vehicle and booking window.'],
-  ['Is a test drive available before buying?', 'Yes. Use the Test Drive booking form to schedule with your preferred dealer at a time that suits you.'],
-]
-
-const POSTS = [
-  { tag: 'EV ownership',  title: 'What UAE drivers should know before switching to electric', read: '6 min', href: '/journal/uae-ev-ownership-guide',    img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
-  { tag: 'Market guide',  title: 'How to compare a used luxury SUV beyond the headline price', read: '8 min', href: '/journal/compare-used-luxury-suvs', img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
-  { tag: 'Car care',      title: 'Five preventive maintenance checks before a long summer drive', read: '5 min', href: '/journal/summer-checks',          img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
-]
-
 const getItemKey = (item, i) => item?.id ?? `item-${i}`
+
+// ─── Service card data (static — translated inline via t()) ───────────────
+const SERVICES_META = [
+  { titleKey: 'svc_inspection',  descKey: 'svc_inspection_desc',  href: '/services/inspection', icon: ShieldCheck,   bg: 'from-[#e8f5e9] to-[#c8e6c9]', fg: '#2e7d32' },
+  { titleKey: 'svc_maintenance', descKey: 'svc_maintenance_desc', href: '/services/maintenance', icon: Wrench,        bg: 'from-[#ede7f6] to-[#d1c4e9]', fg: '#4527a0' },
+  { titleKey: 'svc_roadside',    descKey: 'svc_roadside_desc',    href: '/services/roadside',   icon: HeartHandshake, bg: 'from-[#fff3e0] to-[#ffe0b2]', fg: '#e65100' },
+  { titleKey: 'svc_airport',     descKey: 'svc_airport_desc',     href: '/services/airport',    icon: Users,          bg: 'from-[#e3f2fd] to-[#bbdefb]', fg: '#1565c0' },
+  { titleKey: 'svc_testdrive',   descKey: 'svc_testdrive_desc',   href: '/test-drive',          icon: CarFront,       bg: 'from-[#f3e5f5] to-[#e1bee7]', fg: '#6a1b9a' },
+  { titleKey: 'svc_tradein',     descKey: 'svc_tradein_desc',     href: '/trade-in',            icon: Tag,            bg: 'from-[#fce4ec] to-[#f8bbd0]', fg: '#880e4f' },
+  { titleKey: 'svc_accessories', descKey: 'svc_accessories_desc', href: '/accessories',         icon: ShoppingBag,    bg: 'from-[#fffde7] to-[#fff9c4]', fg: '#f57f17' },
+]
 
 // ─── Animated counter ──────────────────────────────────────────────────────
 function AnimatedNumber({ value }) {
@@ -214,9 +156,17 @@ function Particles({ count = 18, color = '#B5E92E' }) {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────
 function Hero({ meta }) {
+  const { t, lang } = useLang()
   const [slide, setSlide] = useState(0)
   const [mode, setMode]   = useState('buy')
   const [filters, setFilters] = useState({ brand: '', model: '', minPrice: '', maxPrice: '' })
+
+  const HERO_SLIDES = [
+    { eyebrow: t('home_hero_slide1_eyebrow'), title: t('home_hero_slide1_title'), description: t('home_hero_slide1_desc'), image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=90', cta: '/cars', ctaLabel: t('home_hero_slide1_cta'), accent: '#B5E92E' },
+    { eyebrow: t('home_hero_slide2_eyebrow'), title: t('home_hero_slide2_title'), description: t('home_hero_slide2_desc'), image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=90', cta: '/cars?listingType=rent', ctaLabel: t('home_hero_slide2_cta'), accent: '#38bdf8' },
+    { eyebrow: t('home_hero_slide3_eyebrow'), title: t('home_hero_slide3_title'), description: t('home_hero_slide3_desc'), image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=1800&q=90', cta: '/services', ctaLabel: t('home_hero_slide3_cta'), accent: '#fb923c' },
+  ]
+
   const s = HERO_SLIDES[slide]
   const setF = (k, v) => setFilters(p => ({ ...p, [k]: v }))
 
@@ -300,7 +250,7 @@ function Hero({ meta }) {
             </motion.a>
             <motion.a href="/calculator" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               className="inline-flex h-[52px] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 text-[14px] font-bold text-white backdrop-blur-sm transition hover:bg-white/18">
-              Finance calculator
+              {t('home_hero_finance')}
             </motion.a>
           </motion.div>
 
@@ -320,7 +270,7 @@ function Hero({ meta }) {
           className="mt-12 w-full max-w-4xl overflow-hidden rounded-[24px] border border-white/12 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,.25)] backdrop-blur-xl">
           {/* Tabs */}
           <div className="flex border-b border-white/10">
-            {[['buy','Buy'], ['rent','Rent']].map(([m, label]) => (
+            {[['buy', t('search_buy')], ['rent', t('search_rent')]].map(([m, label]) => (
               <button key={m} onClick={() => setMode(m)}
                 className={`flex items-center gap-2 px-6 py-3.5 text-[12px] font-black uppercase tracking-[.1em] transition border-b-2 ${
                   mode === m ? 'border-[#B5E92E] text-white' : 'border-transparent text-white/40 hover:text-white/70'
@@ -331,37 +281,37 @@ function Hero({ meta }) {
           </div>
           <div className="grid gap-px bg-white/8 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]">
             <div className="bg-transparent px-5 py-3">
-              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">Make</p>
+              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">{t('home_hero_make')}</p>
               <div className="relative mt-1">
                 <select value={filters.brand} onChange={e => setF('brand', e.target.value)}
                   className="w-full appearance-none bg-transparent text-[13px] font-semibold text-white outline-none">
-                  <option value="" className="bg-[#0d1922]">Any brand</option>
+                  <option value="" className="bg-[#0d1922]">{t('home_hero_any_brand')}</option>
                   {(meta?.brands || []).map(b => <option key={b} value={b} className="bg-[#0d1922]">{b}</option>)}
                 </select>
                 <ChevronDown size={12} className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-white/30" />
               </div>
             </div>
             <div className="bg-transparent px-5 py-3">
-              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">Model</p>
+              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">{t('home_hero_model')}</p>
               <input value={filters.model} onChange={e => setF('model', e.target.value)}
-                placeholder="Any model"
+                placeholder={t('home_hero_any_model')}
                 className="mt-1 w-full bg-transparent text-[13px] font-semibold text-white outline-none placeholder:text-white/30" />
             </div>
             <div className="bg-transparent px-5 py-3">
-              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">Min price</p>
+              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">{t('home_hero_min_price')}</p>
               <input type="number" value={filters.minPrice} onChange={e => setF('minPrice', e.target.value)}
                 placeholder="0"
                 className="mt-1 w-full bg-transparent text-[13px] font-semibold text-white outline-none placeholder:text-white/30" />
             </div>
             <div className="bg-transparent px-5 py-3">
-              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">Max price</p>
+              <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">{t('home_hero_max_price')}</p>
               <input type="number" value={filters.maxPrice} onChange={e => setF('maxPrice', e.target.value)}
-                placeholder="No limit"
+                placeholder={t('home_hero_no_limit')}
                 className="mt-1 w-full bg-transparent text-[13px] font-semibold text-white outline-none placeholder:text-white/30" />
             </div>
             <a href={`/cars?${params}`}
               className="flex items-center justify-center gap-2 bg-[#B5E92E] px-7 text-[13px] font-black text-[#071016] transition hover:brightness-110">
-              <Search size={15} /> Search
+              <Search size={15} /> {t('home_hero_search')}
             </a>
           </div>
         </motion.div>
@@ -370,7 +320,7 @@ function Hero({ meta }) {
       {/* Scroll hint */}
       <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-[.2em] text-white/30">Scroll</span>
+        <span className="text-[10px] font-bold uppercase tracking-[.2em] text-white/30">{t('home_hero_scroll')}</span>
         <ChevronDown size={16} className="text-white/30" />
       </motion.div>
     </section>
@@ -398,6 +348,13 @@ function BrandsStrip() {
 
 // ─── Stats ────────────────────────────────────────────────────────────────
 function StatsSection() {
+  const { t } = useLang()
+  const STATS = [
+    { value: '18K+', labelKey: 'home_stats_listings', icon: CheckCircle2 },
+    { value: '5K+',  labelKey: 'home_stats_drivers',  icon: Star },
+    { value: '50+',  labelKey: 'home_stats_dealers',  icon: ShieldCheck },
+    { value: '12',   labelKey: 'home_stats_cities',   icon: MapPin },
+  ]
   return (
     <section className="relative overflow-hidden bg-[#0f172a] py-20">
       <Particles count={22} color="#B5E92E" />
@@ -407,7 +364,7 @@ function StatsSection() {
       </div>
       <div className="page-inner relative z-10">
         <div className="grid gap-px overflow-hidden rounded-[28px] border border-white/8 sm:grid-cols-2 lg:grid-cols-4">
-          {STATS.map(({ value, label, icon: Icon }, i) => (
+          {STATS.map(({ value, labelKey, icon: Icon }, i) => (
             <motion.div key={label}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -424,7 +381,7 @@ function StatsSection() {
               <p className="text-[52px] font-black leading-none tracking-[-0.06em] text-white">
                 <AnimatedNumber value={value} />
               </p>
-              <p className="mt-2 text-[11px] font-black uppercase tracking-[.2em] text-white/35">{label}</p>
+              <p className="mt-2 text-[11px] font-black uppercase tracking-[.2em] text-white/35">{t(labelKey)}</p>
             </motion.div>
           ))}
         </div>
@@ -435,6 +392,7 @@ function StatsSection() {
 
 // ─── Featured cars ────────────────────────────────────────────────────────
 function FeaturedSection({ cars }) {
+  const { t } = useLang()
   const [start, setStart] = useState(0)
   const step = 4
   const total = cars.length
@@ -452,7 +410,7 @@ function FeaturedSection({ cars }) {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="inline-block rounded-full bg-[#B5E92E]/15 px-3 py-1 text-[10px] font-black uppercase tracking-[.2em] text-[#6b8f00]">
-              Featured inventory
+              {t('home_featured_eyebrow')}
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
@@ -461,7 +419,7 @@ function FeaturedSection({ cars }) {
               transition={{ delay: 0.07 }}
               className="mt-4 font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
-              Premium cars<br />worth a closer look
+              {t('home_featured_title').split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
             </motion.h2>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -496,7 +454,7 @@ function FeaturedSection({ cars }) {
           viewport={{ once: true }}
           className="mt-10 flex justify-center">
           <a href="/cars" className="inline-flex h-12 items-center gap-2 rounded-full border border-[#e5e9e2] bg-white px-8 text-[13px] font-bold text-[#0f172a] shadow-sm transition hover:border-[#B5E92E] hover:bg-[#B5E92E] hover:text-[#071016]">
-            View all inventory <ArrowRight size={15} />
+            {t('home_featured_view_all')} <ArrowRight size={15} />
           </a>
         </motion.div>
       </div>
@@ -506,6 +464,7 @@ function FeaturedSection({ cars }) {
 
 // ─── Categories ───────────────────────────────────────────────────────────
 function CategoriesSection({ cats }) {
+  const { t } = useLang()
   const fallback = [
     { slug: 'suv',      title: 'SUV',     count: 340, image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
     { slug: 'sedan',    title: 'Sedan',   count: 210, image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
