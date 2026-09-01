@@ -135,7 +135,7 @@ export default function ListYourCarPage() {
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 20, delay: .15 }}
           className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle2 size={52} className="text-green-600" />
+          <CheckCircle2 size={52} className="text-[#16a34a]" />
         </motion.div>
         <h1 className="text-[28px] font-black text-gray-900">Listing Submitted!</h1>
         <p className="mt-3 text-[15px] leading-7 text-gray-500">
@@ -143,11 +143,11 @@ export default function ListYourCarPage() {
         </p>
         <div className="mt-8 flex flex-col gap-3">
           <a href="/my-listings"
-            className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-green-600 text-[14px] font-bold text-white hover:bg-green-500 transition">
+            className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-green-600 text-[14px] font-bold text-white hover:bg-[#f0fdf4]0 transition">
             View My Listings <ArrowRight size={16} />
           </a>
           <a href="/cars"
-            className="flex h-11 items-center justify-center rounded-2xl border border-gray-200 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
+            className="flex h-11 items-center justify-center rounded-2xl border border-gray-200 text-[13px] font-semibold text-gray-700 hover:border-[#B5E92E] transition">
             Browse Marketplace
           </a>
         </div>
@@ -164,7 +164,7 @@ export default function ListYourCarPage() {
       <div className="border-b border-gray-100 bg-white">
         <div className="mx-auto max-w-[820px] px-4 py-6 sm:px-6">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">List Your Car</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#16a34a]">List Your Car</p>
             <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[10px] font-bold text-gray-400">Draft auto-saved</span>
           </div>
           <h1 className="mt-1 text-[24px] font-black text-gray-900">
@@ -193,18 +193,18 @@ export default function ListYourCarPage() {
         <div className={`mt-7 flex items-center ${step > 1 ? 'justify-between' : 'justify-end'}`}>
           {step > 1 && (
             <button onClick={back}
-              className="flex items-center gap-2 rounded-2xl border border-gray-200 px-6 py-3 text-[13px] font-semibold text-gray-700 transition hover:border-green-400">
+              className="flex items-center gap-2 rounded-2xl border border-gray-200 px-6 py-3 text-[13px] font-semibold text-gray-700 transition hover:border-[#B5E92E]">
               <ArrowLeft size={15} /> Back
             </button>
           )}
           {step < 8 ? (
             <button onClick={next}
-              className="flex items-center gap-2 rounded-2xl bg-green-600 px-7 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500">
+              className="flex items-center gap-2 rounded-2xl bg-green-600 px-7 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-[#f0fdf4]0">
               Continue <ArrowRight size={15} />
             </button>
           ) : (
             <button onClick={handleSubmit} disabled={submitting}
-              className="flex items-center gap-2 rounded-2xl bg-green-600 px-8 py-3 text-[14px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500 disabled:opacity-60 disabled:cursor-not-allowed">
+              className="flex items-center gap-2 rounded-2xl bg-green-600 px-8 py-3 text-[14px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-[#f0fdf4]0 disabled:opacity-60 disabled:cursor-not-allowed">
               {submitting ? <><Loader2 size={16} className="animate-spin" /> Submitting…</> : <>Submit Listing <CheckCircle2 size={16} /></>}
             </button>
           )}

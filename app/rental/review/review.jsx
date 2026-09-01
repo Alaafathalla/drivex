@@ -43,7 +43,7 @@ export default function ReviewPage() {
 
   if (!booking) return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#B5E92E] border-t-transparent" />
     </div>
   )
 
@@ -62,8 +62,8 @@ export default function ReviewPage() {
     <div className="w-full min-h-screen bg-gray-50">
       <div className="border-b border-gray-100 bg-white">
         <div className="w-full px-4 py-6 sm:px-6 lg:px-8 xl:px-12">
-          <a href={car?.rentalSlug ? `/rentals/${car.rentalSlug}` : car ? `/cars/${car.id}/rent` : '/rentals'} className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-4 block">← Edit booking</a>
-          <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Step 2 of 3</p>
+          <a href={car?.rentalSlug ? `/rentals/${car.rentalSlug}` : car ? `/cars/${car.id}/rent` : '/rentals'} className="text-[13px] font-semibold text-gray-500 hover:text-[#16a34a] transition mb-4 block">← Edit booking</a>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#16a34a]">Step 2 of 3</p>
           <h1 className="mt-1 text-[26px] font-black text-gray-900">Review your booking</h1>
         </div>
       </div>
@@ -94,11 +94,11 @@ export default function ReviewPage() {
             {/* Cancellation policy */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, delay: .15 }}
               className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h3 className="flex items-center gap-2 font-bold text-gray-900 mb-3"><ShieldCheck size={17} className="text-green-500" />Cancellation Policy</h3>
+              <h3 className="flex items-center gap-2 font-bold text-gray-900 mb-3"><ShieldCheck size={17} className="text-[#22c55e]" />Cancellation Policy</h3>
               <ul className="space-y-2 text-[13px] text-gray-600">
-                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-green-500" />Free cancellation up to 48 hours before pickup</li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-green-500" />50% refund for cancellations 24–48 hours before pickup</li>
-                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-green-500" />No refund for cancellations less than 24 hours before pickup</li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-[#22c55e]" />Free cancellation up to 48 hours before pickup</li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-[#22c55e]" />50% refund for cancellations 24–48 hours before pickup</li>
+                <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 shrink-0 text-[#22c55e]" />No refund for cancellations less than 24 hours before pickup</li>
               </ul>
             </motion.div>
 
@@ -107,12 +107,12 @@ export default function ReviewPage() {
               <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                 className="mt-0.5 h-5 w-5 shrink-0 accent-green-600 rounded" />
               <span className="text-[13px] leading-6 text-gray-700">
-                I agree to the <a href="/terms" className="text-green-600 hover:underline font-semibold">rental terms and conditions</a>, <a href="/privacy" className="text-green-600 hover:underline font-semibold">privacy policy</a>, and confirm that all the information provided is accurate.
+                I agree to the <a href="/terms" className="text-[#16a34a] hover:underline font-semibold">rental terms and conditions</a>, <a href="/privacy" className="text-[#16a34a] hover:underline font-semibold">privacy policy</a>, and confirm that all the information provided is accurate.
               </span>
             </label>
 
             <button onClick={handleConfirm} disabled={loading || !agreed}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-4 text-[15px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500 disabled:opacity-60 disabled:cursor-not-allowed">
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-4 text-[15px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-[#f0fdf4]0 disabled:opacity-60 disabled:cursor-not-allowed">
               {loading ? <><div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> Confirming…</> : <>Proceed to Payment <ArrowRight size={17} /></>}
             </button>
           </div>

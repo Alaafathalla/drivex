@@ -10,7 +10,7 @@ export function LanguageToggle({ className = '' }) {
       onClick={toggle}
       whileTap={{ scale: 0.92 }}
       aria-label={lang === 'en' ? 'Switch to Arabic' : 'Switch to English'}
-      className={`relative flex h-8 w-[60px] items-center overflow-hidden rounded-full border border-gray-200 bg-gray-100 text-[11px] font-black transition hover:border-green-300 ${className}`}
+      className={`relative flex h-8 w-[60px] items-center overflow-hidden rounded-full border border-gray-200 bg-gray-100 text-[11px] font-black transition hover:border-[#B5E92E] ${className}`}
     >
       <motion.span
         animate={{ x: lang === 'en' ? 2 : 32 }}

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext'
 
 const STATUS_CFG = {
   pending:   { label: 'Pending Approval', bg: 'bg-amber-100',  text: 'text-amber-700',  dot: 'bg-amber-400'  },
-  active:    { label: 'Active',           bg: 'bg-green-100',  text: 'text-green-700',  dot: 'bg-green-500'  },
+  active:    { label: 'Active',           bg: 'bg-[#ecfccb]',  text: 'text-[#3a5a00]',  dot: 'bg-[#f0fdf4]0'  },
   rejected:  { label: 'Rejected',         bg: 'bg-red-100',    text: 'text-red-700',    dot: 'bg-red-500'    },
   sold:      { label: 'Sold',             bg: 'bg-blue-100',   text: 'text-blue-700',   dot: 'bg-blue-500'   },
   rented:    { label: 'Rented',           bg: 'bg-purple-100', text: 'text-purple-700', dot: 'bg-purple-500' },
@@ -32,7 +32,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
       <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-40">
         {listing.images?.[0]
           ? <img src={listing.images[0]} alt="Car" className="h-full w-full object-cover" />
-          : <div className="flex h-full items-center justify-center text-3xl">🚗</div>
+          : <div className="flex h-full items-center justify-center text-3xl">??</div>
         }
         <span className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black ${cfg.bg} ${cfg.text}`}>
           <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />{cfg.label}
@@ -42,10 +42,10 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
       {/* Info */}
       <div className="flex flex-1 flex-col justify-between p-4 sm:flex-row sm:items-center">
         <div className="min-w-0">
-          <p className="font-bold text-gray-900">{listing.brand} {listing.model} · {listing.year}</p>
-          <p className="mt-0.5 text-[12px] text-gray-400 capitalize">{isRent ? 'For Rent' : 'For Sale'} · {listing.city}</p>
+          <p className="font-bold text-gray-900">{listing.brand} {listing.model} � {listing.year}</p>
+          <p className="mt-0.5 text-[12px] text-gray-400 capitalize">{isRent ? 'For Rent' : 'For Sale'} � {listing.city}</p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-[12px]">
-            <span className="font-black text-green-600">
+            <span className="font-black text-[#16a34a]">
               {isRent ? `$${listing.price}/day` : `$${listing.salePrice?.toLocaleString()}`}
             </span>
             <span className="text-gray-400">{listing.views ?? 0} views</span>
@@ -56,11 +56,11 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
         {/* Actions */}
         <div className="relative mt-3 flex items-center gap-2 sm:mt-0">
           <a href={`/cars/${listing.id}`}
-            className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-green-400 hover:text-green-700">
+            className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-[#B5E92E] hover:text-[#15803d]">
             <Eye size={13} /> Preview
           </a>
           <a href={`/list-your-car?edit=${listing.id}`}
-            className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-green-400 hover:text-green-700">
+            className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-[#B5E92E] hover:text-[#15803d]">
             <Pencil size={13} /> Edit
           </a>
 
@@ -156,12 +156,12 @@ export default function MyListingsPage() {
         <div className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Account</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-[#16a34a]">Account</p>
               <h1 className="mt-1 text-[28px] font-black text-gray-900">My Listings</h1>
               <p className="mt-1 text-[14px] text-gray-400">{listings.length} total listing{listings.length !== 1 ? 's' : ''}</p>
             </div>
             <a href="/list-your-car"
-              className="flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500">
+              className="flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-3 text-[13px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-[#f0fdf4]0">
               <Plus size={16} /> Add Listing
             </a>
           </div>
@@ -190,17 +190,17 @@ export default function MyListingsPage() {
       {/* Content */}
       <div className="w-full px-4 py-7 sm:px-6 lg:px-8 xl:px-12">
         {loading ? (
-          <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-green-500" /></div>
+          <div className="flex justify-center py-24"><Loader2 size={32} className="animate-spin text-[#22c55e]" /></div>
         ) : visible.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="text-5xl mb-4">📋</div>
+            <div className="text-5xl mb-4">??</div>
             <p className="text-[18px] font-bold text-gray-800">
               {tab === 'all' ? 'No listings yet' : `No ${STATUS_CFG[tab]?.label.toLowerCase()} listings`}
             </p>
             <p className="mt-1 text-[14px] text-gray-400">Ready to list your first car?</p>
             <a href="/list-your-car"
-              className="mt-5 flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
+              className="mt-5 flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white hover:bg-[#f0fdf4]0 transition">
               <Plus size={15} /> List your car
             </a>
           </motion.div>

@@ -88,27 +88,27 @@ export default function CheckoutPage() {
 
   if (!booking) return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-green-500 border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#B5E92E] border-t-transparent" />
     </div>
   )
 
   const inp = (err) =>
-    `w-full rounded-2xl border px-4 py-3 text-[14px] outline-none transition focus:ring-2 focus:ring-green-100 ${err ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-green-400'}`
+    `w-full rounded-2xl border px-4 py-3 text-[14px] outline-none transition focus:ring-2 focus:ring-green-100 ${err ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-[#B5E92E]'}`
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white">
         <div className="w-full px-4 py-6 sm:px-6 lg:px-8 xl:px-12">
-          <a href="/rental/review" className="text-[13px] font-semibold text-gray-500 hover:text-green-600 transition mb-3 block">← Back to review</a>
+          <a href="/rental/review" className="text-[13px] font-semibold text-gray-500 hover:text-[#16a34a] transition mb-3 block">← Back to review</a>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">Step 3 of 3</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-[#16a34a]">Step 3 of 3</p>
               <h1 className="mt-1 text-[26px] font-black text-gray-900">Payment</h1>
             </div>
-            <div className="flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2">
-              <Lock size={14} className="text-green-600" />
-              <span className="text-[12px] font-bold text-green-700">Secure checkout</span>
+            <div className="flex items-center gap-2 rounded-full border border-[#d9f99d] bg-[#f0fdf4] px-4 py-2">
+              <Lock size={14} className="text-[#16a34a]" />
+              <span className="text-[12px] font-bold text-[#15803d]">Secure checkout</span>
             </div>
           </div>
         </div>
@@ -128,14 +128,14 @@ export default function CheckoutPage() {
                 {METHODS.map(m => (
                   <button key={m.id} onClick={() => { setMethod(m.id); setStatus('idle'); setErrMsg('') }}
                     className={`flex items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left transition ${
-                      method === m.id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+                      method === m.id ? 'border-[#B5E92E] bg-[#f0fdf4]' : 'border-gray-200 hover:border-gray-300'
                     }`}>
                     <span className="text-[22px]">{m.icon}</span>
-                    <span className={`text-[13px] font-bold ${method === m.id ? 'text-green-700' : 'text-gray-700'}`}>
+                    <span className={`text-[13px] font-bold ${method === m.id ? 'text-[#15803d]' : 'text-gray-700'}`}>
                       {m.label}
                     </span>
                     {method === m.id && (
-                      <CheckCircle2 size={16} className="ml-auto shrink-0 text-green-500" />
+                      <CheckCircle2 size={16} className="ml-auto shrink-0 text-[#22c55e]" />
                     )}
                   </button>
                 ))}
@@ -151,7 +151,7 @@ export default function CheckoutPage() {
                   className="overflow-hidden">
                   <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
                     <h2 className="flex items-center gap-2 font-bold text-gray-900">
-                      <CreditCard size={17} className="text-green-500" /> Card Details
+                      <CreditCard size={17} className="text-[#22c55e]" /> Card Details
                     </h2>
 
                     <div>
@@ -237,7 +237,7 @@ export default function CheckoutPage() {
               onClick={handlePay}
               disabled={status === 'loading'}
               whileTap={{ scale: .98 }}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-4 text-[15px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-green-500 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-4 text-[15px] font-bold text-white shadow-sm shadow-green-200 transition hover:bg-[#f0fdf4]0 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {status === 'loading' ? (
                 <><div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> Processing payment…</>
@@ -247,7 +247,7 @@ export default function CheckoutPage() {
             </motion.button>
 
             <div className="flex items-center justify-center gap-4 text-[11px] text-gray-400">
-              <ShieldCheck size={14} className="text-green-500" />
+              <ShieldCheck size={14} className="text-[#22c55e]" />
               <span>256-bit SSL encryption</span>
               <span>·</span>
               <span>PCI DSS compliant</span>

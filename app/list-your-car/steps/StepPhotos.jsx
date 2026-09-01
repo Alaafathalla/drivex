@@ -50,10 +50,10 @@ export function StepPhotos({ data, update }) {
         onDrop={e => { e.preventDefault(); handleFiles(e.dataTransfer.files) }}
         onClick={() => !uploading && input.current?.click()}
         whileHover={{ borderColor: '#16a34a' }}
-        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 py-12 transition cursor-pointer ${uploading ? 'opacity-60 cursor-wait' : 'hover:bg-green-50'}`}
+        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 py-12 transition cursor-pointer ${uploading ? 'opacity-60 cursor-wait' : 'hover:bg-[#f0fdf4]'}`}
       >
         {uploading
-          ? <Loader2 size={32} className="animate-spin text-green-500" />
+          ? <Loader2 size={32} className="animate-spin text-[#22c55e]" />
           : <Upload size={28} className="text-gray-400" />
         }
         <div className="text-center">
@@ -88,7 +88,7 @@ export function StepPhotos({ data, update }) {
                 <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition group-hover:opacity-100">
                   {i !== 0 && (
                     <button onClick={() => setMain(i)}
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-green-700 hover:bg-white transition">
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#15803d] hover:bg-white transition">
                       <Star size={14} />
                     </button>
                   )}

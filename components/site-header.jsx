@@ -10,17 +10,14 @@ import {
   GitCompare,
   Heart,
   Menu,
-  Moon,
   Search,
   Sparkles,
-  Sun,
   UserRound,
   Wrench,
   X,
 } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 import { useFavorites } from '@/context/FavoritesContext'
-import { useTheme } from '@/context/ThemeContext'
 import { LanguageToggle } from '@/components/language-toggle'
 import { CurrencySwitcher } from '@/components/currency-switcher'
 import { ScrollProgress } from '@/components/scroll-progress'
@@ -54,6 +51,7 @@ const SERVICE_LINKS = [
   ['Roadside assistance', '/services/roadside', '24/7 help when you need it.'],
   ['Airport transfer', '/services/airport', 'Professional chauffeur pickup.'],
   ['Wedding cars', '/services/wedding', 'Premium event transport packages.'],
+  ['Accessories', '/accessories', 'Genuine parts, upgrades and car care kits.'],
 ]
 
 const CATEGORY_LINKS = [
@@ -144,7 +142,6 @@ function MegaMenu({ type, onClose }) {
 export function SiteHeader() {
   const { t, isRTL } = useLang()
   const { count } = useFavorites()
-  const { toggle: toggleTheme, isDark } = useTheme()
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -253,20 +250,6 @@ export function SiteHeader() {
             <a href="/compare" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] sm:grid" aria-label="Compare"><GitCompare size={17} /></a>
             <div className="hidden lg:block"><CurrencySwitcher compact /></div>
             <div className="hidden sm:block"><LanguageToggle /></div>
-            {/* Dark / Light mode toggle */}
-            <motion.button
-              onClick={toggleTheme}
-              whileTap={{ scale: 0.88, rotate: 15 }}
-              className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC]"
-              aria-label="Toggle theme"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {isDark
-                  ? <motion.span key="sun"  initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: .2 }}><Sun size={17} className="text-[#B5E92E]" /></motion.span>
-                  : <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: .2 }}><Moon size={17} /></motion.span>
-                }
-              </AnimatePresence>
-            </motion.button>
             <a href="/dashboard" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] lg:grid" aria-label="Dashboard"><UserRound size={17} /></a>
             <a href="/list-your-car" className="ml-1 hidden h-11 items-center gap-2 rounded-full bg-[#B5E92E] px-5 text-xs font-black text-[#0E1418] shadow-[0_10px_24px_rgba(181,233,46,.28)] transition hover:-translate-y-0.5 hover:brightness-105 md:flex"><Sparkles size={14} />List Your Car</a>
             <button onClick={() => setDrawerOpen((value) => !value)} className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-700 xl:hidden">{drawerOpen ? <X size={19} /> : <Menu size={19} />}</button>

@@ -1,4 +1,4 @@
-const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-100"
+const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-green-100"
 
 function PriceField({ label, prefix = 'AED', value, onChange, placeholder, hint }) {
   return (
@@ -54,12 +54,12 @@ export function StepPricing({ data, update }) {
 
       {/* Earnings estimate for rent */}
       {isRent && data.price && (
-        <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 p-4">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-green-700 mb-2">Estimated Earnings</p>
+        <div className="mt-5 rounded-2xl border border-[#d9f99d] bg-[#f0fdf4] p-4">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#15803d] mb-2">Estimated Earnings</p>
           <div className="grid grid-cols-3 gap-3 text-center">
             {[['Weekly', 7], ['Monthly', 30], ['Yearly', 365]].map(([label, d]) => (
-              <div key={label} className="rounded-xl bg-white border border-green-100 py-3">
-                <p className="text-[18px] font-black text-green-600">AED {Math.round(Number(data.price) * d * 0.75).toLocaleString()}</p>
+              <div key={label} className="rounded-xl bg-white border border-[#dcfce7] py-3">
+                <p className="text-[18px] font-black text-[#16a34a]">AED {Math.round(Number(data.price) * d * 0.75).toLocaleString()}</p>
                 <p className="text-[10px] text-gray-400">{label} (75% occupancy)</p>
               </div>
             ))}
