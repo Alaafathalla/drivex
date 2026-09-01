@@ -350,10 +350,10 @@ function BrandsStrip() {
 function StatsSection() {
   const { t } = useLang()
   const STATS = [
-    { value: '18K+', labelKey: 'home_stats_listings', icon: CheckCircle2 },
-    { value: '5K+',  labelKey: 'home_stats_drivers',  icon: Star },
-    { value: '50+',  labelKey: 'home_stats_dealers',  icon: ShieldCheck },
-    { value: '12',   labelKey: 'home_stats_cities',   icon: MapPin },
+    { value: '18K+', labelKey: 'stat_listings', icon: CheckCircle2 },
+    { value: '5K+',  labelKey: 'stat_drivers',  icon: Star },
+    { value: '50+',  labelKey: 'stat_dealers',  icon: ShieldCheck },
+    { value: '12',   labelKey: 'stat_cities',   icon: MapPin },
   ]
   return (
     <section className="relative overflow-hidden bg-[#0f172a] py-20">
@@ -365,7 +365,7 @@ function StatsSection() {
       <div className="page-inner relative z-10">
         <div className="grid gap-px overflow-hidden rounded-[28px] border border-white/8 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map(({ value, labelKey, icon: Icon }, i) => (
-            <motion.div key={label}
+            <motion.div key={labelKey}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -528,7 +528,10 @@ function CategoriesSection({ cats }) {
 // ─── Services ─────────────────────────────────────────────────────────────
 function ServicesSection() {
   const rowRef = useRef(null)
+  const { t } = useLang()
   const scroll = (d) => rowRef.current?.scrollBy({ left: d, behavior: 'smooth' })
+  // alias so inline code that references SERVICES_LIST still works
+  const SERVICES_LIST = SERVICES_META
 
   return (
     <section className="overflow-hidden bg-white py-24">
@@ -589,6 +592,14 @@ function ServicesSection() {
 
 // ─── How it works ─────────────────────────────────────────────────────────
 function HowItWorks() {
+  const { t } = useLang()
+
+  const PROCESS = [
+    { n: '01', title: t('hiw_step1_title'), text: t('hiw_step1_text'), icon: Search },
+    { n: '02', title: t('hiw_step2_title'), text: t('hiw_step2_text'), icon: GitCompare },
+    { n: '03', title: t('hiw_step3_title'), text: t('hiw_step3_text'), icon: Zap },
+  ]
+
   return (
     <section className="bg-[#f8fafc] py-24">
       <div className="page-inner">

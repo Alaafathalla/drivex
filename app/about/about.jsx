@@ -27,9 +27,40 @@ export default function AboutPage() {
 
   const stats = [
     { value: 10000, suffix: '+', label: t('stat_cars') },
-    { value: 350,   suffix: '+', label: 'Partners' },
+    { value: 350,   suffix: '+', label: t('about_partners_count') },
     { value: 12,    suffix: '',  label: t('stat_cities') },
-    { value: 24,    suffix: '/7',label: t('benefit_support_title') },
+    { value: 24,    suffix: '/7',label: t('trust_support') },
+  ]
+
+  const howWeWork = [
+    [t('about_curated'),      t('about_curated_text')],
+    [t('about_clear'),        t('about_clear_text')],
+    [t('about_support_long'), t('about_support_long_text')],
+  ]
+
+  const setsApart = [
+    [t('about_transparent'),  t('about_transparent_text')],
+    [t('about_premium_support'), t('about_premium_text')],
+    [t('about_seamless'),     t('about_seamless_text')],
+  ]
+
+  const timeline = [
+    ['2023', 'Marketplace launch',       'Verified buying and selling with transparent listing data.'],
+    ['2024', 'Rental network',           'Location-aware bookings, add-ons and payment-ready rental flows.'],
+    ['2025', 'Ownership services',       'Inspection, maintenance, detailing and roadside support joined the same account.'],
+    ['2026', 'DriveX intelligence',      'Comparison, finance planning, recommendations and a unified member dashboard.'],
+  ]
+
+  const leadership = [
+    ['Nadia Rahman',  'Chief Executive Officer',     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85'],
+    ['Karim Mansour', 'VP Automotive Operations',    'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85'],
+    ['Leila Haddad',  'Chief Product Officer',       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85'],
+  ]
+
+  const press = [
+    ['Gulf Mobility Review',    '"DriveX turns fragmented vehicle services into one premium workflow."'],
+    ['AutoTech Middle East',    '"A marketplace thinking beyond the transaction."'],
+    ['Future Transport',        '"One of the region\'s most complete ownership-interface concepts."'],
   ]
 
   return (
@@ -41,27 +72,30 @@ export default function AboutPage() {
         image="https://images.unsplash.com/photo-1562141961-b5d65aba8f5e?auto=format&fit=crop&w=2000&q=85"
       >
         <div className="mt-8 flex flex-wrap gap-3 text-[11px] font-black uppercase tracking-[.18em] text-white/65">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Trusted platform</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Local expertise</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Real support</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('about_trusted')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('about_local')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('about_real_support')}</span>
         </div>
       </PageHero>
 
+      {/* ── Mission ── */}
       <section className="page-inner py-20 sm:py-24 lg:py-28">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
           <motion.div initial={{ opacity:0, x:-24 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}>
-            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#2ee52b]">Why we exist</p>
-            <h2 className="mt-4 max-w-xl text-4xl font-black leading-[1.05] tracking-[-.05em] text-[#111827] sm:text-5xl">
+            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#2ee52b]">{t('about_why_exist')}</p>
+            <h2 className="mt-4 max-w-xl whitespace-pre-line text-4xl font-black leading-[1.05] tracking-[-.05em] text-[#111827] sm:text-5xl">
               {t('about_h2')}
             </h2>
           </motion.div>
 
-          <motion.div initial={{ opacity:0, x:24 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }} transition={{ duration:0.5, delay:0.08 }} className="rounded-[28px] border border-[#dfe7e0] bg-[#0b1017] p-7 text-white shadow-[0_30px_80px_rgba(9,12,16,0.12)]">
-            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">Our mission</p>
+          <motion.div initial={{ opacity:0, x:24 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }} transition={{ duration:0.5, delay:0.08 }}
+            className="rounded-[28px] border border-[#dfe7e0] bg-[#0b1017] p-7 text-white shadow-[0_30px_80px_rgba(9,12,16,0.12)]">
+            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">{t('about_mission')}</p>
             <p className="mt-4 leading-8 text-white/70">{t('about_body')}</p>
           </motion.div>
         </div>
 
+        {/* Stats */}
         <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-[20px] border border-[#dfe7e0] bg-[#dfe7e0] lg:grid-cols-4">
           {stats.map(({ value, suffix, label }, i) => (
             <motion.div key={label}
@@ -77,27 +111,21 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── How we work (dark) ── */}
       <section className="w-full bg-[#0b1017] text-white">
         <div className="page-inner py-20 sm:py-24 lg:py-28">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
-            <motion.div initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.6 }} className="overflow-hidden rounded-[28px] border border-white/10 bg-white/5">
-              <img
-                src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=90"
-                alt="Premium dealership experience"
-                className="h-full min-h-[360px] w-full object-cover"
-              />
+            <motion.div initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.6 }}
+              className="overflow-hidden rounded-[28px] border border-white/10 bg-white/5">
+              <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=90"
+                alt={t('about_smarter')} className="h-full min-h-[360px] w-full object-cover" />
             </motion.div>
 
             <motion.div initial={{ opacity:0, x:24 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }} transition={{ duration:0.5 }}>
-              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">How we work</p>
-              <h3 className="mt-4 text-3xl font-black tracking-[-.05em] sm:text-4xl">A smarter buying experience, built around trust.</h3>
-
+              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">{t('about_how_work')}</p>
+              <h3 className="mt-4 text-3xl font-black tracking-[-.05em] sm:text-4xl">{t('about_smarter')}</h3>
               <div className="mt-8 space-y-5">
-                {[
-                  ['Curated inventory', 'Every listing is reviewed for quality, condition, and transparency before it reaches the market.'],
-                  ['Clear guidance', 'From price comparison to financing and delivery, we simplify every step of the decision.'],
-                  ['Long-term support', 'Our team stays with you beyond the purchase through service, care, and after-sales help.'],
-                ].map(([title, desc], index) => (
+                {howWeWork.map(([title, desc], index) => (
                   <div key={title} className="flex gap-4 rounded-[18px] border border-white/10 bg-white/5 p-5">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#d7ff3f] text-[11px] font-black text-[#0b1017]">
                       0{index + 1}
@@ -114,19 +142,16 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── What sets us apart ── */}
       <section className="page-inner py-20 sm:py-24 lg:py-28">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#2ee52b]">What sets us apart</p>
-          <h3 className="mt-4 text-3xl font-black tracking-[-.05em] text-[#111827] sm:text-5xl">Built for drivers who expect more.</h3>
+          <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#2ee52b]">{t('about_sets_apart')}</p>
+          <h3 className="mt-4 text-3xl font-black tracking-[-.05em] text-[#111827] sm:text-5xl">{t('about_for_drivers')}</h3>
         </div>
-
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {[
-            ['Transparent pricing', 'No hidden costs, no confusion. Every figure is clear, fair, and easy to compare.'],
-            ['Premium support', 'We combine technology with real people who understand how car ownership works in the real world.'],
-            ['A seamless journey', 'From discovery to purchase to aftercare, every interaction is designed to feel effortless.'],
-          ].map(([title, desc]) => (
-            <motion.div key={title} initial={{ opacity:0, y:18 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.4 }} className="rounded-[24px] border border-[#dfe7e0] bg-white p-7 shadow-[0_12px_40px_rgba(17,24,39,0.04)]">
+          {setsApart.map(([title, desc]) => (
+            <motion.div key={title} initial={{ opacity:0, y:18 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.4 }}
+              className="rounded-[24px] border border-[#dfe7e0] bg-white p-7 shadow-[0_12px_40px_rgba(17,24,39,0.04)]">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d7ff3f]/20 text-lg font-black text-[#111827]">•</div>
               <h4 className="mt-6 text-xl font-black tracking-[-.03em] text-[#111827]">{title}</h4>
               <p className="mt-3 text-sm leading-7 text-[#475467]">{desc}</p>
@@ -135,39 +160,81 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── Timeline ── */}
       <section className="bg-white py-20 sm:py-24">
         <div className="page-inner">
           <div className="grid gap-8 lg:grid-cols-[.65fr_1.35fr]">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Company timeline</p>
-              <h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">Built one connected layer at a time.</h3>
-              <p className="mt-4 text-sm leading-7 text-[#64748b]">The platform evolves from marketplace discovery into a full ownership operating system.</p>
+              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">{t('about_timeline')}</p>
+              <h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">{t('about_timeline_title')}</h3>
+              <p className="mt-4 text-sm leading-7 text-[#64748b]">{t('about_timeline_desc')}</p>
             </div>
             <div className="space-y-3">
-              {[['2023','Marketplace launch','Verified buying and selling with transparent listing data.'],['2024','Rental network','Location-aware bookings, add-ons and payment-ready rental flows.'],['2025','Ownership services','Inspection, maintenance, detailing and roadside support joined the same account.'],['2026','DriveX intelligence','Comparison, finance planning, recommendations and a unified member dashboard.']].map(([year,title,text],i)=><motion.div key={year} initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.06}} className="grid gap-4 rounded-[22px] border border-[#e2e6de] bg-[#fafbf9] p-5 sm:grid-cols-[80px_1fr]"><span className="text-xl font-black text-[#7d9f24]">{year}</span><div><h4 className="font-black text-[#111827]">{title}</h4><p className="mt-2 text-sm leading-6 text-[#64748b]">{text}</p></div></motion.div>)}
+              {timeline.map(([year, title, text], i) => (
+                <motion.div key={year} initial={{ opacity:0, x:24 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
+                  transition={{ delay: i * 0.06 }}
+                  className="grid gap-4 rounded-[22px] border border-[#e2e6de] bg-[#fafbf9] p-5 sm:grid-cols-[80px_1fr]">
+                  <span className="text-xl font-black text-[#7d9f24]">{year}</span>
+                  <div>
+                    <h4 className="font-black text-[#111827]">{title}</h4>
+                    <p className="mt-2 text-sm leading-6 text-[#64748b]">{text}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
+      {/* ── Leadership ── */}
       <section className="page-inner py-20 sm:py-24">
-        <div className="mx-auto max-w-3xl text-center"><p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Leadership</p><h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">Automotive, product and operations under one roof.</h3></div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">{t('about_leadership')}</p>
+          <h3 className="mt-4 text-4xl font-black tracking-[-.05em] text-[#111827]">{t('about_leadership_title')}</h3>
+        </div>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {[['Nadia Rahman','Chief Executive Officer','https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85'],['Karim Mansour','VP Automotive Operations','https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85'],['Leila Haddad','Chief Product Officer','https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85']].map(([name,role,image],i)=><motion.article key={name} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.06}} className="overflow-hidden rounded-[26px] border border-[#e2e6de] bg-white"><img src={image} alt={name} className="aspect-[1.15] w-full object-cover"/><div className="p-5"><h4 className="text-lg font-black text-[#111827]">{name}</h4><p className="mt-1 text-xs font-bold uppercase tracking-[.1em] text-[#7d9f24]">{role}</p></div></motion.article>)}
+          {leadership.map(([name, role, image], i) => (
+            <motion.article key={name} initial={{ opacity:0, y:18 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
+              transition={{ delay: i * 0.06 }}
+              className="overflow-hidden rounded-[26px] border border-[#e2e6de] bg-white">
+              <img src={image} alt={name} className="aspect-[1.15] w-full object-cover" />
+              <div className="p-5">
+                <h4 className="text-lg font-black text-[#111827]">{name}</h4>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[.1em] text-[#7d9f24]">{role}</p>
+              </div>
+            </motion.article>
+          ))}
         </div>
       </section>
 
+      {/* ── Press ── */}
       <section className="bg-[#eef2e9] py-16">
-        <div className="page-inner"><div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">Press & recognition</p><h3 className="mt-3 text-3xl font-black tracking-[-.04em] text-[#111827]">A new standard for digital car ownership.</h3></div><p className="max-w-xl text-sm leading-7 text-[#64748b]">Sample press modules are API-ready so editorial coverage can later be managed from a CMS.</p></div><div className="mt-8 grid gap-4 md:grid-cols-3">{[['Gulf Mobility Review','“DriveX turns fragmented vehicle services into one premium workflow.”'],['AutoTech Middle East','“A marketplace thinking beyond the transaction.”'],['Future Transport','“One of the region’s most complete ownership-interface concepts.”']].map(([source,quote])=><article key={source} className="rounded-[22px] border border-[#d9e0d3] bg-white p-6"><p className="text-[10px] font-black uppercase tracking-[.16em] text-[#94a3b8]">{source}</p><p className="mt-5 text-base font-black leading-7 text-[#111827]">{quote}</p></article>)}</div></div>
+        <div className="page-inner">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#7d9f24]">{t('about_press')}</p>
+              <h3 className="mt-3 text-3xl font-black tracking-[-.04em] text-[#111827]">{t('about_press_title')}</h3>
+            </div>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {press.map(([source, quote]) => (
+              <article key={source} className="rounded-[22px] border border-[#d9e0d3] bg-white p-6">
+                <p className="text-[10px] font-black uppercase tracking-[.16em] text-[#94a3b8]">{source}</p>
+                <p className="mt-5 text-base font-black leading-7 text-[#111827]">{quote}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
+      {/* ── CTA ── */}
       <section className="page-inner pb-20 sm:pb-24 lg:pb-28">
-        <motion.div initial={{ opacity:0, y:18 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.4 }} className="rounded-[32px] bg-[#0b1017] px-6 py-10 text-white sm:px-10 lg:flex lg:items-center lg:justify-between">
+        <motion.div initial={{ opacity:0, y:18 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:0.4 }}
+          className="rounded-[32px] bg-[#0b1017] px-6 py-10 text-white sm:px-10 lg:flex lg:items-center lg:justify-between">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">Let’s move forward</p>
-            <h3 className="mt-3 text-3xl font-black tracking-[-.05em] sm:text-4xl">Ready to find your next car with confidence?</h3>
+            <p className="text-[11px] font-black uppercase tracking-[.22em] text-[#d7ff3f]">{t('about_forward')}</p>
+            <h3 className="mt-3 text-3xl font-black tracking-[-.05em] sm:text-4xl">{t('about_ready')}</h3>
           </div>
-
           <a href="/contact"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#d7ff3f] px-6 py-3 text-sm font-black text-[#090c10] transition hover:bg-[#c7f134] lg:mt-0">
             {t('about_partner')} <ArrowRight size={15} />
