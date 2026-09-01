@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronRight, Paintbrush, Settings2, Sofa } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
+import { useLang } from '@/context/LangContext'
 
 // ── Configuration data ────────────────────────────────────────────────────
 const MODELS = [
@@ -70,31 +71,30 @@ export default function ConfiguratorPage() {
   const [colorIdx, setColorIdx] = useState(0)
   const [rimIdx,   setRimIdx]   = useState(0)
   const [intIdx,   setIntIdx]   = useState(0)
-  const [tab,      setTab]      = useState('color')  // 'color' | 'rims' | 'interior'
+  const [tab,      setTab]      = useState('color')
+  const { t } = useLang()
 
   const model    = MODELS[modelIdx]
   const color    = COLORS[colorIdx]
   const rim      = RIMS[rimIdx]
   const interior = INTERIORS[intIdx]
 
-  // Get the best image for the current color
   const currentImage = model.images[color.name] || Object.values(model.images)[0]
   const totalPrice = model.basePrice + color.price + rim.price + interior.price
-
   const fmt = (n) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', maximumFractionDigits: 0 }).format(n)
 
   const TABS = [
-    { id: 'color',    label: 'Exterior',  icon: Paintbrush },
-    { id: 'rims',     label: 'Rims',      icon: Settings2 },
-    { id: 'interior', label: 'Interior',  icon: Sofa },
+    { id: 'color',    label: t('config_exterior'),  icon: Paintbrush },
+    { id: 'rims',     label: t('config_rims'),       icon: Settings2 },
+    { id: 'interior', label: t('config_interior'),   icon: Sofa },
   ]
 
   return (
     <main className="bg-[#F5F6F3]">
       <PageHero
-        eyebrow="Car Configurator"
-        title="Build your perfect spec."
-        description="Choose your model, exterior colour, rim style and interior trim. See every change reflected instantly."
+        eyebrow={t('config_eyebrow')}
+        title={t('config_title')}
+        description={t('config_desc')}
         image="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=2200&q=86"
       />
 
@@ -177,15 +177,15 @@ export default function ConfiguratorPage() {
           <div className="space-y-5">
             {/* Model info */}
             <div className="rounded-2xl border border-[#dfe5db] bg-white p-5 shadow-sm">
-              <p className="text-[10px] font-black uppercase tracking-[.2em] text-[#7d9f24]">Selected model</p>
+              <p className="text-[10px] font-black uppercase tracking-[.2em] text-[#7d9f24]">{t('config_selected_model')}</p>
               <h2 className="mt-1 text-xl font-black text-[#0f172a]">{model.brand} {model.model} {model.year}</h2>
               <div className="mt-3 flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] text-[#94a3b8]">Base price</p>
+                  <p className="text-[10px] text-[#94a3b8]">{t('config_base_price')}</p>
                   <p className="text-lg font-black text-[#0f172a]">{fmt(model.basePrice)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-[#94a3b8]">Options added</p>
+                  <p className="text-[10px] text-[#94a3b8]">{t('config_options_added')}</p>
                   <p className="text-lg font-black text-[#B5E92E]">+{fmt(color.price + rim.price + interior.price)}</p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function ConfiguratorPage() {
               {tab === 'color' && (
                 <motion.div key="color" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   className="rounded-2xl border border-[#dfe5db] bg-white p-5 shadow-sm">
-                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">Exterior colour</p>
+                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">{t('config_exterior_colour')}</p>
                   <div className="grid grid-cols-3 gap-3">
                     {COLORS.map((c, i) => (
                       <motion.button
@@ -230,7 +230,7 @@ export default function ConfiguratorPage() {
                         <span className="text-[10px] font-black text-[#0f172a]">{c.name}</span>
                         {c.price > 0
                           ? <span className="text-[9px] text-[#7d9f24]">+{fmt(c.price)}</span>
-                          : <span className="text-[9px] text-[#94a3b8]">Included</span>
+                          : <span className="text-[9px] text-[#94a3b8]">{t('config_included')}</span>
                         }
                         {colorIdx === i && (
                           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
@@ -247,7 +247,7 @@ export default function ConfiguratorPage() {
               {tab === 'rims' && (
                 <motion.div key="rims" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   className="rounded-2xl border border-[#dfe5db] bg-white p-5 shadow-sm">
-                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">Rim style</p>
+                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">{t('config_rim_style')}</p>
                   <div className="space-y-2.5">
                     {RIMS.map((r, i) => (
                       <motion.button
@@ -266,7 +266,7 @@ export default function ConfiguratorPage() {
                         <div className="text-right">
                           {r.price > 0
                             ? <span className="text-sm font-black text-[#7d9f24]">+{fmt(r.price)}</span>
-                            : <span className="rounded-full bg-[#eef4df] px-2 py-0.5 text-[10px] font-black text-[#7d9f24]">Standard</span>
+                            : <span className="rounded-full bg-[#eef4df] px-2 py-0.5 text-[10px] font-black text-[#7d9f24]">{t('config_standard')}</span>
                           }
                         </div>
                         {rimIdx === i && <Check size={16} className="shrink-0 text-[#B5E92E]" />}
@@ -279,7 +279,7 @@ export default function ConfiguratorPage() {
               {tab === 'interior' && (
                 <motion.div key="interior" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   className="rounded-2xl border border-[#dfe5db] bg-white p-5 shadow-sm">
-                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">Interior trim</p>
+                  <p className="mb-4 text-xs font-black uppercase tracking-[.14em] text-[#64748b]">{t('config_interior_trim')}</p>
                   <div className="space-y-2.5">
                     {INTERIORS.map((int, i) => (
                       <motion.button
@@ -300,7 +300,7 @@ export default function ConfiguratorPage() {
                         <div className="text-right">
                           {int.price > 0
                             ? <span className="text-sm font-black text-[#7d9f24]">+{fmt(int.price)}</span>
-                            : <span className="rounded-full bg-[#eef4df] px-2 py-0.5 text-[10px] font-black text-[#7d9f24]">Standard</span>
+                            : <span className="rounded-full bg-[#eef4df] px-2 py-0.5 text-[10px] font-black text-[#7d9f24]">{t('config_standard')}</span>
                           }
                         </div>
                         {intIdx === i && <Check size={16} className="shrink-0 text-[#B5E92E]" />}
@@ -313,13 +313,13 @@ export default function ConfiguratorPage() {
 
             {/* Summary + CTA */}
             <div className="rounded-2xl border border-[#dfe5db] bg-[#0b141b] p-5 text-white shadow-sm">
-              <p className="text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">Your configuration</p>
+              <p className="text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">{t('config_your_config')}</p>
               <div className="mt-3 space-y-2 text-sm">
                 {[
-                  ['Model',    `${model.brand} ${model.model}`],
-                  ['Colour',   color.name],
-                  ['Rims',     rim.name],
-                  ['Interior', interior.name],
+                  [t('config_model'),    `${model.brand} ${model.model}`],
+                  [t('config_colour'),   color.name],
+                  [t('config_rim'),      rim.name],
+                  [t('config_int'),      interior.name],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between">
                     <span className="text-white/50">{k}</span>
@@ -327,17 +327,17 @@ export default function ConfiguratorPage() {
                   </div>
                 ))}
                 <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
-                  <span className="font-black text-white/70">Total</span>
+                  <span className="font-black text-white/70">{t('config_total')}</span>
                   <motion.span key={totalPrice} initial={{ scale: 0.9 }} animate={{ scale: 1 }}
                     className="text-xl font-black text-[#B5E92E]">{fmt(totalPrice)}</motion.span>
                 </div>
               </div>
               <div className="mt-4 flex gap-2">
                 <a href="/cars" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#B5E92E] px-4 py-3 text-xs font-black text-[#071016] transition hover:brightness-105">
-                  Find this spec <ChevronRight size={14} />
+                  {t('config_find_spec')} <ChevronRight size={14} />
                 </a>
                 <a href="/calculator" className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs font-black text-white transition hover:bg-white/10">
-                  Finance it
+                  {t('config_finance')}
                 </a>
               </div>
             </div>
