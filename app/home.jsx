@@ -559,7 +559,7 @@ function ServicesSection() {
         </div>
 
         <div ref={rowRef} className="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {SERVICES_LIST.map(({ title, desc, href, icon: Icon, bg, fg, dot }, i) => (
+          {SERVICES_LIST.map(({ titleKey, descKey, href, icon: Icon, bg, fg }, i) => (
             <motion.a key={href} href={href}
               initial={{ opacity: 0, x: 24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -572,10 +572,10 @@ function ServicesSection() {
                 className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
                 <Icon size={22} style={{ color: fg }} />
               </motion.div>
-              <h3 className="mt-6 text-[17px] font-black" style={{ color: fg }}>{title}</h3>
-              <p className="mt-2 text-[12px] leading-5 text-[#64748b]">{desc}</p>
+              <h3 className="mt-6 text-[17px] font-black" style={{ color: fg }}>{t(titleKey)}</h3>
+              <p className="mt-2 text-[12px] leading-5 text-[#64748b]">{t(descKey)}</p>
               <span className="mt-6 inline-flex items-center gap-2 text-[11px] font-black" style={{ color: fg }}>
-                Learn more
+                {t('services_learn_more')}
                 <motion.span
                   animate={{ x: [0, 4, 0] }}
                   transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2 }}>
@@ -704,9 +704,9 @@ function SellCTA() {
 
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.28 }}
             className="mt-10 flex flex-wrap gap-3">
-            {['Free valuation', 'No hidden fees', 'Reach 18K+ buyers', 'List in 5 minutes'].map(t => (
-              <span key={t} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/60">
-                <CheckCircle2 size={11} className="text-[#B5E92E]" /> {t}
+            {['Free valuation', 'No hidden fees', 'Reach 18K+ buyers', 'List in 5 minutes'].map(pill => (
+              <span key={pill} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/60">
+                <CheckCircle2 size={11} className="text-[#B5E92E]" /> {pill}
               </span>
             ))}
           </motion.div>
@@ -718,6 +718,14 @@ function SellCTA() {
 
 // ─── Testimonials ─────────────────────────────────────────────────────────
 function TestimonialsSection() {
+  const { t } = useLang()
+
+  const QUOTES = [
+    { q: t('testimonial1_q'), name: t('testimonial1_name'), role: t('testimonial1_role'), avatar: 'M', color: '#B5E92E' },
+    { q: t('testimonial2_q'), name: t('testimonial2_name'), role: t('testimonial2_role'), avatar: 'O', color: '#0f172a' },
+    { q: t('testimonial3_q'), name: t('testimonial3_name'), role: t('testimonial3_role'), avatar: 'D', color: '#38bdf8' },
+  ]
+
   return (
     <section className="bg-white py-24">
       <div className="page-inner">
@@ -775,7 +783,16 @@ function TestimonialsSection() {
 
 // ─── FAQ ──────────────────────────────────────────────────────────────────
 function FAQSection() {
+  const { t } = useLang()
   const [open, setOpen] = useState(null)
+
+  const FAQS = [
+    [t('faq_q1'), t('faq_a1')],
+    [t('faq_q2'), t('faq_a2')],
+    [t('faq_q3'), t('faq_a3')],
+    [t('faq_q4'), t('faq_a4')],
+  ]
+
   return (
     <section className="bg-[#f8fafc] py-24">
       <div className="page-inner grid gap-16 lg:grid-cols-[1fr_1.6fr] lg:items-start">
@@ -837,6 +854,14 @@ function FAQSection() {
 
 // ─── Journal ──────────────────────────────────────────────────────────────
 function JournalSection() {
+  const { t } = useLang()
+
+  const POSTS = [
+    { tag: 'EV ownership',  title: 'What UAE drivers should know before switching to electric',    read: '6 min', href: '/journal/uae-ev-ownership-guide',    img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
+    { tag: 'Market guide',  title: 'How to compare a used luxury SUV beyond the headline price',  read: '8 min', href: '/journal/compare-used-luxury-suvs', img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
+    { tag: 'Car care',      title: 'Five preventive maintenance checks before a long summer drive',read: '5 min', href: '/journal/summer-checks',          img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
+  ]
+
   return (
     <section className="bg-white py-24">
       <div className="page-inner">
