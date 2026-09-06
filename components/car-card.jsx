@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GitCompare, Heart } from 'lucide-react'
 import { useFavorites } from '@/context/FavoritesContext'
 import { useCurrency } from '@/context/CurrencyContext'
+import { useLang } from '@/context/LangContext'
 
 /**
  * Shared animated car card used across Home, Buy Cars, Rentals pages.
@@ -14,12 +15,21 @@ import { useCurrency } from '@/context/CurrencyContext'
 export function CarCard({ car, index = 0, showCompare = false, className = '' }) {
   const { toggle, isFav } = useFavorites()
   const { format } = useCurrency()
+  const { t, isRTL } = useLang()
   const isRent = car.type === 'rent'
   const fav = isFav(car.slug)
   const href = isRent ? `/rentals/${car.slug}` : `/cars/${car.slug}`
   const priceLabel = isRent
-    ? `${format(car.pricePerDay)}/day`
+    ? `${format(car.pricePerDay)}${t('card_per_day')}`
     : format(car.price || 0)
+
+  const badgeText = isRent
+    ? t('card_for_rent')
+    : car.condition === 'New'
+      ? t('card_new')
+      : car.condition === 'Used'
+        ? t('card_used')
+        : t('card_for_sale')
 
   return (
     <motion.article
@@ -40,18 +50,18 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         {/* Badge */}
-        <span className="absolute left-3 top-3 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black uppercase tracking-[.08em]">
-          {isRent ? 'FOR RENT' : car.condition || 'FOR SALE'}
+        <span className={`absolute top-3 rounded-[3px] bg-[#2ee52b] px-2 py-[3px] text-[9px] font-black text-black uppercase tracking-[.08em] ${isRTL ? 'right-3' : 'left-3'}`}>
+          {badgeText}
         </span>
 
         {/* Action buttons */}
-        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
+        <div className={`absolute top-3 flex flex-col gap-1.5 ${isRTL ? 'left-3' : 'right-3'}`}>
           {/* Heart */}
           <motion.button
             onClick={(e) => { e.preventDefault(); toggle(car.slug) }}
             whileTap={{ scale: 0.8 }}
             className="relative grid h-8 w-8 place-items-center rounded-full bg-black/40 backdrop-blur-sm transition hover:bg-black/70"
-            aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
+            aria-label={fav ? t('card_removed_wishlist') : t('card_added_wishlist')}
           >
             <motion.span
               animate={fav ? { scale: [1, 1.5, 1] } : { scale: 1 }}
@@ -92,7 +102,7 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
               whileTap={{ scale: 0.85 }}
               onClick={(e) => e.preventDefault()}
               className="grid h-8 w-8 place-items-center rounded-full bg-black/40 backdrop-blur-sm text-white transition hover:bg-[#2ee52b] hover:text-black"
-              aria-label="Compare"
+              aria-label={t('nav_compare')}
             >
               <GitCompare size={13} />
             </motion.button>
@@ -104,7 +114,7 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
       <div className="p-4">
         <h3 className="truncate font-bold leading-tight">{car.name}</h3>
         <p className="mt-1 text-[11px] text-white/45">
-          {car.year} · {isRent ? `${car.seats} seats · ${car.fuel}` : `${(car.mileage || 0).toLocaleString()} km · ${car.fuel || ''}`}
+          {car.year} · {isRent ? `${car.seats} ${t('card_seats')} · ${car.fuel}` : `${(car.mileage || 0).toLocaleString()} ${t('card_km')} · ${car.fuel || ''}`}
         </p>
 
         <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-3">
@@ -112,7 +122,7 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
             <p className="text-[15px] font-black text-[#2ee52b]">{priceLabel}</p>
             {!isRent && car.price && (
               <p className="text-[9px] text-white/30 mt-0.5">
-                ~{format(Math.round(car.price / 60))}/mo
+                ~{format(Math.round(car.price / 60))}{t('card_per_mo')}
               </p>
             )}
           </div>
@@ -120,7 +130,7 @@ export function CarCard({ car, index = 0, showCompare = false, className = '' })
             href={href}
             className="rounded-[4px] border border-white/15 px-3 py-1.5 text-[10px] font-bold text-white/60 transition hover:border-[#2ee52b] hover:text-[#2ee52b]"
           >
-            View →
+            {t('card_view')}
           </a>
         </div>
       </div>

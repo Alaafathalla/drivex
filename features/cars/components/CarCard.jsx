@@ -5,13 +5,14 @@ import { useFavorites } from '@/context/FavoritesContext'
 import { useToast } from '@/context/ToastContext'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useCompare } from '@/context/CompareContext'
+import { useLang } from '@/context/LangContext'
 
 // Derive dynamic status badges from car data
-function getBadges(car) {
+function getBadges(car, t) {
   const badges = []
-  if (car.fuelType === 'Electric') badges.push({ label: 'Electric', icon: Zap, bg: 'bg-[#1d4ed8]', text: 'text-white' })
-  if (car.views && car.views > 300) badges.push({ label: 'Popular', icon: TrendingUp, bg: 'bg-[#7c3aed]', text: 'text-white' })
-  if (car.negotiable || (car.salePrice && car.salePrice < car.price)) badges.push({ label: 'Deal', icon: Tag, bg: 'bg-[#dc2626]', text: 'text-white' })
+  if (car.fuelType === 'Electric') badges.push({ label: t('card_electric'), icon: Zap, bg: 'bg-[#1d4ed8]', text: 'text-white' })
+  if (car.views && car.views > 300) badges.push({ label: t('card_popular'), icon: TrendingUp, bg: 'bg-[#7c3aed]', text: 'text-white' })
+  if (car.negotiable || (car.salePrice && car.salePrice < car.price)) badges.push({ label: t('card_deal'), icon: Tag, bg: 'bg-[#dc2626]', text: 'text-white' })
   return badges
 }
 
@@ -20,26 +21,37 @@ export function CarCard({ car, index = 0 }) {
   const toast = useToast()
   const { format } = useCurrency()
   const { toggle: compareToggle, isCompared, isFull } = useCompare()
+  const { t, isRTL } = useLang()
   const fav = isFav(String(car.id))
   const compared = isCompared(car.id)
   const isRent = car.listingType === 'rent'
   const href = `/cars/${car.id}`
-  const badges = getBadges(car)
+  const badges = getBadges(car, t)
 
   const handleHeart = (e) => {
     e.preventDefault()
     toggle(String(car.id))
-    toast({ message: fav ? 'Removed from wishlist' : `${car.brand} ${car.model} added to wishlist`, type: fav ? 'info' : 'fav' })
+    toast({
+      message: fav
+        ? t('card_removed_wishlist')
+        : `${car.brand} ${car.model} ${t('card_added_wishlist')}`,
+      type: fav ? 'info' : 'fav',
+    })
   }
 
   const handleCompare = (e) => {
     e.preventDefault()
     if (!compared && isFull) {
-      toast({ message: 'Comparison is full (max 4 vehicles)', type: 'error' })
+      toast({ message: t('card_compare_full'), type: 'error' })
       return
     }
     compareToggle(car)
-    toast({ message: compared ? `${car.brand} ${car.model} removed from comparison` : `${car.brand} ${car.model} added to comparison`, type: compared ? 'info' : 'success' })
+    toast({
+      message: compared
+        ? `${car.brand} ${car.model} ${t('card_removed_compare')}`
+        : `${car.brand} ${car.model} ${t('card_added_compare')}`,
+      type: compared ? 'info' : 'success',
+    })
   }
 
   return (
@@ -69,9 +81,9 @@ export function CarCard({ car, index = 0 }) {
           <div className="flex flex-wrap gap-1.5">
             {[
               car.engine && `⚙ ${car.engine}`,
-              car.mileage && `${Number(car.mileage).toLocaleString()} km`,
-              car.seats && `${car.seats} seats`,
-              car.doors && `${car.doors} doors`,
+              car.mileage && `${Number(car.mileage).toLocaleString()} ${t('card_km')}`,
+              car.seats && `${car.seats} ${t('card_seats')}`,
+              car.doors && `${car.doors} ${t('card_doors')}`,
             ].filter(Boolean).map((spec) => (
               <span key={spec} className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
                 {spec}
@@ -81,18 +93,18 @@ export function CarCard({ car, index = 0 }) {
         </motion.div>
 
         {/* Listing type badge */}
-        <span className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide shadow-sm ${
+        <span className={`absolute top-3 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wide shadow-sm ${isRTL ? 'right-3' : 'left-3'} ${
           isRent ? 'bg-[#1d4ed8] text-white' : car.condition === 'New' ? 'bg-[#B5E92E] text-[#071016]' : 'bg-[#f59e0b] text-white'
         }`}>
-          {isRent ? 'Rent' : car.condition === 'New' ? 'New' : 'Used'}
+          {isRent ? t('card_for_rent') : car.condition === 'New' ? t('card_new') : t('card_used')}
         </span>
 
         {/* Dynamic status badges */}
-        <div className="absolute left-3 top-10 flex flex-col gap-1 mt-1">
+        <div className={`absolute top-10 flex flex-col gap-1 mt-1 ${isRTL ? 'right-3' : 'left-3'}`}>
           {badges.map(({ label, icon: Icon, bg, text }) => (
             <motion.span
               key={label}
-              initial={{ opacity: 0, x: -8 }}
+              initial={{ opacity: 0, x: isRTL ? 8 : -8 }}
               animate={{ opacity: 1, x: 0 }}
               className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black uppercase ${bg} ${text} shadow-sm`}
             >
@@ -104,15 +116,15 @@ export function CarCard({ car, index = 0 }) {
 
         {/* Availability dot for rentals */}
         {isRent && (
-          <span className={`absolute right-[52px] top-3.5 h-2.5 w-2.5 rounded-full border-2 border-white shadow ${car.available ? 'bg-[#22c55e]' : 'bg-[#ef4444]'}`} />
+          <span className={`absolute top-3.5 h-2.5 w-2.5 rounded-full border-2 border-white shadow ${isRTL ? 'left-[52px]' : 'right-[52px]'} ${car.available ? 'bg-[#22c55e]' : 'bg-[#ef4444]'}`} />
         )}
 
         {/* Heart button */}
         <motion.button
           onClick={handleHeart}
           whileTap={{ scale: 0.75 }}
-          className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition hover:bg-white"
-          aria-label="Toggle wishlist"
+          className={`absolute top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition hover:bg-white ${isRTL ? 'left-3' : 'right-3'}`}
+          aria-label={fav ? t('card_removed_wishlist') : t('card_added_wishlist')}
         >
           <motion.span animate={fav ? { scale: [1, 1.6, 1] } : {}}>
             <Heart size={14} className={fav ? 'fill-rose-500 text-rose-500' : 'text-gray-400'} />
@@ -123,15 +135,15 @@ export function CarCard({ car, index = 0 }) {
         <motion.button
           onClick={handleCompare}
           whileTap={{ scale: 0.85 }}
-          className={`absolute bottom-3 right-3 flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[10px] font-black shadow-md backdrop-blur-sm transition
+          className={`absolute bottom-3 flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[10px] font-black shadow-md backdrop-blur-sm transition ${isRTL ? 'left-3' : 'right-3'}
             ${compared
               ? 'bg-[#B5E92E] text-[#071016]'
               : 'bg-white/90 text-slate-600 opacity-0 group-hover:opacity-100'
             }`}
-          aria-label="Toggle compare"
+          aria-label={t('nav_compare')}
         >
           <GitCompare size={11} />
-          {compared ? 'Added' : 'Compare'}
+          {compared ? t('compare_selected') : t('nav_compare')}
         </motion.button>
       </a>
 
@@ -158,7 +170,7 @@ export function CarCard({ car, index = 0 }) {
           {[
             [Settings2, car.transmission],
             [Fuel, car.fuelType],
-            [Users, car.seats ? `${car.seats} seats` : null],
+            [Users, car.seats ? `${car.seats} ${t('card_seats')}` : null],
           ].filter(([, v]) => Boolean(v)).map(([Icon, label]) => (
             <span key={label} className="flex items-center gap-1 rounded-md border border-[#f0f0f0] bg-[#f8fafc] px-2 py-0.5 text-[10px] text-[#64748b]">
               <Icon size={9} />{label}
@@ -169,10 +181,10 @@ export function CarCard({ car, index = 0 }) {
         {/* Price + CTA */}
         <div className="mt-4 flex items-end justify-between border-t border-[#f0f2ef] pt-3">
           <div>
-            <p className="text-[10px] text-[#94a3b8]">{isRent ? 'from / day' : 'asking price'}</p>
+            <p className="text-[10px] text-[#94a3b8]">{isRent ? t('search_rent') : t('search_buy')}</p>
             <p className="text-[18px] font-black text-[#0f172a]">
               {format(car.price)}
-              {isRent && <span className="text-[11px] font-normal text-[#94a3b8]">/day</span>}
+              {isRent && <span className="text-[11px] font-normal text-[#94a3b8]">{t('card_per_day')}</span>}
             </p>
           </div>
           <a
@@ -183,7 +195,7 @@ export function CarCard({ car, index = 0 }) {
                 : 'bg-gray-100 text-gray-400 pointer-events-none'
             }`}
           >
-            {isRent ? (car.available ? 'Rent Now' : 'Unavailable') : 'View Details'}
+            {isRent ? (car.available ? t('rent_view_book') : t('rent_unavailable')) : t('card_view')}
           </a>
         </div>
       </div>

@@ -1,17 +1,42 @@
-﻿import { Calendar, Fuel, Gauge, Palette, Settings2, Users, Car, Zap } from 'lucide-react'
+'use client'
+
+import { Calendar, Fuel, Gauge, Palette, Settings2, Users, Car, Zap } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
 
 export function CarSpecifications({ car }) {
+  const { t } = useLang()
+
+  const translateValue = (val) => {
+    if (!val) return val
+    const map = {
+      'Automatic': t('opt_auto'),
+      'Manual': t('opt_manual'),
+      'Petrol': t('opt_petrol'),
+      'Diesel': t('opt_diesel'),
+      'Electric': t('opt_electric'),
+      'Hybrid': t('opt_hybrid'),
+      'Sedan': t('opt_sedan'),
+      'SUV': t('opt_suv'),
+      'Sports': t('opt_sports'),
+      'Coupe': t('opt_coupe'),
+      'Hatchback': t('opt_hatchback'),
+      'Convertible': t('opt_convertible'),
+      'Pickup': t('opt_pickup'),
+    }
+    return map[val] || val
+  }
+
   const specs = [
-    { icon: Calendar,   label: 'Year',         value: car.year },
-    { icon: Gauge,      label: 'Mileage',       value: `${car.mileage?.toLocaleString()} km` },
-    { icon: Settings2,  label: 'Transmission',  value: car.transmission },
-    { icon: Fuel,       label: 'Fuel Type',     value: car.fuelType },
-    { icon: Car,        label: 'Body Type',     value: car.bodyType },
-    { icon: Zap,        label: 'Engine',        value: car.engine },
-    { icon: Palette,    label: 'Color',         value: car.color },
-    { icon: Users,      label: 'Seats',         value: car.seats },
-    { icon: Car,        label: 'Doors',         value: car.doors },
-    { icon: Settings2,  label: 'Drive',         value: car.drive || '—' },
+    { icon: Calendar,   label: t('spec_year'),        value: car.year },
+    { icon: Gauge,      label: t('spec_mileage'),     value: car.mileage ? `${car.mileage.toLocaleString()} ${t('filter_mileage').includes('km') ? 'km' : ''}` : null },
+    { icon: Settings2,  label: t('spec_trans'),       value: translateValue(car.transmission) },
+    { icon: Fuel,       label: t('spec_fuel'),        value: translateValue(car.fuelType) },
+    { icon: Car,        label: t('spec_body'),        value: translateValue(car.bodyType) },
+    { icon: Zap,        label: t('spec_engine'),      value: car.engine },
+    { icon: Palette,    label: t('spec_color'),       value: car.color },
+    { icon: Users,      label: t('spec_seats'),       value: car.seats },
+    { icon: Car,        label: t('spec_doors'),       value: car.doors },
+    { icon: Settings2,  label: t('spec_drive'),       value: car.drive || '—' },
   ].filter(s => s.value)
 
   return (
@@ -30,3 +55,4 @@ export function CarSpecifications({ car }) {
     </div>
   )
 }
+

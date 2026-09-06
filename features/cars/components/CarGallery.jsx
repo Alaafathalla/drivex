@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Camera, ChevronLeft, ChevronRight, Maximize2, RotateCcw, X } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
 
 // Swiper is loaded client-side only to avoid SSR issues
 export function CarGallery({ images = [] }) {
+  const { t, isRTL } = useLang()
   const [active, setActive] = useState(0)
   const [lightbox, setLightbox] = useState(false)
   const [view360, setView360] = useState(false)
@@ -78,17 +80,17 @@ export function CarGallery({ images = [] }) {
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); prev() }}
                 className="absolute left-3 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
-                aria-label="Previous image"
+                aria-label={t('gallery_prev')}
               >
-                <ChevronLeft size={18} className="text-[#0f172a]" />
+                <ChevronLeft size={18} className={`text-[#0f172a] ${isRTL ? 'rotate-180' : ''}`} />
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); next() }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
-                aria-label="Next image"
+                aria-label={t('gallery_next')}
               >
-                <ChevronRight size={18} className="text-[#0f172a]" />
+                <ChevronRight size={18} className={`text-[#0f172a] ${isRTL ? 'rotate-180' : ''}`} />
               </motion.button>
             </>
           )}
@@ -99,7 +101,7 @@ export function CarGallery({ images = [] }) {
               whileTap={{ scale: 0.88 }}
               onClick={() => setLightbox(true)}
               className="grid h-9 w-9 place-items-center rounded-full bg-white/85 shadow backdrop-blur-sm transition hover:bg-white"
-              aria-label="View fullscreen"
+              aria-label={t('gallery_fullscreen')}
             >
               <Maximize2 size={14} className="text-[#0f172a]" />
             </motion.button>
@@ -107,7 +109,7 @@ export function CarGallery({ images = [] }) {
               whileTap={{ scale: 0.88 }}
               onClick={() => setView360(true)}
               className="grid h-9 w-9 place-items-center rounded-full bg-[#B5E92E] shadow backdrop-blur-sm transition hover:brightness-105"
-              aria-label="360° view"
+              aria-label={t('gallery_360_btn')}
             >
               <RotateCcw size={13} className="text-[#071016]" />
             </motion.button>
@@ -191,7 +193,7 @@ export function CarGallery({ images = [] }) {
 
               {/* Caption */}
               <p className="mt-3 text-center text-xs text-white/50">
-                {active + 1} / {imgs.length} — Drag or use arrows to navigate
+                {active + 1} / {imgs.length} — {t('gallery_drag_hint')}
               </p>
             </motion.div>
 
@@ -203,12 +205,14 @@ export function CarGallery({ images = [] }) {
             {imgs.length > 1 && (
               <>
                 <button onClick={(e) => { e.stopPropagation(); prev() }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
-                  <ChevronLeft size={24} />
+                  className="absolute left-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                  aria-label={t('gallery_prev')}>
+                  <ChevronLeft size={24} className={isRTL ? 'rotate-180' : ''} />
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); next() }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
-                  <ChevronRight size={24} />
+                  className="absolute right-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                  aria-label={t('gallery_next')}>
+                  <ChevronRight size={24} className={isRTL ? 'rotate-180' : ''} />
                 </button>
               </>
             )}
@@ -233,8 +237,8 @@ export function CarGallery({ images = [] }) {
             >
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-black text-white">360° Exterior View</h2>
-                  <p className="mt-1 text-sm text-white/40">Drag to rotate. Scroll to zoom.</p>
+                  <h2 className="text-xl font-black text-white">{t('gallery_360_title')}</h2>
+                  <p className="mt-1 text-sm text-white/40">{t('gallery_360_sub')}</p>
                 </div>
                 <button
                   onClick={() => setView360(false)}
@@ -250,7 +254,7 @@ export function CarGallery({ images = [] }) {
                 <View360Strip images={imgs} />
                 <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-xs text-white/70 backdrop-blur-sm">
                   <RotateCcw size={12} />
-                  Drag left or right to rotate
+                  {t('gallery_360_drag')}
                 </div>
               </div>
 

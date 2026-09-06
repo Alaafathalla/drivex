@@ -1,8 +1,11 @@
 'use client'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, Loader2 } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
 
-export function ConfirmModal({ open, title, message, confirmLabel = 'Confirm', danger = false, loading = false, onConfirm, onCancel }) {
+export function ConfirmModal({ open, title, message, confirmLabel, danger = false, loading = false, onConfirm, onCancel }) {
+  const { t } = useLang()
+  const displayConfirmLabel = confirmLabel || t('modal_confirm')
   return (
     <AnimatePresence>
       {open && (
@@ -21,13 +24,13 @@ export function ConfirmModal({ open, title, message, confirmLabel = 'Confirm', d
             <div className="flex gap-3 border-t border-gray-100 px-6 py-4">
               <button onClick={onCancel} disabled={loading}
                 className="flex-1 rounded-xl border border-gray-200 py-2.5 text-[13px] font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50">
-                Cancel
+                {t('modal_cancel')}
               </button>
               <button onClick={onConfirm} disabled={loading}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white transition disabled:opacity-60 ${
-                  danger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-[#f0fdf4]0'
+                  danger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-700'
                 }`}>
-                {loading ? <><Loader2 size={15} className="animate-spin" /> Working…</> : confirmLabel}
+                {loading ? <><Loader2 size={15} className="animate-spin" /> {t('modal_working')}</> : displayConfirmLabel}
               </button>
             </div>
           </motion.div>
@@ -36,3 +39,4 @@ export function ConfirmModal({ open, title, message, confirmLabel = 'Confirm', d
     </AnimatePresence>
   )
 }
+

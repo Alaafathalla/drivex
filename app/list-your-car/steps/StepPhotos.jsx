@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Camera, Loader2, Star, Trash2, Upload } from 'lucide-react'
 import { useToast } from '@/context/ToastContext'
+import { useLang } from '@/context/LangContext'
 
 // Simulate image upload by converting File → object URL
 async function fakeUpload(file) {
@@ -12,8 +13,9 @@ async function fakeUpload(file) {
 }
 
 export function StepPhotos({ data, update }) {
-  const toast  = useToast()
-  const input  = useRef(null)
+  const toast = useToast()
+  const { t, lang } = useLang()
+  const input = useRef(null)
   const [uploading, setUploading] = useState(false)
 
   const handleFiles = async (files) => {
@@ -23,9 +25,9 @@ export function StepPhotos({ data, update }) {
     try {
       const urls = await Promise.all(arr.map(fakeUpload))
       update({ images: [...data.images, ...urls] })
-      toast({ message: `${urls.length} photo${urls.length > 1 ? 's' : ''} uploaded`, type: 'success' })
+      toast({ message: `${urls.length} ${t('lyc_photos_uploaded_toast')}`, type: 'success' })
     } catch {
-      toast({ message: 'Upload failed. Please try again.', type: 'error' })
+      toast({ message: t('lyc_photos_fail_toast'), type: 'error' })
     } finally {
       setUploading(false)
     }
@@ -36,13 +38,13 @@ export function StepPhotos({ data, update }) {
     const imgs = [...data.images]
     const [picked] = imgs.splice(i, 1)
     update({ images: [picked, ...imgs] })
-    toast({ message: 'Main photo updated', type: 'success' })
+    toast({ message: t('lyc_photos_main_updated'), type: 'success' })
   }
 
   return (
     <div>
-      <h2 className="mb-2 text-[17px] font-bold text-gray-900">Upload Photos</h2>
-      <p className="mb-6 text-[13px] text-gray-500">Add up to 8 photos. The first image will be the main listing photo. High-quality photos get 3× more inquiries.</p>
+      <h2 className="mb-2 text-[17px] font-bold text-gray-900">{t('lyc_photos_header')}</h2>
+      <p className="mb-6 text-[13px] text-gray-500">{t('lyc_photos_sub')}</p>
 
       {/* Upload zone */}
       <motion.div
@@ -57,8 +59,12 @@ export function StepPhotos({ data, update }) {
           : <Upload size={28} className="text-gray-400" />
         }
         <div className="text-center">
-          <p className="font-semibold text-gray-700">{uploading ? 'Uploading…' : 'Click or drag & drop photos'}</p>
-          <p className="mt-1 text-[12px] text-gray-400">PNG, JPG — max 10 MB each · {8 - data.images.length} slots remaining</p>
+          <p className="font-semibold text-gray-700">{uploading ? t('lyc_photos_uploading') : t('lyc_photos_drag_drop')}</p>
+          <p className="mt-1 text-[12px] text-gray-400">
+            {lang === 'ar'
+              ? `PNG, JPG — بحد أقصى ١٠ ميجابايت لكل صورة · متبقي ${8 - data.images.length} صور`
+              : `PNG, JPG — max 10 MB each · ${8 - data.images.length} slots remaining`}
+          </p>
         </div>
         <input ref={input} type="file" accept="image/*" multiple className="hidden"
           onChange={e => handleFiles(e.target.files)} />
@@ -78,21 +84,21 @@ export function StepPhotos({ data, update }) {
 
                 {/* Main badge */}
                 {i === 0 && (
-                  <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-green-600 px-2 py-0.5">
+                  <div className="absolute left-2 top-2 rtl:left-auto rtl:right-2 flex items-center gap-1 rounded-full bg-green-600 px-2 py-0.5">
                     <Star size={9} className="text-white" />
-                    <span className="text-[9px] font-black text-white">MAIN</span>
+                    <span className="text-[9px] font-black text-white">{t('lyc_photos_main_badge')}</span>
                   </div>
                 )}
 
                 {/* Actions overlay */}
                 <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition group-hover:opacity-100">
                   {i !== 0 && (
-                    <button onClick={() => setMain(i)}
+                    <button onClick={() => setMain(i)} title={t('lyc_photos_set_main')}
                       className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#15803d] hover:bg-white transition">
                       <Star size={14} />
                     </button>
                   )}
-                  <button onClick={() => remove(i)}
+                  <button onClick={() => remove(i)} title={t('lyc_photos_remove')}
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-500 hover:bg-white transition">
                     <Trash2 size={14} />
                   </button>
@@ -104,8 +110,11 @@ export function StepPhotos({ data, update }) {
       )}
 
       {data.images.length === 0 && (
-        <p className="mt-4 text-center text-[12px] text-gray-400">No photos yet. At least 1 photo is recommended.</p>
+        <p className="mt-4 text-center text-[12px] text-gray-400">
+          {lang === 'ar' ? 'لا توجد صور مضافة بعد. يُوصى بإضافة صورة واحدة على الأقل.' : 'No photos yet. At least 1 photo is recommended.'}
+        </p>
       )}
     </div>
   )
 }
+

@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { GitCompare, X } from 'lucide-react'
 import { useCompare } from '@/context/CompareContext'
+import { useLang } from '@/context/LangContext'
 
 export function CompareBar() {
   const { items, remove, clear, count } = useCompare()
+  const { t } = useLang()
 
   return (
     <AnimatePresence>
@@ -57,8 +59,8 @@ export function CompareBar() {
             <div className="mx-1 h-10 w-px bg-white/10" />
 
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[.15em] text-[#B5E92E]">{count}/4 selected</p>
-              <p className="text-[11px] text-white/50">Ready to compare</p>
+              <p className="text-[10px] font-black uppercase tracking-[.15em] text-[#B5E92E]">{count}/4 {t('compare_selected')}</p>
+              <p className="text-[11px] text-white/50">{t('compare_ready')}</p>
             </div>
 
             <a
@@ -66,13 +68,13 @@ export function CompareBar() {
               className="flex h-10 items-center gap-2 rounded-xl bg-[#B5E92E] px-4 text-[12px] font-black text-[#071016] transition hover:brightness-105"
             >
               <GitCompare size={14} />
-              Compare now
+              {t('compare_now')}
             </a>
 
             <button
               onClick={clear}
               className="grid size-9 place-items-center rounded-xl bg-white/5 text-white/40 transition hover:bg-white/10 hover:text-white"
-              aria-label="Clear comparison"
+              aria-label={t('compare_clear')}
             >
               <X size={15} />
             </button>

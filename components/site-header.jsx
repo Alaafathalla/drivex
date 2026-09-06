@@ -33,36 +33,6 @@ const NAV = [
   { key: 'nav_contact', href: '/contact' },
 ]
 
-const MARKET_LINKS = [
-  ['New & used cars', '/cars', 'Verified inventory curated for confident buying.'],
-  ['Electric vehicles', '/categories/electric', 'Modern EV and hybrid-ready picks.'],
-  ['Luxury collection', '/categories/luxury', 'Premium brands, trims and standout specs.'],
-  ['Compare cars', '/compare', 'Compare up to four vehicles side by side.'],
-  ['Finance calculator', '/calculator', 'Estimate your monthly budget instantly.'],
-  ['Sell your car', '/list-your-car', 'Create a polished listing in minutes.'],
-]
-
-const SERVICE_LINKS = [
-  ['Inspection', '/services/inspection', 'Independent pre-purchase and condition reports.'],
-  ['Maintenance', '/services/maintenance', 'Workshop service and routine repairs.'],
-  ['Car wash & detailing', '/services/wash', 'Mobile and studio-grade detailing.'],
-  ['Performance tuning', '/services/tuning', 'Diagnostics and upgrade consultation.'],
-  ['Vehicle delivery', '/services/delivery', 'Protected pickup and transport.'],
-  ['Roadside assistance', '/services/roadside', '24/7 help when you need it.'],
-  ['Airport transfer', '/services/airport', 'Professional chauffeur pickup.'],
-  ['Wedding cars', '/services/wedding', 'Premium event transport packages.'],
-  ['Accessories', '/accessories', 'Genuine parts, upgrades and car care kits.'],
-]
-
-const CATEGORY_LINKS = [
-  { label: 'SUV',       href: '/categories/suv',       img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '340+' },
-  { label: 'Sedan',     href: '/categories/sedan',     img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=300&q=80', count: '210+' },
-  { label: 'Electric',  href: '/categories/electric',  img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=300&q=80', count: '95+' },
-  { label: 'Sports',    href: '/categories/sports',    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80', count: '78+' },
-  { label: 'Luxury',    href: '/categories/luxury',    img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80', count: '130+' },
-  { label: '7-Seater',  href: '/categories/7-seater',  img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '60+' },
-]
-
 const BRAND_LINKS = [
   ['BMW', '/brands/bmw'],
   ['Mercedes-Benz', '/brands/mercedes-benz'],
@@ -73,7 +43,39 @@ const BRAND_LINKS = [
 ]
 
 function MegaMenu({ type, onClose }) {
-  const items = type === 'market' ? MARKET_LINKS : type === 'services' ? SERVICE_LINKS : CATEGORY_LINKS
+  const { t, isRTL } = useLang()
+
+  const marketLinks = [
+    [t('mega_new_used'), '/cars', t('mega_new_used_desc')],
+    [t('mega_electric'), '/categories/electric', t('mega_electric_desc')],
+    [t('mega_luxury'), '/categories/luxury', t('mega_luxury_desc')],
+    [t('mega_compare'), '/compare', t('mega_compare_desc')],
+    [t('mega_finance'), '/calculator', t('mega_finance_desc')],
+    [t('mega_sell'), '/list-your-car', t('mega_sell_desc')],
+  ]
+
+  const serviceLinks = [
+    [t('svc_inspection'), '/services/inspection', t('services_insp_desc')],
+    [t('svc_maintenance'), '/services/maintenance', t('svc_maintenance_desc')],
+    [t('svc_inspection'), '/services/wash', t('svc_inspection_desc')],
+    [t('services_tuning'), '/services/tuning', t('services_tuning_desc')],
+    [t('services_delivery'), '/services/delivery', t('services_deliv_desc')],
+    [t('svc_roadside'), '/services/roadside', t('svc_roadside_desc')],
+    [t('svc_airport'), '/services/airport', t('svc_airport_desc')],
+    [t('services_wedding'), '/services/wedding', t('services_wedding_desc')],
+    [t('svc_accessories'), '/accessories', t('svc_accessories_desc')],
+  ]
+
+  const categoryLinks = [
+    { label: t('cat_suv'),       href: '/categories/suv',       img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '340+' },
+    { label: t('cat_sedan'),     href: '/categories/sedan',     img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=300&q=80', count: '210+' },
+    { label: t('cat_electric'),  href: '/categories/electric',  img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=300&q=80', count: '95+' },
+    { label: t('cat_sports'),    href: '/categories/sports',    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&q=80', count: '78+' },
+    { label: t('cat_luxury'),    href: '/categories/luxury',    img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80', count: '130+' },
+    { label: t('cat_7seater'),   href: '/categories/7-seater',  img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=300&q=80', count: '60+' },
+  ]
+
+  const items = type === 'market' ? marketLinks : type === 'services' ? serviceLinks : categoryLinks
 
   return (
     <motion.div
@@ -86,9 +88,9 @@ function MegaMenu({ type, onClose }) {
       {type === 'categories' ? (
         <div className="grid gap-3 lg:grid-cols-2">
           <div className="rounded-[24px] bg-[#F8FAFC] p-3">
-            <p className="px-3 pb-2 pt-2 text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Body styles</p>
+            <p className="px-3 pb-2 pt-2 text-[10px] font-black uppercase tracking-[.18em] text-slate-400">{t('mega_body_styles')}</p>
             <div className="grid grid-cols-3 gap-2">
-              {CATEGORY_LINKS.map(({ label, href, img, count }) => (
+              {categoryLinks.map(({ label, href, img, count }) => (
                 <a key={href} href={href} onClick={onClose}
                   className="group relative overflow-hidden rounded-2xl border border-transparent transition hover:border-[#B5E92E]"
                   style={{ aspectRatio: '4/3' }}>
@@ -96,19 +98,19 @@ function MegaMenu({ type, onClose }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0b1220]/80 via-[#0b1220]/20 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-2.5">
                     <p className="text-[12px] font-black text-white leading-tight">{label}</p>
-                    <p className="text-[10px] text-white/60">{count} cars</p>
+                    <p className="text-[10px] text-white/60">{count} {t('mega_cars_count_suffix')}</p>
                   </div>
                 </a>
               ))}
             </div>
           </div>
           <div className="rounded-[24px] bg-[#F8FAFC] p-3">
-            <p className="px-3 pb-2 pt-2 text-[10px] font-black uppercase tracking-[.18em] text-slate-400">Popular brands</p>
+            <p className="px-3 pb-2 pt-2 text-[10px] font-black uppercase tracking-[.18em] text-slate-400">{t('mega_popular_brands')}</p>
             <div className="grid grid-cols-2 gap-1">
               {BRAND_LINKS.map(([title, href]) => (
                 <a key={href} href={href} onClick={onClose} className="group flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-bold text-slate-800 transition hover:bg-white">
                   <span>{title}</span>
-                  <ArrowRight size={12} className="text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#7f9f1b]" />
+                  <ArrowRight size={12} className={`text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#7f9f1b] ${isRTL ? 'rotate-180' : ''}`} />
                 </a>
               ))}
             </div>
@@ -120,7 +122,7 @@ function MegaMenu({ type, onClose }) {
             <a key={href} href={href} onClick={onClose} className="group rounded-[22px] border border-transparent bg-white p-4 transition hover:border-[#E5E7EB] hover:bg-[#F8FAFC]">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-sm font-black text-slate-900">{title}</span>
-                <ArrowRight size={14} className="text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#7f9f1b]" />
+                <ArrowRight size={14} className={`text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#7f9f1b] ${isRTL ? 'rotate-180' : ''}`} />
               </div>
               {description && <p className="mt-2 text-xs leading-5 text-slate-500">{description}</p>}
             </a>
@@ -130,10 +132,10 @@ function MegaMenu({ type, onClose }) {
 
       <div className="mt-3 flex flex-col items-start justify-between gap-4 rounded-[24px] border border-[#E5E7EB] bg-[#F8FAFC] px-5 py-4 md:flex-row md:items-center">
         <div>
-          <p className="text-xs font-black uppercase tracking-[.18em] text-[#7f9f1b]">DriveX concierge</p>
-          <p className="mt-1 text-sm text-slate-500">Need help choosing the right car or service package? Talk to a specialist.</p>
+          <p className="text-xs font-black uppercase tracking-[.18em] text-[#7f9f1b]">{t('mega_concierge')}</p>
+          <p className="mt-1 text-sm text-slate-500">{t('mega_concierge_desc')}</p>
         </div>
-        <a href="/contact" className="rounded-full bg-[#0F172A] px-4 py-2 text-xs font-black text-white">Get help</a>
+        <a href="/contact" className="rounded-full bg-[#0F172A] px-4 py-2 text-xs font-black text-white">{t('mega_get_help')}</a>
       </div>
     </motion.div>
   )
@@ -238,20 +240,20 @@ export function SiteHeader() {
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
             <button onClick={() => setSearchOpen(true)} className="group hidden h-11 items-center gap-2 rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-4 text-xs font-bold text-slate-500 transition hover:border-slate-300 md:flex">
               <Search size={15} />
-              <span className="hidden lg:inline">Search cars, brands or rentals</span>
+              <span className="hidden lg:inline">{t('nav_search_ph')}</span>
               <kbd className="ml-1 rounded-full border border-white bg-white px-2 py-0.5 text-[9px] text-slate-400">⌘K</kbd>
             </button>
             <button onClick={() => setSearchOpen(true)} className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 md:hidden"><Search size={17} /></button>
 
-            <a href="/favorites" className="relative grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC]" aria-label="Saved cars">
+            <a href="/favorites" className="relative grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC]" aria-label={t('nav_favorites')}>
               <Heart size={17} />
               {count > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-h-4 min-w-4 place-items-center rounded-full bg-[#B5E92E] px-1 text-[9px] font-black text-[#0E1418]">{count > 9 ? '9+' : count}</span>}
             </a>
-            <a href="/compare" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] sm:grid" aria-label="Compare"><GitCompare size={17} /></a>
+            <a href="/compare" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] sm:grid" aria-label={t('nav_compare')}><GitCompare size={17} /></a>
             <div className="hidden lg:block"><CurrencySwitcher compact /></div>
             <div className="hidden sm:block"><LanguageToggle /></div>
-            <a href="/dashboard" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] lg:grid" aria-label="Dashboard"><UserRound size={17} /></a>
-            <a href="/list-your-car" className="ml-1 hidden h-11 items-center gap-2 rounded-full bg-[#B5E92E] px-5 text-xs font-black text-[#0E1418] shadow-[0_10px_24px_rgba(181,233,46,.28)] transition hover:-translate-y-0.5 hover:brightness-105 md:flex"><Sparkles size={14} />List Your Car</a>
+            <a href="/dashboard" className="hidden size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-500 transition hover:bg-[#F8FAFC] lg:grid" aria-label={t('nav_dashboard')}><UserRound size={17} /></a>
+            <a href="/list-your-car" className="ml-1 hidden h-11 items-center gap-2 rounded-full bg-[#B5E92E] px-5 text-xs font-black text-[#0E1418] shadow-[0_10px_24px_rgba(181,233,46,.28)] transition hover:-translate-y-0.5 hover:brightness-105 md:flex"><Sparkles size={14} />{t('nav_list_car')}</a>
             <button onClick={() => setDrawerOpen((value) => !value)} className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-slate-700 xl:hidden">{drawerOpen ? <X size={19} /> : <Menu size={19} />}</button>
           </div>
         </div>
@@ -278,11 +280,11 @@ export function SiteHeader() {
                 ))}
               </nav>
               <div className="mt-6 grid grid-cols-2 gap-2">
-                <a href="/compare" className="rounded-2xl border border-slate-200 p-4 text-xs font-black text-slate-800"><GitCompare size={18} className="mb-3" />Compare</a>
-                <a href="/services" className="rounded-2xl border border-slate-200 p-4 text-xs font-black text-slate-800"><Wrench size={18} className="mb-3" />Services</a>
+                <a href="/compare" className="rounded-2xl border border-slate-200 p-4 text-xs font-black text-slate-800"><GitCompare size={18} className="mb-3" />{t('nav_compare')}</a>
+                <a href="/services" className="rounded-2xl border border-slate-200 p-4 text-xs font-black text-slate-800"><Wrench size={18} className="mb-3" />{t('nav_services')}</a>
               </div>
               <div className="mt-5 flex items-center gap-2"><CurrencySwitcher /><LanguageToggle /></div>
-              <a href="/list-your-car" className="mt-5 flex h-12 items-center justify-center rounded-2xl bg-[#B5E92E] text-sm font-black text-[#0E1418]">List Your Car</a>
+              <a href="/list-your-car" className="mt-5 flex h-12 items-center justify-center rounded-2xl bg-[#B5E92E] text-sm font-black text-[#0E1418]">{t('nav_list_car')}</a>
             </motion.aside>
           </>
         )}
@@ -299,16 +301,16 @@ export function SiteHeader() {
                 <button type="button" onClick={() => setSearchOpen(false)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-black text-slate-400">ESC</button>
               </form>
               <div className="p-3">
-                <div className="flex items-center justify-between px-2 py-2"><p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-400">{q.length >= 2 ? 'Suggestions' : 'Popular searches'}</p>{searching && <span className="text-[10px] text-slate-400">Searching…</span>}</div>
+                <div className="flex items-center justify-between px-2 py-2"><p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-400">{q.length >= 2 ? t('search_suggestions') : t('search_popular')}</p>{searching && <span className="text-[10px] text-slate-400">{t('search_searching')}</span>}</div>
                 {q.length >= 2 ? (
                   <div className="space-y-1">
                     {suggestions.length ? suggestions.map((item) => (
                       <a key={item.id} href={`/cars/${item.id}`} className="flex items-center gap-3 rounded-2xl p-2.5 transition hover:bg-slate-50">
                         <img src={item.image} alt="" className="h-12 w-20 rounded-xl object-cover" />
                         <div className="min-w-0 flex-1"><p className="truncate text-sm font-black text-slate-950">{item.label}</p><p className="text-xs text-slate-400">{item.meta}</p></div>
-                        <ArrowRight size={15} className="text-slate-300" />
+                        <ArrowRight size={15} className={`text-slate-300 ${isRTL ? 'rotate-180' : ''}`} />
                       </a>
-                    )) : !searching && <p className="px-3 py-8 text-center text-sm text-slate-400">No matching vehicles found.</p>}
+                    )) : !searching && <p className="px-3 py-8 text-center text-sm text-slate-400">{t('car_not_found')}</p>}
                   </div>
                 ) : (
                   <div className="flex flex-wrap gap-2 px-2 pb-3">
@@ -317,7 +319,7 @@ export function SiteHeader() {
                     ))}
                   </div>
                 )}
-                {q.trim() && <a href={searchHref} className="mt-2 flex items-center justify-between rounded-2xl bg-[#0F172A] px-4 py-3 text-sm font-black text-white">View all results for “{q.trim()}”<ArrowRight size={15} /></a>}
+                {q.trim() && <a href={searchHref} className="mt-2 flex items-center justify-between rounded-2xl bg-[#0F172A] px-4 py-3 text-sm font-black text-white"><span>{t('search_btn')}: “{q.trim()}”</span><ArrowRight size={15} className={isRTL ? 'rotate-180' : ''} /></a>}
               </div>
             </motion.div>
           </motion.div>
