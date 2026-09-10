@@ -467,13 +467,13 @@ function FeaturedSection({ cars }) {
 function CategoriesSection({ cats }) {
   const { t } = useLang()
   const fallback = [
-    { slug: 'suv',      title: 'SUV',     count: 340, image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
-    { slug: 'sedan',    title: 'Sedan',   count: 210, image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
-    { slug: 'electric', title: 'Electric',count: 95,  image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
-    { slug: 'sports',   title: 'Sports',  count: 78,  image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80' },
-    { slug: 'luxury',   title: 'Luxury',  count: 130, image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=600&q=80' },
+    { slug: 'suv',      titleKey: 'cat_suv_name',      count: 340, image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
+    { slug: 'sedan',    titleKey: 'cat_sedan_name',    count: 210, image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
+    { slug: 'electric', titleKey: 'cat_electric_name', count: 95,  image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
+    { slug: 'sports',   titleKey: 'cat_sports_name',   count: 78,  image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80' },
+    { slug: 'luxury',   titleKey: 'cat_luxury_name',   count: 130, image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=600&q=80' },
   ]
-  const list = cats?.length ? cats : fallback
+  const list = (cats?.length ? cats.map(c => ({ ...c, titleKey: null })) : fallback)
 
   return (
     <section className="bg-white py-24">
@@ -509,7 +509,7 @@ function CategoriesSection({ cats }) {
 
               <div className="absolute inset-x-0 bottom-0 p-5">
                 <p className="text-[11px] font-black uppercase tracking-[.15em] text-white/60">{cat.count}{t('cats_cars_count')}</p>
-                <p className={`font-black text-white ${i === 0 ? 'text-[28px]' : 'text-[18px]'}`}>{cat.title}</p>
+                <p className={`font-black text-white ${i === 0 ? 'text-[28px]' : 'text-[18px]'}`}>{cat.titleKey ? t(cat.titleKey) : cat.title}</p>
                 <motion.span
                   initial={{ x: 0 }}
                   whileHover={{ x: 4 }}
@@ -863,9 +863,9 @@ function JournalSection() {
   const { t } = useLang()
 
   const POSTS = [
-    { tag: 'EV ownership',  title: 'What UAE drivers should know before switching to electric',    read: '6 min', href: '/journal/uae-ev-ownership-guide',    img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
-    { tag: 'Market guide',  title: 'How to compare a used luxury SUV beyond the headline price',  read: '8 min', href: '/journal/compare-used-luxury-suvs', img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
-    { tag: 'Car care',      title: 'Five preventive maintenance checks before a long summer drive',read: '5 min', href: '/journal/summer-checks',          img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
+    { tagKey: 'home_journal_p1_tag', titleKey: 'home_journal_p1_title', readKey: 'home_journal_p1_read', href: '/journal/uae-ev-ownership-guide',  img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80' },
+    { tagKey: 'home_journal_p2_tag', titleKey: 'home_journal_p2_title', readKey: 'home_journal_p2_read', href: '/journal/compare-used-luxury-suvs', img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80' },
+    { tagKey: 'home_journal_p3_tag', titleKey: 'home_journal_p3_title', readKey: 'home_journal_p3_read', href: '/journal/summer-checks',             img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
   ]
 
   return (
@@ -874,18 +874,18 @@ function JournalSection() {
         <div className="mb-12 flex items-end justify-between">
           <div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">DriveX journal</motion.p>
+              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('home_journal_eyebrow')}</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-              className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+              className="mt-3 whitespace-pre-line font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-              Practical intelligence<br />for car people.
+              {t('home_journal_title')}
             </motion.h2>
           </div>
-          <a href="/journal" className="shrink-0 text-[12px] font-black text-[#0f172a] underline underline-offset-4 hover:text-[#B5E92E]">All articles →</a>
+          <a href="/journal" className="shrink-0 text-[12px] font-black text-[#0f172a] underline underline-offset-4 hover:text-[#B5E92E]">{t('home_journal_all')}</a>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
-          {POSTS.map(({ tag, title, read, href, img }, i) => (
+          {POSTS.map(({ tagKey, titleKey, readKey, href, img }, i) => (
             <motion.a key={href} href={href}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -894,13 +894,13 @@ function JournalSection() {
               whileHover={{ y: -5, transition: { duration: 0.22 } }}
               className="group block overflow-hidden rounded-[22px] border border-[#e8ecf0] bg-white shadow-sm transition hover:shadow-xl">
               <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
-                <img src={img} alt={title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-106" />
+                <img src={img} alt={t(titleKey)} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-106" />
                 <div className="absolute inset-0 bg-black/10" />
-                <span className="absolute left-4 top-4 rounded-full bg-[#0f172a] px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-white">{tag}</span>
+                <span className="absolute left-4 top-4 rounded-full bg-[#0f172a] px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-white">{t(tagKey)}</span>
               </div>
               <div className="p-5">
-                <h3 className="text-[15px] font-black leading-snug tracking-tight text-[#0f172a] transition group-hover:text-[#7d9f24]">{title}</h3>
-                <p className="mt-3 text-[11px] text-[#94a3b8]">{read} read</p>
+                <h3 className="text-[15px] font-black leading-snug tracking-tight text-[#0f172a] transition group-hover:text-[#7d9f24]">{t(titleKey)}</h3>
+                <p className="mt-3 text-[11px] text-[#94a3b8]">{t(readKey)} {t('home_journal_read')}</p>
               </div>
             </motion.a>
           ))}

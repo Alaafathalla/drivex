@@ -11,51 +11,66 @@ import { FaqSection, TestimonialsSection, TrustBand } from '@/components/platfor
 import { RentalDateRangePicker } from '@/components/platform/rental-date-range-picker'
 import { CarDrivingAnimation } from '@/components/platform/car-driving-animation'
 import { useCurrency } from '@/context/CurrencyContext'
-
-const CATEGORIES = ['All', ...RENTAL_CATEGORIES.map((item) => item.name)]
+import { useLang } from '@/context/LangContext'
 
 function RentalCard({ car, index, search }) {
   const { format } = useCurrency()
+  const { t } = useLang()
   const href = `/rentals/${car.slug}?${search.toString()}`
+
   return (
     <motion.article
       layout
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: .98 }}
-      transition={{ duration: .38, delay: index * .045 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.38, delay: index * 0.045 }}
       whileHover={{ y: -5 }}
       className="group overflow-hidden rounded-[24px] border border-[#E2E6DE] bg-white shadow-[0_18px_50px_rgba(15,23,42,.055)]"
     >
       <a href={href} className="relative block aspect-[1.48] overflow-hidden">
         <img className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" src={car.image} alt={car.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#091219]/65 via-transparent to-transparent" />
-        <span className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[.12em] ${car.available ? 'bg-[#B5E92E] text-[#091219]' : 'bg-white/90 text-[#091219]'}`}>
-          {car.available ? 'Available' : 'Unavailable'}
+        <span className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[.12em] ${
+          car.available ? 'bg-[#B5E92E] text-[#091219]' : 'bg-white/90 text-[#091219]'
+        }`}>
+          {car.available ? t('rentals_available') : t('rentals_unavailable')}
         </span>
-        <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-black/25 px-3 py-1 text-[10px] font-bold text-white backdrop-blur">{car.category}</span>
+        <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-black/25 px-3 py-1 text-[10px] font-bold text-white backdrop-blur">
+          {car.category}
+        </span>
       </a>
       <div className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2"><h3 className="text-lg font-black tracking-[-.02em] text-[#0F172A]">{car.name}</h3><ShieldCheck size={15} className="text-[#7C8B55]" /></div>
-            <p className="mt-1 text-xs text-[#64748B]">{car.year} · {car.seats} seats · {car.transmission} · {car.fuel}</p>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-black tracking-[-.02em] text-[#0F172A]">{car.name}</h3>
+              <ShieldCheck size={15} className="text-[#7C8B55]" />
+            </div>
+            <p className="mt-1 text-xs text-[#64748B]">
+              {car.year} · {car.seats} {t('card_seats')} · {car.transmission} · {car.fuel}
+            </p>
           </div>
-          <div className="text-right">
+          <div className="text-end">
             <p className="text-xl font-black text-[#0F172A]">{format(car.pricePerDay)}</p>
-            <p className="text-[10px] font-semibold uppercase tracking-[.1em] text-[#94A3B8]">per day</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[.1em] text-[#94A3B8]">{t('rentals_per_day')}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {car.locations?.slice(0, 2).map((location) => <span key={location} className="rounded-full bg-[#F3F5F1] px-2.5 py-1 text-[10px] font-bold text-[#52604D]">{location}</span>)}
+          {car.locations?.slice(0, 2).map((loc) => (
+            <span key={loc} className="rounded-full bg-[#F3F5F1] px-2.5 py-1 text-[10px] font-bold text-[#52604D]">{loc}</span>
+          ))}
         </div>
-        <a href={href} className="mt-5 flex h-11 items-center justify-center gap-2 rounded-full bg-[#0E1418] text-xs font-black text-white transition hover:bg-[#B5E92E] hover:text-[#0E1418]">View & book <ArrowRight size={14} /></a>
+        <a href={href} className="mt-5 flex h-11 items-center justify-center gap-2 rounded-full bg-[#0E1418] text-xs font-black text-white transition hover:bg-[#B5E92E] hover:text-[#0E1418]">
+          {t('rentals_view_book')} <ArrowRight size={14} />
+        </a>
       </div>
     </motion.article>
   )
 }
 
 export default function RentalsPage() {
+  const { t, isRTL } = useLang()
   const router = useRouter()
   const query = useSearchParams()
   const defaults = useMemo(() => getDefaultRentalDates(), [])
@@ -65,6 +80,8 @@ export default function RentalsPage() {
   const [location, setLocation] = useState(query.get('location') || '')
   const [startDate, setStartDate] = useState(query.get('start') || defaults.start)
   const [endDate, setEndDate] = useState(query.get('end') || defaults.end)
+
+  const CATEGORIES_LIST = ['All', ...RENTAL_CATEGORIES.map((item) => item.name)]
 
   const syncUrl = (next = {}) => {
     const values = { category, location, start: startDate, end: endDate, ...next }
@@ -92,50 +109,121 @@ export default function RentalsPage() {
   const updateCategory = (value) => { setCategory(value); syncUrl({ category: value }) }
   const updateLocation = (value) => { setLocation(value); syncUrl({ location: value }) }
 
+  const resultsLabel = loading
+    ? t('rentals_searching')
+    : `${rentals.length} ${rentals.length === 1 ? t('rentals_found_s') : t('rentals_found_p')}`
+
+  const FAQ_ITEMS = [
+    [t('rentals_faq_q1'), t('rentals_faq_a1')],
+    [t('rentals_faq_q2'), t('rentals_faq_a2')],
+    [t('rentals_faq_q3'), t('rentals_faq_a3')],
+    [t('rentals_faq_q4'), t('rentals_faq_a4')],
+  ]
+
   return (
-    <main className="min-h-screen bg-[#F5F6F3]">
-      <PageHero eyebrow="Premium car rental" title="Rent the right car. In the right place." description="Choose your location and exact rental dates, then compare a verified fleet with transparent daily pricing." image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86">
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.1fr_1.35fr_auto]">
+    <main className="min-h-screen bg-[#F5F6F3]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <PageHero
+        eyebrow={t('rentals_hero_eyebrow')}
+        title={t('rentals_hero_title')}
+        description={t('rentals_hero_desc')}
+        image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          className="mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.1fr_1.35fr_auto]"
+        >
           <label className="rounded-[15px] bg-white/[.08] px-4 py-3 text-white">
-            <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45"><MapPin size={13} className="text-[#B5E92E]" /> Pickup location</span>
-            <select value={location} onChange={(e) => updateLocation(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none [&>option]:text-black">
-              <option value="">Any location</option>
-              {RENTAL_LOCATIONS.map((item) => <option key={item.city} value={item.city}>{item.city}</option>)}
+            <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45">
+              <MapPin size={13} className="text-[#B5E92E]" /> {t('rentals_pickup_label')}
+            </span>
+            <select
+              value={location}
+              onChange={(e) => updateLocation(e.target.value)}
+              className="mt-2 w-full bg-transparent text-sm font-bold outline-none [&>option]:text-black"
+            >
+              <option value="">{t('rentals_any_location')}</option>
+              {RENTAL_LOCATIONS.map((item) => (
+                <option key={item.city} value={item.city}>{item.city}</option>
+              ))}
             </select>
           </label>
-          <RentalDateRangePicker start={startDate} end={endDate} minDate={defaults.start} onChange={({ start, end }) => { setStartDate(start); setEndDate(end); syncUrl({ start, end }) }} />
-          <button onClick={() => syncUrl()} className="flex min-h-16 items-center justify-center gap-2 rounded-[15px] bg-[#B5E92E] px-6 text-xs font-black uppercase tracking-[.08em] text-[#091219] transition hover:brightness-105"><Search size={15} /> Find cars</button>
+          <RentalDateRangePicker
+            start={startDate} end={endDate} minDate={defaults.start}
+            onChange={({ start, end }) => { setStartDate(start); setEndDate(end); syncUrl({ start, end }) }}
+          />
+          <button
+            onClick={() => syncUrl()}
+            className="flex min-h-16 items-center justify-center gap-2 rounded-[15px] bg-[#B5E92E] px-6 text-xs font-black uppercase tracking-[.08em] text-[#091219] transition hover:brightness-105"
+          >
+            <Search size={15} /> {t('rentals_find_btn')}
+          </button>
         </motion.div>
       </PageHero>
 
-      <section className="sticky top-[72px] z-30 border-b border-[#E2E6DE] bg-[#F5F6F3]/95 backdrop-blur-xl">
-        <div className="page-inner flex items-center gap-2 overflow-x-auto py-3">
-          <SlidersHorizontal size={15} className="mr-1 shrink-0 text-[#7C8B55]" />
-          {CATEGORIES.map((item) => (
-            <button key={item} onClick={() => updateCategory(item)} className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${category === item ? 'bg-[#0E1418] text-white' : 'border border-[#DDE2D8] bg-white text-[#64748B] hover:border-[#B5E92E] hover:text-[#0F172A]'}`}>{item}</button>
+      {/* Category strip */}
+      <section className="sticky top-[100px] z-30 border-b border-[#E2E6DE] bg-[#F5F6F3]/95 backdrop-blur-xl">
+        <div className="page-inner flex items-center gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
+          <SlidersHorizontal size={15} className="shrink-0 text-[#7C8B55]" />
+          {CATEGORIES_LIST.map((item) => (
+            <button
+              key={item}
+              onClick={() => updateCategory(item)}
+              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
+                category === item
+                  ? 'bg-[#0E1418] text-white'
+                  : 'border border-[#DDE2D8] bg-white text-[#64748B] hover:border-[#B5E92E] hover:text-[#0F172A]'
+              }`}
+            >
+              {item}
+            </button>
           ))}
         </div>
       </section>
 
+      {/* Results */}
       <section className="page-inner py-12 sm:py-16">
         <div className="mb-7 flex items-end justify-between gap-4">
-          <div><p className="text-xs font-black uppercase tracking-[.16em] text-[#7C8B55]">Available fleet</p><h2 className="mt-2 text-3xl font-black tracking-[-.04em] text-[#0F172A]">{loading ? 'Searching…' : `${rentals.length} rental${rentals.length === 1 ? '' : 's'} found`}</h2></div>
-          <a href="/rent-by-location" className="hidden items-center gap-2 text-sm font-black sm:flex">Browse locations <ArrowRight size={15} /></a>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.16em] text-[#7C8B55]">{t('rentals_fleet_eyebrow')}</p>
+            <h2 className="mt-2 text-3xl font-black tracking-[-.04em] text-[#0F172A]">{resultsLabel}</h2>
+          </div>
+          <a href="/rent-by-location" className="hidden items-center gap-2 text-sm font-black text-[#0F172A] transition hover:text-[#7d9f24] sm:flex">
+            {t('rentals_browse_locs')} <ArrowRight size={15} />
+          </a>
         </div>
 
         {loading ? (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="aspect-[1.15] animate-pulse rounded-[24px] bg-[#E9ECE6]" />)}</div>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-[1.15] animate-pulse rounded-[24px] bg-[#E9ECE6]" />
+            ))}
+          </div>
         ) : rentals.length ? (
-          <AnimatePresence mode="popLayout"><motion.div layout className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{rentals.map((car, i) => <RentalCard key={car.id} car={car} index={i} search={bookingSearch} />)}</motion.div></AnimatePresence>
+          <AnimatePresence mode="popLayout">
+            <motion.div layout className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {rentals.map((car, i) => (
+                <RentalCard key={car.id} car={car} index={i} search={bookingSearch} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
         ) : (
-          <div className="rounded-[24px] border border-dashed border-[#CBD3C3] bg-white px-6 py-16 text-center"><h3 className="text-xl font-black text-[#0F172A]">No cars match these filters</h3><p className="mt-2 text-sm text-[#64748B]">Try another location or vehicle category.</p><button onClick={() => { setCategory('All'); setLocation(''); syncUrl({ category: 'All', location: '' }) }} className="mt-5 rounded-full bg-[#0E1418] px-5 py-3 text-xs font-black text-white">Reset filters</button></div>
+          <div className="rounded-[24px] border border-dashed border-[#CBD3C3] bg-white px-6 py-16 text-center">
+            <h3 className="text-xl font-black text-[#0F172A]">{t('rentals_empty_title')}</h3>
+            <p className="mt-2 text-sm text-[#64748B]">{t('rentals_empty_desc')}</p>
+            <button
+              onClick={() => { setCategory('All'); setLocation(''); syncUrl({ category: 'All', location: '' }) }}
+              className="mt-5 rounded-full bg-[#0E1418] px-5 py-3 text-xs font-black text-white transition hover:bg-[#B5E92E] hover:text-[#0E1418]"
+            >
+              {t('rentals_reset')}
+            </button>
+          </div>
         )}
       </section>
 
       <section className="page-inner pb-16"><CarDrivingAnimation /></section>
       <TrustBand />
       <TestimonialsSection />
-      <FaqSection items={[["What is included in the displayed rental price?","The vehicle rate is shown before optional services, insurance add-ons, delivery and refundable deposits. The booking breakdown displays the full total before payment."],["Can I choose different pickup and drop-off locations?","Yes. The booking flow supports pickup and return location selection, subject to partner availability."],["How is rental duration calculated?","The booking flow uses your selected start and end dates and applies the configured daily, weekly or monthly pricing logic."],["Can I add insurance or services?","Yes. Eligible add-ons such as airport delivery, extra drivers and care packages are included in the rental booking flow."]]} />
+      <FaqSection items={FAQ_ITEMS} />
     </main>
   )
 }
