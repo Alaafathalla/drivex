@@ -45,22 +45,22 @@ export default function AboutPage() {
   ]
 
   const timeline = [
-    ['2023', 'Marketplace launch',       'Verified buying and selling with transparent listing data.'],
-    ['2024', 'Rental network',           'Location-aware bookings, add-ons and payment-ready rental flows.'],
-    ['2025', 'Ownership services',       'Inspection, maintenance, detailing and roadside support joined the same account.'],
-    ['2026', 'DriveX intelligence',      'Comparison, finance planning, recommendations and a unified member dashboard.'],
+    ['2023', t('about_tl_2023_title'), t('about_tl_2023_desc')],
+    ['2024', t('about_tl_2024_title'), t('about_tl_2024_desc')],
+    ['2025', t('about_tl_2025_title'), t('about_tl_2025_desc')],
+    ['2026', t('about_tl_2026_title'), t('about_tl_2026_desc')],
   ]
 
   const leadership = [
-    ['Nadia Rahman',  'Chief Executive Officer',     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85'],
-    ['Karim Mansour', 'VP Automotive Operations',    'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85'],
-    ['Leila Haddad',  'Chief Product Officer',       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85'],
+    ['Nadia Rahman',  t('about_role_ceo'), 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=85'],
+    ['Karim Mansour', t('about_role_vp'),  'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=85'],
+    ['Leila Haddad',  t('about_role_cpo'), 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85'],
   ]
 
   const press = [
-    ['Gulf Mobility Review',    '"DriveX turns fragmented vehicle services into one premium workflow."'],
-    ['AutoTech Middle East',    '"A marketplace thinking beyond the transaction."'],
-    ['Future Transport',        '"One of the region\'s most complete ownership-interface concepts."'],
+    [t('about_press_src1'), t('about_press_q1')],
+    [t('about_press_src2'), t('about_press_q2')],
+    [t('about_press_src3'), t('about_press_q3')],
   ]
 
   return (

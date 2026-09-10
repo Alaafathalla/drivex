@@ -45,8 +45,8 @@ export default function ContactPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-black">
                   <ArrowRight size={28} />
                 </div>
-                <p className="text-2xl font-black">Message sent!</p>
-                <p className="text-muted-foreground">We'll get back to you within 24 hours.</p>
+                <p className="text-2xl font-black">{t('contact_sent_title')}</p>
+                <p className="text-muted-foreground">{t('contact_sent_desc')}</p>
               </motion.div>
             ) : (
               <form

@@ -35,9 +35,9 @@ export default function SellPage() {
         image="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2200&q=86"
       >
         <div className="mt-8 flex flex-wrap gap-3 text-[11px] font-black uppercase tracking-[.18em] text-white/65">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Fast valuation</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Local buyers</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Hassle-free</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('sell_badge_valuation')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('sell_badge_buyers')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('sell_badge_hassle')}</span>
         </div>
       </PageHero>
 
@@ -94,7 +94,7 @@ export default function SellPage() {
               {t('sell_step')} {step} {t('sell_of')} {STEP_COUNT}
             </p>
             <h2 className="mt-3 text-2xl font-black tracking-[-.04em]">
-              {step === 3 ? t('sell_photos') : step === 5 ? 'Review & Submit' : t('sell_tell_us')}
+              {step === 3 ? t('sell_photos') : step === 5 ? t('sell_review_submit') : t('sell_tell_us')}
             </h2>
 
             {step === 3 ? (
@@ -109,7 +109,7 @@ export default function SellPage() {
                   </div>
                   <div className="text-center">
                     <p className="font-black">{t('sell_photos')}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">PNG, JPG up to 10MB each</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{t('sell_upload_hint')}</p>
                   </div>
                 </motion.div>
               </div>
@@ -125,7 +125,7 @@ export default function SellPage() {
                       <span className="font-bold">{stepLabels[i]}</span>
                     </div>
                     <button onClick={() => setStep(i+1)} className="cursor-pointer text-xs font-bold text-accent hover:underline">
-                      Edit
+                      {t('sell_edit')}
                     </button>
                   </div>
                 ))}
@@ -181,7 +181,7 @@ export default function SellPage() {
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   if (step === STEP_COUNT) {
-                    toast({ message: 'Your listing is ready to be submitted.', type: 'success' })
+                    toast({ message: t('sell_toast_ready'), type: 'success' })
                     return
                   }
                   setStep(s => Math.min(STEP_COUNT, s + 1))
