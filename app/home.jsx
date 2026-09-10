@@ -68,6 +68,7 @@ function HomeCarCard({ car, index }) {
   const { toggle, isFav } = useFavorites()
   const toast   = useToast()
   const { format } = useCurrency()
+  const { t }   = useLang()
   const fav     = isFav(String(car.id))
   const isRent  = car.listingType === 'rent'
   const image   = car.images?.[0] || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80'
@@ -89,7 +90,7 @@ function HomeCarCard({ car, index }) {
         <div className="absolute left-3 top-3 flex gap-1.5">
           <span className={`rounded-full px-2.5 py-1 text-[10px] font-black uppercase shadow-sm ${
             isRent ? 'bg-[#38bdf8] text-white' : car.condition === 'New' ? 'bg-[#B5E92E] text-[#071016]' : 'bg-white/90 text-[#334155]'
-          }`}>{isRent ? 'Rent' : car.condition}</span>
+          }`}>{isRent ? t('search_rent') : car.condition}</span>
           {car.fuelType === 'Electric' && (
             <span className="flex items-center gap-1 rounded-full bg-[#B5E92E] px-2 py-1 text-[9px] font-black text-[#071016] shadow-sm"><Zap size={8} />EV</span>
           )}
@@ -113,12 +114,12 @@ function HomeCarCard({ car, index }) {
         </div>
         <div className="mt-auto flex items-end justify-between pt-4">
           <div>
-            <p className="text-[10px] text-[#94a3b8]">{isRent ? 'per day' : 'asking price'}</p>
-            <p className="text-[17px] font-black text-[#0f172a]">{format(car.price)}{isRent && <span className="text-[11px] font-normal text-[#94a3b8]">/day</span>}</p>
+            <p className="text-[10px] text-[#94a3b8]">{isRent ? t('card_per_day_label') : t('card_asking')}</p>
+            <p className="text-[17px] font-black text-[#0f172a]">{format(car.price)}{isRent && <span className="text-[11px] font-normal text-[#94a3b8]">{t('card_per_day')}</span>}</p>
           </div>
           <a href={`/cars/${car.id}`}
             className="rounded-xl bg-[#0f172a] px-3.5 py-2 text-[11px] font-black text-white transition hover:bg-[#B5E92E] hover:text-[#071016]">
-            {isRent ? 'Book' : 'View'}
+            {isRent ? t('card_book') : t('card_view')}
           </a>
         </div>
       </div>
@@ -480,14 +481,14 @@ function CategoriesSection({ cats }) {
         <div className="mb-12 flex items-end justify-between gap-4">
           <div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Shop by style</motion.p>
+              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('cats_eyebrow')}</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-              className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+              className="mt-3 whitespace-pre-line font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
-              Find your<br />perfect category
+              {t('cats_title')}
             </motion.h2>
           </div>
-          <a href="/cars" className="shrink-0 text-[12px] font-black text-[#0f172a] underline underline-offset-4 transition hover:text-[#B5E92E]">Browse all →</a>
+          <a href="/cars" className="shrink-0 text-[12px] font-black text-[#0f172a] underline underline-offset-4 transition hover:text-[#B5E92E]">{t('cats_view_all')}</a>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]" style={{ gridAutoRows: '240px' }}>
@@ -504,17 +505,16 @@ function CategoriesSection({ cats }) {
               <img src={cat.image} alt={cat.title}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-107" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#071016]/85 via-[#071016]/20 to-transparent" />
-              {/* Animated overlay on hover */}
               <motion.div className="absolute inset-0 bg-[#B5E92E]/0 transition-colors duration-300 group-hover:bg-[#B5E92E]/08" />
 
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="text-[11px] font-black uppercase tracking-[.15em] text-white/60">{cat.count}+ cars</p>
+                <p className="text-[11px] font-black uppercase tracking-[.15em] text-white/60">{cat.count}{t('cats_cars_count')}</p>
                 <p className={`font-black text-white ${i === 0 ? 'text-[28px]' : 'text-[18px]'}`}>{cat.title}</p>
                 <motion.span
                   initial={{ x: 0 }}
                   whileHover={{ x: 4 }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-black text-white backdrop-blur-sm transition group-hover:bg-[#B5E92E] group-hover:text-[#071016]">
-                  Browse <ArrowRight size={10} />
+                  {t('nav_buy')} <ArrowRight size={10} />
                 </motion.span>
               </div>
             </motion.a>
@@ -539,11 +539,11 @@ function ServicesSection() {
         <div className="mb-12 flex items-end justify-between">
           <div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Full ownership circle</motion.p>
+              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('services_eyebrow')}</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
               className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-              Every service<br />in one place
+              {t('services_title').split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
             </motion.h2>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -607,21 +607,21 @@ function HowItWorks() {
           {/* Sticky heading */}
           <div className="lg:sticky lg:top-32">
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Simple process</motion.p>
+              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('hiw_eyebrow')}</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-              className="mt-4 font-black leading-[0.92] tracking-[-0.055em] text-[#0f172a]"
+              className="mt-4 whitespace-pre-line font-black leading-[0.92] tracking-[-0.055em] text-[#0f172a]"
               style={{ fontSize: 'clamp(36px, 4.5vw, 58px)' }}>
-              Fast,<br />simple<br />and secure.
+              {t('hiw_title')}
             </motion.h2>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.12 }}
               className="mt-5 text-[15px] leading-7 text-[#64748b]">
-              From search to keys in three clear steps. No paperwork surprises.
+              {t('hiw_desc')}
             </motion.p>
             <motion.a href="/cars"
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.18 }}
               className="mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-[#0f172a] px-7 text-[13px] font-black text-white transition hover:bg-[#B5E92E] hover:text-[#071016]">
-              Start browsing <ArrowRight size={15} />
+              {t('hiw_start')} <ArrowRight size={15} />
             </motion.a>
           </div>
 
@@ -641,7 +641,7 @@ function HowItWorks() {
                   <Icon size={22} className="text-[#071016]" />
                 </motion.div>
                 <div>
-                  <p className="text-[10px] font-black tracking-[.2em] text-[#94a3b8]">STEP {n}</p>
+                  <p className="text-[10px] font-black tracking-[.2em] text-[#94a3b8]">{t('hiw_step_prefix')} {n}</p>
                   <h3 className="mt-1 text-[20px] font-black text-[#0f172a]">{title}</h3>
                   <p className="mt-2 text-[13px] leading-6 text-[#64748b]">{text}</p>
                 </div>
@@ -656,6 +656,13 @@ function HowItWorks() {
 
 // ─── Sell CTA ─────────────────────────────────────────────────────────────
 function SellCTA() {
+  const { t } = useLang()
+
+  const PILLS = [
+    t('sell_cta_trust1'), t('sell_cta_trust2'),
+    t('sell_cta_trust3'), t('sell_cta_trust4'),
+  ]
+
   return (
     <section className="relative overflow-hidden bg-[#0f172a] py-24">
       <div className="absolute inset-0">
@@ -664,7 +671,6 @@ function SellCTA() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-[#0f172a]/80 to-transparent" />
       </div>
 
-      {/* Animated lime orb */}
       <motion.div
         animate={{ scale: [1, 1.18, 1], opacity: [0.12, 0.22, 0.12] }}
         transition={{ duration: 6, repeat: Infinity }}
@@ -676,35 +682,35 @@ function SellCTA() {
         <div className="max-w-2xl">
           <motion.span initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="inline-flex items-center gap-2 rounded-full bg-[#B5E92E]/15 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">
-            <Sparkles size={10} /> Sell smarter
+            <Sparkles size={10} /> {t('sell_cta_badge')}
           </motion.span>
 
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.08 }}
-            className="mt-6 font-black leading-[0.9] tracking-[-0.055em] text-white"
+            className="mt-6 whitespace-pre-line font-black leading-[0.9] tracking-[-0.055em] text-white"
             style={{ fontSize: 'clamp(40px, 5.5vw, 72px)' }}>
-            Ready to sell<br />at the right<br />price?
+            {t('sell_cta_title')}
           </motion.h2>
 
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
             className="mt-6 max-w-md text-[16px] leading-7 text-white/55">
-            Get a free valuation, create a polished listing, and reach buyers who are already looking for exactly what you have.
+            {t('sell_cta_desc')}
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
             className="mt-8 flex flex-wrap gap-3">
             <motion.a href="/trade-in" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="inline-flex h-[52px] items-center gap-2 rounded-full bg-[#B5E92E] px-7 text-[14px] font-black text-[#071016] transition hover:brightness-110">
-              Get free valuation <ArrowRight size={16} />
+              {t('sell_cta_valuation')} <ArrowRight size={16} />
             </motion.a>
             <motion.a href="/list-your-car" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               className="inline-flex h-[52px] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 text-[14px] font-bold text-white transition hover:bg-white/18">
-              List my car
+              {t('sell_cta_list')}
             </motion.a>
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.28 }}
             className="mt-10 flex flex-wrap gap-3">
-            {['Free valuation', 'No hidden fees', 'Reach 18K+ buyers', 'List in 5 minutes'].map(pill => (
+            {PILLS.map(pill => (
               <span key={pill} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/60">
                 <CheckCircle2 size={11} className="text-[#B5E92E]" /> {pill}
               </span>
@@ -731,11 +737,11 @@ function TestimonialsSection() {
       <div className="page-inner">
         <div className="mb-14 text-center">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Driver stories</motion.p>
+            className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('testimonials_eyebrow')}</motion.p>
           <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-            className="mt-4 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+            className="mt-4 whitespace-pre-line font-black leading-none tracking-[-0.05em] text-[#0f172a]"
             style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-            Built around real<br />automotive decisions.
+            {t('testimonials_title')}
           </motion.h2>
         </div>
 
@@ -798,21 +804,21 @@ function FAQSection() {
       <div className="page-inner grid gap-16 lg:grid-cols-[1fr_1.6fr] lg:items-start">
         <div>
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">FAQ</motion.p>
+            className="text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">{t('faq_eyebrow')}</motion.p>
           <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-            className="mt-4 font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
+            className="mt-4 whitespace-pre-line font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
             style={{ fontSize: 'clamp(30px, 3.5vw, 46px)' }}>
-            Answers before<br />you need to ask.
+            {t('faq_title')}
           </motion.h2>
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.12 }}
             className="mt-5 text-[14px] leading-7 text-[#64748b]">
-            Still have questions? Our team is available 7 days a week.
+            {t('faq_support_text')}
           </motion.p>
           <motion.a href="/contact"
             whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
             initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.18 }}
             className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-[#0f172a] px-5 text-[12px] font-black text-white transition hover:bg-[#B5E92E] hover:text-[#071016]">
-            <Headphones size={14} /> Contact support
+            <Headphones size={14} /> {t('faq_contact')}
           </motion.a>
         </div>
 

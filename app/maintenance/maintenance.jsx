@@ -1,35 +1,42 @@
+'use client'
+
 import { ServiceDetailPage } from '@/components/platform/service-detail-page'
+import { useLang } from '@/context/LangContext'
 
 export default function MaintenancePage() {
-  return <ServiceDetailPage
-    slug="maintenance"
-    eyebrow="Maintenance & service"
-    title="Keep your car at its best."
-    description="Schedule preventive maintenance, mechanical care and workshop support with clear scope, trusted partners and connected service records."
-    heroImage="https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=2200&q=86"
-    startingPrice="From AED 179"
-    packages={[
-      ['Oil & filters', 'Engine oil, filter replacement and essential fluid checks.', 'From AED 179'],
-      ['Brakes', 'Pad, disc and braking-system inspection with quote before work.', 'From AED 249'],
-      ['Battery care', 'Battery health test, replacement support and charging-system check.', 'From AED 299'],
-      ['AC service', 'Cooling performance inspection, refrigerant and cabin-air checks.', 'From AED 199'],
-    ]}
-    benefits={[
-      ['Vehicle-aware service', 'Add your car details so the request reaches the right service partner.'],
-      ['Quote transparency', 'Confirm the scope and final quote before any billable work begins.'],
-      ['Preventive reminders', 'The API model is ready to connect service intervals and dashboard reminders.'],
-      ['Service history', 'Keep completed maintenance ready to attach to the vehicle record.'],
-    ]}
-    process={[
-      ['Tell us about the car', 'Share vehicle details, location and the maintenance need.'],
-      ['Confirm scope and slot', 'A suitable partner confirms availability, inclusions and pricing.'],
-      ['Track completion', 'Connect the completed job, invoice and next service interval to the dashboard.'],
-    ]}
-    faq={[
-      ['Can I request routine and repair work?', 'Yes. The booking form supports scheduled maintenance as well as notes for a specific issue.'],
-      ['Is the displayed price final?', 'Package values are starting prices. A final quote can be confirmed after the vehicle and scope are known.'],
-      ['Can maintenance history be stored with my vehicle?', 'Yes. The service request structure is designed to connect to a vehicle profile and dashboard history.'],
-      ['Can I choose the service location?', 'Yes. Location is part of the booking request and can later map to workshop, mobile-service or pickup options.'],
-    ]}
-  />
+  const { t } = useLang()
+
+  return (
+    <ServiceDetailPage
+      slug="maintenance"
+      eyebrow={t('svc_maint_eyebrow')}
+      title={t('svc_maint_title')}
+      description={t('svc_maint_desc')}
+      heroImage="https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=2200&q=86"
+      startingPrice={t('svc_maint_price')}
+      packages={[
+        [t('svc_maint_pkg1'), t('svc_maint_pkg1_desc'), t('svc_maint_pkg1_price')],
+        [t('svc_maint_pkg2'), t('svc_maint_pkg2_desc'), t('svc_maint_pkg2_price')],
+        [t('svc_maint_pkg3'), t('svc_maint_pkg3_desc'), t('svc_maint_pkg3_price')],
+        [t('svc_maint_pkg4'), t('svc_maint_pkg4_desc'), t('svc_maint_pkg4_price')],
+      ]}
+      benefits={[
+        [t('svc_maint_ben1'), t('svc_maint_ben1_desc')],
+        [t('svc_maint_ben2'), t('svc_maint_ben2_desc')],
+        [t('svc_maint_ben3'), t('svc_maint_ben3_desc')],
+        [t('svc_maint_ben4'), t('svc_maint_ben4_desc')],
+      ]}
+      process={[
+        [t('svc_maint_proc1'), t('svc_maint_proc1_desc')],
+        [t('svc_maint_proc2'), t('svc_maint_proc2_desc')],
+        [t('svc_maint_proc3'), t('svc_maint_proc3_desc')],
+      ]}
+      faq={[
+        [t('svc_maint_faq1_q'), t('svc_maint_faq1_a')],
+        [t('svc_maint_faq2_q'), t('svc_maint_faq2_a')],
+        [t('svc_maint_faq3_q'), t('svc_maint_faq3_a')],
+        [t('svc_maint_faq4_q'), t('svc_maint_faq4_a')],
+      ]}
+    />
+  )
 }

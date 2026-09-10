@@ -7,75 +7,55 @@ import {
   Gauge, Heart, Package, Search, ShieldCheck, ShoppingBag,
   ShoppingCart, Sparkles, Star, Tag, Truck, Zap,
 } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
 
-// ─── Data ──────────────────────────────────────────────────────────────────
-const CATEGORIES = [
-  { id: 'all',           label: 'All products' },
-  { id: 'exterior',      label: 'Exterior' },
-  { id: 'interior',      label: 'Interior' },
-  { id: 'performance',   label: 'Performance' },
-  { id: 'tech',          label: 'Tech & Audio' },
-  { id: 'care',          label: 'Car Care' },
-  { id: 'safety',        label: 'Safety' },
-]
+// ─── Static data ──────────────────────────────────────────────────────────
 
 const PRODUCTS = [
   // Exterior
-  { id: 1,  cat: 'exterior',    name: 'Carbon Fibre Front Splitter',    brand: 'AeroKit',     price: 1290,  rating: 4.8, reviews: 34,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
-  { id: 2,  cat: 'exterior',    name: 'Gloss Black Side Mirror Covers',  brand: 'DriveX Parts',price: 340,   rating: 4.6, reviews: 61,  badge: null,      image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&q=80' },
-  { id: 3,  cat: 'exterior',    name: 'Sport Rear Diffuser',             brand: 'AeroKit',     price: 980,   rating: 4.7, reviews: 22,  badge: 'New',     image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500&q=80' },
-  { id: 4,  cat: 'exterior',    name: 'Smoked LED Tail Light Set',       brand: 'LumiDrive',   price: 1650,  rating: 4.9, reviews: 18,  badge: 'New',     image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&q=80' },
+  { id: 1,  cat: 'exterior',    name: 'Carbon Fibre Front Splitter',    brand: 'AeroKit',      price: 1290, rating: 4.8, reviews: 34,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
+  { id: 2,  cat: 'exterior',    name: 'Gloss Black Side Mirror Covers',  brand: 'DriveX Parts', price: 340,  rating: 4.6, reviews: 61,  badge: null,      image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&q=80' },
+  { id: 3,  cat: 'exterior',    name: 'Sport Rear Diffuser',             brand: 'AeroKit',      price: 980,  rating: 4.7, reviews: 22,  badge: 'New',     image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500&q=80' },
+  { id: 4,  cat: 'exterior',    name: 'Smoked LED Tail Light Set',       brand: 'LumiDrive',    price: 1650, rating: 4.9, reviews: 18,  badge: 'New',     image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&q=80' },
   // Interior
-  { id: 5,  cat: 'interior',    name: 'Alcantara Steering Wheel Cover',  brand: 'CabinPro',    price: 420,   rating: 4.7, reviews: 55,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80' },
-  { id: 6,  cat: 'interior',    name: 'Carbon Dash Trim Kit',            brand: 'CabinPro',    price: 780,   rating: 4.5, reviews: 30,  badge: null,      image: 'https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?w=500&q=80' },
-  { id: 7,  cat: 'interior',    name: 'Sport Racing Seat Pair',          brand: 'RaceLine',    price: 3200,  rating: 4.9, reviews: 12,  badge: 'Premium', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
-  { id: 8,  cat: 'interior',    name: 'All-Weather Floor Mat Set',       brand: 'DriveX Parts',price: 290,   rating: 4.8, reviews: 104, badge: 'Popular', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80' },
+  { id: 5,  cat: 'interior',    name: 'Alcantara Steering Wheel Cover',  brand: 'CabinPro',     price: 420,  rating: 4.7, reviews: 55,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80' },
+  { id: 6,  cat: 'interior',    name: 'Carbon Dash Trim Kit',            brand: 'CabinPro',     price: 780,  rating: 4.5, reviews: 30,  badge: null,      image: 'https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?w=500&q=80' },
+  { id: 7,  cat: 'interior',    name: 'Sport Racing Seat Pair',          brand: 'RaceLine',     price: 3200, rating: 4.9, reviews: 12,  badge: 'Premium', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
+  { id: 8,  cat: 'interior',    name: 'All-Weather Floor Mat Set',       brand: 'DriveX Parts', price: 290,  rating: 4.8, reviews: 104, badge: 'Popular', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80' },
   // Performance
-  { id: 9,  cat: 'performance', name: 'Cold Air Intake Kit',             brand: 'TurboEdge',   price: 1150,  rating: 4.8, reviews: 27,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&q=80' },
-  { id: 10, cat: 'performance', name: 'Sport Exhaust Tip Set',           brand: 'TurboEdge',   price: 680,   rating: 4.6, reviews: 41,  badge: null,      image: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&q=80' },
-  { id: 11, cat: 'performance', name: 'Big Brake Upgrade Kit',           brand: 'StopTech',    price: 4800,  rating: 4.9, reviews: 8,   badge: 'Premium', image: 'https://images.unsplash.com/photo-1486006920555-c77dcf18193c?w=500&q=80' },
-  { id: 12, cat: 'performance', name: 'Lowering Spring Set',             brand: 'RaceLine',    price: 920,   rating: 4.7, reviews: 19,  badge: null,      image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&q=80' },
+  { id: 9,  cat: 'performance', name: 'Cold Air Intake Kit',             brand: 'TurboEdge',    price: 1150, rating: 4.8, reviews: 27,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&q=80' },
+  { id: 10, cat: 'performance', name: 'Sport Exhaust Tip Set',           brand: 'TurboEdge',    price: 680,  rating: 4.6, reviews: 41,  badge: null,      image: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&q=80' },
+  { id: 11, cat: 'performance', name: 'Big Brake Upgrade Kit',           brand: 'StopTech',     price: 4800, rating: 4.9, reviews: 8,   badge: 'Premium', image: 'https://images.unsplash.com/photo-1486006920555-c77dcf18193c?w=500&q=80' },
+  { id: 12, cat: 'performance', name: 'Lowering Spring Set',             brand: 'RaceLine',     price: 920,  rating: 4.7, reviews: 19,  badge: null,      image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&q=80' },
   // Tech
-  { id: 13, cat: 'tech',        name: 'Android 12 CarPlay Head Unit',    brand: 'NavTech',     price: 1890,  rating: 4.8, reviews: 67,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
-  { id: 14, cat: 'tech',        name: '360° Dash Camera System',         brand: 'VisionDrive',  price: 2100,  rating: 4.9, reviews: 38,  badge: 'New',     image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&q=80' },
-  { id: 15, cat: 'tech',        name: 'Wireless Phone Charging Mount',   brand: 'NavTech',     price: 180,   rating: 4.6, reviews: 145, badge: null,      image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80' },
-  { id: 16, cat: 'tech',        name: 'Tyre Pressure Monitor System',    brand: 'DriveX Parts',price: 350,   rating: 4.7, reviews: 52,  badge: null,      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80' },
+  { id: 13, cat: 'tech',        name: 'Android 12 CarPlay Head Unit',    brand: 'NavTech',      price: 1890, rating: 4.8, reviews: 67,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
+  { id: 14, cat: 'tech',        name: '360° Dash Camera System',         brand: 'VisionDrive',  price: 2100, rating: 4.9, reviews: 38,  badge: 'New',     image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&q=80' },
+  { id: 15, cat: 'tech',        name: 'Wireless Phone Charging Mount',   brand: 'NavTech',      price: 180,  rating: 4.6, reviews: 145, badge: null,      image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80' },
+  { id: 16, cat: 'tech',        name: 'Tyre Pressure Monitor System',    brand: 'DriveX Parts', price: 350,  rating: 4.7, reviews: 52,  badge: null,      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80' },
   // Care
-  { id: 17, cat: 'care',        name: 'Pro Ceramic Coating Kit',         brand: 'ShineGuard',  price: 780,   rating: 4.9, reviews: 88,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=500&q=80' },
-  { id: 18, cat: 'care',        name: 'Paint Correction Polish Set',     brand: 'ShineGuard',  price: 420,   rating: 4.7, reviews: 63,  badge: null,      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500&q=80' },
-  { id: 19, cat: 'care',        name: 'Microfibre Detailing Bundle',     brand: 'DriveX Parts',price: 95,    rating: 4.8, reviews: 212, badge: 'Popular', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
-  { id: 20, cat: 'care',        name: 'Interior UV Protectant Spray',    brand: 'CabinPro',    price: 65,    rating: 4.5, reviews: 97,  badge: null,      image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80' },
+  { id: 17, cat: 'care',        name: 'Pro Ceramic Coating Kit',         brand: 'ShineGuard',   price: 780,  rating: 4.9, reviews: 88,  badge: 'Popular', image: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=500&q=80' },
+  { id: 18, cat: 'care',        name: 'Paint Correction Polish Set',     brand: 'ShineGuard',   price: 420,  rating: 4.7, reviews: 63,  badge: null,      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500&q=80' },
+  { id: 19, cat: 'care',        name: 'Microfibre Detailing Bundle',     brand: 'DriveX Parts', price: 95,   rating: 4.8, reviews: 212, badge: 'Popular', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&q=80' },
+  { id: 20, cat: 'care',        name: 'Interior UV Protectant Spray',    brand: 'CabinPro',     price: 65,   rating: 4.5, reviews: 97,  badge: null,      image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80' },
   // Safety
-  { id: 21, cat: 'safety',      name: 'Multi-Function Jump Starter',     brand: 'SafeDrive',   price: 490,   rating: 4.9, reviews: 134, badge: 'Popular', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=500&q=80' },
-  { id: 22, cat: 'safety',      name: 'Emergency Roadside Kit',          brand: 'SafeDrive',   price: 185,   rating: 4.8, reviews: 89,  badge: null,      image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&q=80' },
-  { id: 23, cat: 'safety',      name: 'Blind Spot Mirror Set',           brand: 'VisionDrive', price: 55,    rating: 4.6, reviews: 181, badge: null,      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&q=80' },
-  { id: 24, cat: 'safety',      name: 'Dashcam with Parking Mode',       brand: 'VisionDrive', price: 1200,  rating: 4.8, reviews: 45,  badge: 'New',     image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
+  { id: 21, cat: 'safety',      name: 'Multi-Function Jump Starter',     brand: 'SafeDrive',    price: 490,  rating: 4.9, reviews: 134, badge: 'Popular', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=500&q=80' },
+  { id: 22, cat: 'safety',      name: 'Emergency Roadside Kit',          brand: 'SafeDrive',    price: 185,  rating: 4.8, reviews: 89,  badge: null,      image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&q=80' },
+  { id: 23, cat: 'safety',      name: 'Blind Spot Mirror Set',           brand: 'VisionDrive',  price: 55,   rating: 4.6, reviews: 181, badge: null,      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&q=80' },
+  { id: 24, cat: 'safety',      name: 'Dashcam with Parking Mode',       brand: 'VisionDrive',  price: 1200, rating: 4.8, reviews: 45,  badge: 'New',     image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
 ]
 
 const FEATURED_BRANDS = [
-  { name: 'AeroKit',      desc: 'Aerodynamic body kits & exterior upgrades' },
-  { name: 'TurboEdge',    desc: 'Performance intakes, exhausts & tuning parts' },
-  { name: 'CabinPro',     desc: 'Premium interior upgrades & trim kits' },
-  { name: 'ShineGuard',   desc: 'Professional detailing & paint protection' },
-  { name: 'NavTech',      desc: 'In-car tech, audio & navigation systems' },
-  { name: 'SafeDrive',    desc: 'Safety equipment & emergency kits' },
-]
-
-const WHY_US = [
-  { icon: ShieldCheck, title: 'Genuine parts only',    desc: 'Every product is sourced from verified suppliers with original quality assurance.' },
-  { icon: Truck,       title: 'Fast UAE delivery',     desc: 'Same-day dispatch from Dubai. Most orders arrive within 1–3 business days.' },
-  { icon: Tag,         title: 'Best price guarantee',  desc: 'Found it cheaper? We match the price and refund the difference within 7 days.' },
-  { icon: Zap,         title: 'Expert fitment advice', desc: 'Not sure if a part fits your car? Our team will verify compatibility before you buy.' },
-]
-
-const BANNER_SLIDES = [
-  { tag: 'New arrivals',   title: 'Ceramic Coating\nKits — Pro Grade',         sub: 'From AED 780',   cta: 'Shop now', accent: '#B5E92E', img: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=1400&q=85' },
-  { tag: 'Best sellers',   title: 'Performance\nUpgrade Packs',                 sub: 'Starting AED 920', cta: 'Explore', accent: '#38bdf8', img: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=1400&q=85' },
-  { tag: 'Limited offer',  title: 'Tech & Audio\nBundle Deals',                 sub: 'Save up to 20%',   cta: 'See deals', accent: '#fb923c', img: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=1400&q=85' },
+  { name: 'AeroKit',    descKey: 'Aerodynamic body kits & exterior upgrades' },
+  { name: 'TurboEdge',  descKey: 'Performance intakes, exhausts & tuning parts' },
+  { name: 'CabinPro',   descKey: 'Premium interior upgrades & trim kits' },
+  { name: 'ShineGuard', descKey: 'Professional detailing & paint protection' },
+  { name: 'NavTech',    descKey: 'In-car tech, audio & navigation systems' },
+  { name: 'SafeDrive',  descKey: 'Safety equipment & emergency kits' },
 ]
 
 // ─── Product card ──────────────────────────────────────────────────────────
 function ProductCard({ product, index }) {
+  const { t } = useLang()
   const [saved, setSaved] = useState(false)
   const [added, setAdded] = useState(false)
 
@@ -96,14 +76,16 @@ function ProductCard({ product, index }) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-20px' }}
-      transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24), ease: [.22,1,.36,1] }}
+      transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.24), ease: [.22, 1, .36, 1] }}
       whileHover={{ y: -5, transition: { duration: 0.22 } }}
       className="group relative flex flex-col overflow-hidden rounded-[22px] border border-[#e8ecf0] bg-white shadow-[0_4px_20px_rgba(0,0,0,.05)] transition-shadow hover:shadow-[0_16px_40px_rgba(0,0,0,.1)]"
     >
-      {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
-        <img src={product.image} alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-106" />
+        <img
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
         {product.badge && (
@@ -116,17 +98,16 @@ function ProductCard({ product, index }) {
           whileTap={{ scale: 0.72 }}
           onClick={() => setSaved(s => !s)}
           className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-sm transition hover:bg-white"
-          aria-label="Save">
+          aria-label={saved ? t('detail_wishlist_remove') : t('detail_wishlist_add')}
+        >
           <Heart size={14} className={saved ? 'fill-rose-500 text-rose-500' : 'text-[#94a3b8]'} />
         </motion.button>
       </div>
 
-      {/* Body */}
       <div className="flex flex-1 flex-col p-4">
         <p className="text-[10px] font-black uppercase tracking-[.15em] text-[#94a3b8]">{product.brand}</p>
         <h3 className="mt-1 text-[14px] font-black leading-snug text-[#0f172a]">{product.name}</h3>
 
-        {/* Stars */}
         <div className="mt-2 flex items-center gap-1.5">
           <div className="flex gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -138,7 +119,7 @@ function ProductCard({ product, index }) {
 
         <div className="mt-auto flex items-end justify-between pt-4">
           <div>
-            <p className="text-[10px] text-[#94a3b8]">Price</p>
+            <p className="text-[10px] text-[#94a3b8]">{t('acc_price_label')}</p>
             <p className="text-[18px] font-black text-[#0f172a]">AED {product.price.toLocaleString()}</p>
           </div>
           <motion.button
@@ -146,8 +127,9 @@ function ProductCard({ product, index }) {
             onClick={handleAdd}
             className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[11px] font-black transition ${
               added ? 'bg-[#B5E92E] text-[#071016]' : 'bg-[#0f172a] text-white hover:bg-[#B5E92E] hover:text-[#071016]'
-            }`}>
-            {added ? <><CheckCircle2 size={13} /> Added</> : <><ShoppingCart size={13} /> Add</>}
+            }`}
+          >
+            {added ? <><CheckCircle2 size={13} /> {t('acc_added_btn')}</> : <><ShoppingCart size={13} /> {t('acc_add_btn')}</>}
           </motion.button>
         </div>
       </div>
@@ -157,12 +139,20 @@ function ProductCard({ product, index }) {
 
 // ─── Hero banner slider ────────────────────────────────────────────────────
 function HeroBanner() {
+  const { t } = useLang()
   const [slide, setSlide] = useState(0)
+
+  const BANNER_SLIDES = [
+    { tag: 'New arrivals',  title: 'Ceramic Coating\nKits — Pro Grade',  sub: 'From AED 780',   cta: t('acc_browse_cats'), accent: '#B5E92E', img: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=1400&q=85' },
+    { tag: 'Best sellers',  title: 'Performance\nUpgrade Packs',          sub: 'Starting AED 920', cta: t('acc_browse_cats'), accent: '#38bdf8', img: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=1400&q=85' },
+    { tag: 'Limited offer', title: 'Tech & Audio\nBundle Deals',          sub: 'Save up to 20%',   cta: t('acc_browse_cats'), accent: '#fb923c', img: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=1400&q=85' },
+  ]
+
   const s = BANNER_SLIDES[slide]
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(i => (i + 1) % BANNER_SLIDES.length), 5000)
-    return () => clearInterval(t)
+    const timer = setInterval(() => setSlide(i => (i + 1) % BANNER_SLIDES.length), 5000)
+    return () => clearInterval(timer)
   }, [])
 
   return (
@@ -180,7 +170,6 @@ function HeroBanner() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Floating orb */}
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
         transition={{ duration: 6, repeat: Infinity }}
@@ -202,7 +191,7 @@ function HeroBanner() {
           <AnimatePresence mode="wait">
             <motion.h1 key={`h-${slide}`}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.45, ease: [.22,1,.36,1] }}
+              transition={{ duration: 0.45, ease: [.22, 1, .36, 1] }}
               className="mt-5 whitespace-pre-line font-black leading-[0.9] tracking-[-0.05em] text-white"
               style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}>
               {s.title}
@@ -225,11 +214,10 @@ function HeroBanner() {
             </motion.a>
             <motion.a href="#categories" whileHover={{ scale: 1.03 }}
               className="inline-flex h-12 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 text-[13px] font-bold text-white backdrop-blur-sm hover:bg-white/18">
-              Browse categories
+              {t('acc_browse_cats')}
             </motion.a>
           </motion.div>
 
-          {/* Dots */}
           <div className="mt-8 flex gap-2">
             {BANNER_SLIDES.map((_, i) => (
               <button key={i} onClick={() => setSlide(i)}
@@ -246,9 +234,20 @@ function HeroBanner() {
 
 // ─── Category pills ────────────────────────────────────────────────────────
 function CategoryBar({ active, setActive }) {
-  const rowRef = useRef(null)
+  const { t } = useLang()
+
+  const CATEGORIES = [
+    { id: 'all',         labelKey: 'acc_all_products' },
+    { id: 'exterior',    labelKey: 'acc_cat_exterior' },
+    { id: 'interior',    labelKey: 'acc_cat_interior' },
+    { id: 'performance', labelKey: 'acc_cat_performance' },
+    { id: 'tech',        labelKey: 'acc_cat_tech' },
+    { id: 'care',        labelKey: 'acc_cat_care' },
+    { id: 'safety',      labelKey: 'acc_cat_safety' },
+  ]
+
   return (
-    <div ref={rowRef} className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {CATEGORIES.map(c => (
         <motion.button key={c.id} onClick={() => setActive(c.id)}
           whileTap={{ scale: 0.94 }}
@@ -257,7 +256,7 @@ function CategoryBar({ active, setActive }) {
               ? 'bg-[#0f172a] text-white shadow-sm'
               : 'border border-[#e8ecf0] bg-white text-[#64748b] hover:border-[#B5E92E] hover:text-[#0f172a]'
           }`}>
-          {c.label}
+          {t(c.labelKey)}
         </motion.button>
       ))}
     </div>
@@ -266,6 +265,8 @@ function CategoryBar({ active, setActive }) {
 
 // ─── Products grid ─────────────────────────────────────────────────────────
 function ProductsGrid({ activeCategory, searchQ }) {
+  const { t } = useLang()
+
   const filtered = PRODUCTS.filter(p => {
     const catMatch = activeCategory === 'all' || p.cat === activeCategory
     const searchMatch = !searchQ || p.name.toLowerCase().includes(searchQ.toLowerCase()) || p.brand.toLowerCase().includes(searchQ.toLowerCase())
@@ -275,7 +276,7 @@ function ProductsGrid({ activeCategory, searchQ }) {
   return (
     <>
       <p className="mb-6 text-[12px] text-[#94a3b8]">
-        {filtered.length} product{filtered.length !== 1 ? 's' : ''} found
+        {filtered.length} {filtered.length !== 1 ? t('acc_products_found_p') : t('acc_products_found_s')}
       </p>
       {filtered.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -284,8 +285,8 @@ function ProductsGrid({ activeCategory, searchQ }) {
       ) : (
         <div className="flex flex-col items-center justify-center rounded-[24px] border border-dashed border-[#e2e8f0] py-20 text-center">
           <Package size={36} className="text-[#cbd5e1]" />
-          <p className="mt-4 font-black text-[#0f172a]">No products found</p>
-          <p className="mt-2 text-[13px] text-[#94a3b8]">Try a different category or search term</p>
+          <p className="mt-4 font-black text-[#0f172a]">{t('acc_no_products')}</p>
+          <p className="mt-2 text-[13px] text-[#94a3b8]">{t('acc_no_products_sub')}</p>
         </div>
       )}
     </>
@@ -294,21 +295,32 @@ function ProductsGrid({ activeCategory, searchQ }) {
 
 // ─── Why DriveX Accessories ────────────────────────────────────────────────
 function WhySection() {
+  const { t } = useLang()
+
+  const WHY_US = [
+    { icon: ShieldCheck, titleKey: 'acc_why_genuine',   descKey: 'acc_why_genuine_desc' },
+    { icon: Truck,       titleKey: 'acc_why_delivery',  descKey: 'acc_why_delivery_desc' },
+    { icon: Tag,         titleKey: 'acc_why_price',     descKey: 'acc_why_price_desc' },
+    { icon: Zap,         titleKey: 'acc_why_advice',    descKey: 'acc_why_advice_desc' },
+  ]
+
   return (
     <section className="bg-[#f8fafc] py-20">
       <div className="page-inner">
         <div className="mb-12 text-center">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Why shop with us</motion.p>
+            className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">
+            {t('acc_why_eyebrow')}
+          </motion.p>
           <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-            className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+            className="mt-3 whitespace-pre-line font-black leading-none tracking-[-0.05em] text-[#0f172a]"
             style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-            Genuine parts.<br />Expert advice. Fast delivery.
+            {t('acc_why_title')}
           </motion.h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {WHY_US.map(({ icon: Icon, title, desc }, i) => (
-            <motion.div key={title}
+          {WHY_US.map(({ icon: Icon, titleKey, descKey }, i) => (
+            <motion.div key={titleKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -320,8 +332,8 @@ function WhySection() {
                   <Icon size={22} className="text-[#4a7000]" />
                 </motion.div>
               </div>
-              <h3 className="mt-5 text-[16px] font-black text-[#0f172a]">{title}</h3>
-              <p className="mt-2 text-[13px] leading-6 text-[#64748b]">{desc}</p>
+              <h3 className="mt-5 text-[16px] font-black text-[#0f172a]">{t(titleKey)}</h3>
+              <p className="mt-2 text-[13px] leading-6 text-[#64748b]">{t(descKey)}</p>
             </motion.div>
           ))}
         </div>
@@ -332,22 +344,26 @@ function WhySection() {
 
 // ─── Featured brands ───────────────────────────────────────────────────────
 function BrandsSection() {
+  const { t } = useLang()
+
   return (
     <section className="bg-white py-20">
       <div className="page-inner">
         <div className="mb-10 flex items-end justify-between">
           <div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Curated brands</motion.p>
+              className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">
+              {t('acc_curated_brands_eyebrow')}
+            </motion.p>
             <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
               className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(24px, 3vw, 38px)' }}>
-              Trusted by car enthusiasts
+              {t('acc_curated_brands_title')}
             </motion.h2>
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURED_BRANDS.map(({ name, desc }, i) => (
+          {FEATURED_BRANDS.map(({ name, descKey }, i) => (
             <motion.div key={name}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -360,7 +376,7 @@ function BrandsSection() {
               </div>
               <div>
                 <p className="font-black text-[#0f172a]">{name}</p>
-                <p className="mt-1 text-[12px] leading-5 text-[#64748b]">{desc}</p>
+                <p className="mt-1 text-[12px] leading-5 text-[#64748b]">{descKey}</p>
               </div>
             </motion.div>
           ))}
@@ -370,8 +386,17 @@ function BrandsSection() {
   )
 }
 
-// ─── Install CTA ───────────────────────────────────────────────────────────
+// ─── Fitment CTA ───────────────────────────────────────────────────────────
 function InstallCTA() {
+  const { t } = useLang()
+
+  const TRUST_BADGES = [
+    t('acc_cert_tech'),
+    t('acc_mobile_fitment'),
+    t('acc_parts_guaranteed'),
+    t('acc_same_day'),
+  ]
+
   return (
     <section className="relative overflow-hidden bg-[#0f172a] py-24">
       <div className="absolute inset-0">
@@ -388,33 +413,33 @@ function InstallCTA() {
         <div className="max-w-2xl">
           <motion.span initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="inline-flex items-center gap-2 rounded-full bg-[#B5E92E]/15 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">
-            <Sparkles size={10} /> Professional fitment
+            <Sparkles size={10} /> {t('acc_fitment_eyebrow')}
           </motion.span>
           <motion.h2 initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.08 }}
-            className="mt-6 font-black leading-[0.9] tracking-[-0.055em] text-white"
+            className="mt-6 whitespace-pre-line font-black leading-[0.9] tracking-[-0.055em] text-white"
             style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}>
-            Need it fitted?<br />We've got you.
+            {t('acc_fitment_title')}
           </motion.h2>
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.14 }}
             className="mt-6 max-w-md text-[16px] leading-7 text-white/55">
-            Add professional installation when you checkout. Our certified technicians come to you or you can drop in at any of our partner workshops.
+            {t('acc_fitment_desc')}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
             className="mt-8 flex flex-wrap gap-3">
             <motion.a href="/services/maintenance" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="inline-flex h-[52px] items-center gap-2 rounded-full bg-[#B5E92E] px-7 text-[14px] font-black text-[#071016] transition hover:brightness-110">
-              Book fitment <ArrowRight size={16} />
+              {t('acc_fitment_cta')} <ArrowRight size={16} />
             </motion.a>
             <motion.a href="/contact" whileHover={{ scale: 1.03 }}
               className="inline-flex h-[52px] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 text-[14px] font-bold text-white transition hover:bg-white/18">
-              Ask an expert
+              {t('acc_ask_expert')}
             </motion.a>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.28 }}
             className="mt-10 flex flex-wrap gap-3">
-            {['Certified technicians', 'Mobile fitment available', 'All parts guaranteed', 'Same-day booking'].map(t => (
-              <span key={t} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/60">
-                <CheckCircle2 size={11} className="text-[#B5E92E]" /> {t}
+            {TRUST_BADGES.map(badge => (
+              <span key={badge} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/60">
+                <CheckCircle2 size={11} className="text-[#B5E92E]" /> {badge}
               </span>
             ))}
           </motion.div>
@@ -426,24 +451,26 @@ function InstallCTA() {
 
 // ─── Root ──────────────────────────────────────────────────────────────────
 export default function Accessories() {
+  const { t, isRTL } = useLang()
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQ, setSearchQ] = useState('')
 
+  const STRIP_ITEMS = [
+    ['🚚', t('acc_free_delivery')],
+    ['🔒', t('acc_secure_checkout')],
+    ['↩️', t('acc_easy_returns')],
+    ['🏆', t('acc_genuine_only')],
+  ]
+
   return (
-    <div className="w-full overflow-x-hidden">
-      {/* Hero */}
+    <div className="w-full overflow-x-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <HeroBanner />
 
-      {/* Why us strip */}
+      {/* Trust strip */}
       <div className="border-y border-[#e8ecf0] bg-white py-4">
         <div className="page-inner">
           <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] font-bold text-[#64748b]">
-            {[
-              ['🚚', 'Free delivery over AED 300'],
-              ['🔒', 'Secure checkout'],
-              ['↩️', '30-day easy returns'],
-              ['🏆', 'Genuine parts only'],
-            ].map(([icon, text]) => (
+            {STRIP_ITEMS.map(([icon, text]) => (
               <span key={text} className="flex items-center gap-2">{icon} {text}</span>
             ))}
           </div>
@@ -456,21 +483,23 @@ export default function Accessories() {
           <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-                className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">Accessories store</motion.p>
+                className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">
+                {t('acc_store_eyebrow')}
+              </motion.p>
               <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
                 className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
                 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-                Upgrade your ride
+                {t('acc_upgrade_title')}
               </motion.h2>
             </div>
             {/* Search */}
             <div className="relative shrink-0">
-              <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
+              <Search size={15} className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
               <input
                 value={searchQ}
                 onChange={e => setSearchQ(e.target.value)}
-                placeholder="Search products…"
-                className="h-11 w-full rounded-full border border-[#e8ecf0] bg-[#f8fafc] pl-9 pr-4 text-[13px] text-[#0f172a] outline-none transition focus:border-[#B5E92E] focus:bg-white sm:w-64"
+                placeholder={t('acc_search_ph')}
+                className="h-11 w-full rounded-full border border-[#e8ecf0] bg-[#f8fafc] ps-9 pe-4 text-[13px] text-[#0f172a] outline-none transition focus:border-[#B5E92E] focus:bg-white sm:w-64"
               />
             </div>
           </div>
@@ -480,18 +509,12 @@ export default function Accessories() {
             <CategoryBar active={activeCategory} setActive={setActiveCategory} />
           </div>
 
-          {/* Grid */}
           <ProductsGrid activeCategory={activeCategory} searchQ={searchQ} />
         </div>
       </section>
 
-      {/* Why DriveX */}
       <WhySection />
-
-      {/* Brands */}
       <BrandsSection />
-
-      {/* Fitment CTA */}
       <InstallCTA />
     </div>
   )

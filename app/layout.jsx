@@ -56,7 +56,7 @@ export default function RootLayout({ children }) {
                 <FavoritesProvider>
                   <ToastProvider>
                     <SiteHeader />
-                    <main className="flex-1 w-full pt-[72px]">
+                    <main className="flex-1 w-full">
                       {children}
                     </main>
                     <SiteFooter />
