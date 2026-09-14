@@ -9,12 +9,12 @@ import { useToast } from '@/context/ToastContext'
 import { useLang } from '@/context/LangContext'
 
 const STATUS_CFG = {
-  pending:  { label: 'Pending',  bg: 'bg-amber-100',   text: 'text-amber-700',   dot: 'bg-amber-400'  },
-  active:   { label: 'Active',   bg: 'bg-[#ecfccb]',   text: 'text-[#3a5a00]',  dot: 'bg-green-400'  },
-  rejected: { label: 'Rejected', bg: 'bg-red-100',     text: 'text-red-700',    dot: 'bg-red-500'    },
-  sold:     { label: 'Sold',     bg: 'bg-blue-100',    text: 'text-blue-700',   dot: 'bg-blue-500'   },
-  rented:   { label: 'Rented',   bg: 'bg-purple-100',  text: 'text-purple-700', dot: 'bg-purple-500' },
-  inactive: { label: 'Inactive', bg: 'bg-gray-100',    text: 'text-gray-600',   dot: 'bg-gray-400'   },
+  pending:  { labelKey: 'booking_status_pending',  bg: 'bg-amber-100',   text: 'text-amber-700',   dot: 'bg-amber-400'  },
+  active:   { labelKey: 'booking_status_active',   bg: 'bg-[#ecfccb]',   text: 'text-[#3a5a00]',  dot: 'bg-green-400'  },
+  rejected: { labelKey: 'listing_status_rejected', bg: 'bg-red-100',     text: 'text-red-700',    dot: 'bg-red-500'    },
+  sold:     { labelKey: 'listing_status_sold',     bg: 'bg-blue-100',    text: 'text-blue-700',   dot: 'bg-blue-500'   },
+  rented:   { labelKey: 'listing_status_rented',   bg: 'bg-purple-100',  text: 'text-purple-700', dot: 'bg-purple-500' },
+  inactive: { labelKey: 'listing_status_inactive', bg: 'bg-gray-100',    text: 'text-gray-600',   dot: 'bg-gray-400'   },
 }
 const TABS = ['all', 'active', 'pending', 'inactive', 'rejected']
 
@@ -22,6 +22,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
   const { t } = useLang()
   const [menuOpen, setMenuOpen] = useState(false)
   const cfg    = STATUS_CFG[listing.status] || STATUS_CFG.pending
+  const statusLabel = t(cfg.labelKey)
   const isRent = listing.listingType === 'rent'
 
   return (
@@ -36,7 +37,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
         }
         <span className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black ${cfg.bg} ${cfg.text}`}>
           <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
-          {cfg.label}
+          {statusLabel}
         </span>
       </div>
 
@@ -63,7 +64,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
         <div className="relative mt-3 flex items-center gap-2 sm:mt-0">
           <a href={`/cars/${listing.id}`}
             className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-[#B5E92E] hover:text-green-700">
-            <Eye size={13} /> Preview
+            <Eye size={13} /> {t('listing_preview')}
           </a>
           <a href={`/list-your-car?edit=${listing.id}`}
             className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-[#B5E92E] hover:text-green-700">
@@ -83,23 +84,23 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
                   {listing.status !== 'inactive' && (
                     <button onClick={() => { onStatusChange(listing.id, 'inactive'); setMenuOpen(false) }}
                       className="flex w-full items-center gap-3 px-4 py-3 text-[12px] text-gray-700 transition hover:bg-gray-50">
-                      <X size={14} className="text-gray-400" /> Mark Inactive
+                      <X size={14} className="text-gray-400" /> {t('listing_mark_inactive')}
                     </button>
                   )}
                   {listing.listingType === 'sale' && listing.status !== 'sold' && (
                     <button onClick={() => { onStatusChange(listing.id, 'sold'); setMenuOpen(false) }}
                       className="flex w-full items-center gap-3 px-4 py-3 text-[12px] text-gray-700 transition hover:bg-gray-50">
-                      <ArrowRight size={14} className="text-gray-400" /> Mark as Sold
+                      <ArrowRight size={14} className="text-gray-400" /> {t('listing_mark_sold')}
                     </button>
                   )}
                   <button onClick={() => setMenuOpen(false)}
                     className="flex w-full items-center gap-3 px-4 py-3 text-[12px] text-gray-700 transition hover:bg-gray-50">
-                    <Copy size={14} className="text-gray-400" /> Duplicate
+                    <Copy size={14} className="text-gray-400" /> {t('listing_duplicate')}
                   </button>
                   <div className="border-t border-gray-100" />
                   <button onClick={() => { onDelete(listing.id); setMenuOpen(false) }}
                     className="flex w-full items-center gap-3 px-4 py-3 text-[12px] text-red-600 transition hover:bg-red-50">
-                    <Trash2 size={14} /> {t('btn_cancel')} Listing
+                    <Trash2 size={14} /> {t('listing_delete_listing')}
                   </button>
                 </motion.div>
               )}
@@ -132,9 +133,9 @@ export default function MyListingsPage() {
     try {
       await carService.deleteListing(toDelete)
       setListings(l => l.filter(x => x.id !== toDelete))
-      toast({ message: 'Listing deleted.', type: 'success' })
+      toast({ message: t('listing_deleted'), type: 'success' })
     } catch (e) {
-      toast({ message: e.message || 'Delete failed.', type: 'error' })
+      toast({ message: e.message || t('listing_delete_failed'), type: 'error' })
     } finally { setDeleting(false); setToDelete(null) }
   }
 
@@ -142,7 +143,7 @@ export default function MyListingsPage() {
     try {
       await carService.updateListing(id, { status })
       setListings(l => l.map(x => x.id === id ? { ...x, status } : x))
-      toast({ message: `Status updated to "${STATUS_CFG[status]?.label}".`, type: 'success' })
+      toast({ message: `${t('listing_status_updated')} "${t(STATUS_CFG[status]?.labelKey)}".`, type: 'success' })
     } catch (e) {
       toast({ message: e.message, type: 'error' })
     }
@@ -163,7 +164,7 @@ export default function MyListingsPage() {
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-green-600">{t('dash_eyebrow')}</p>
               <h1 className="mt-1 text-[28px] font-black text-gray-900">{t('dash_listing_perf')}</h1>
-              <p className="mt-1 text-[14px] text-gray-400">{listings.length} listings</p>
+              <p className="mt-1 text-[14px] text-gray-400">{listings.length} {t('listings_lower')}</p>
             </div>
             <a href="/list-your-car"
               className="flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-3 text-[13px] font-bold text-white shadow-sm transition hover:bg-green-500">
@@ -181,7 +182,7 @@ export default function MyListingsPage() {
                 className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-1.5 text-[12px] font-bold capitalize transition ${
                   tab === tb ? 'bg-green-600 text-white' : 'text-gray-500 hover:bg-gray-100'
                 }`}>
-                {tb === 'all' ? 'All' : STATUS_CFG[tb]?.label}
+                {tb === 'all' ? t('booking_tab_all') : t(STATUS_CFG[tb]?.labelKey)}
                 <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${tab === tb ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'}`}>
                   {counts[tb]}
                 </span>
@@ -199,7 +200,9 @@ export default function MyListingsPage() {
             className="flex flex-col items-center justify-center py-24 text-center">
             <div className="mb-4 text-5xl">&#x1F697;</div>
             <p className="text-[18px] font-bold text-gray-800">
-              {tab === 'all' ? t('dash_no_listings') : `No ${STATUS_CFG[tab]?.label.toLowerCase()} listings`}
+              {tab === 'all'
+                ? t('dash_no_listings')
+                : `${t('no')} ${t(STATUS_CFG[tab]?.labelKey).toLowerCase()} ${t('listings_lower')}`}
             </p>
             <a href="/list-your-car"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white transition hover:bg-green-500">
@@ -221,9 +224,9 @@ export default function MyListingsPage() {
 
       <ConfirmModal
         open={!!toDelete}
-        title="Delete Listing"
-        message="This listing will be permanently removed. This cannot be undone."
-        confirmLabel="Delete"
+        title={t('listing_delete_confirm')}
+        message={t('listing_delete_confirm_msg')}
+        confirmLabel={t('listing_delete_action')}
         danger
         loading={deleting}
         onConfirm={handleDelete}

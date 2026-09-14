@@ -35,21 +35,21 @@ export default function JournalPage() {
               <a href={`/journal/${post.slug}`} className="block overflow-hidden">
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={t(post.titleKey || post.title)}
                   className="aspect-[1.65] w-full object-cover transition duration-700 group-hover:scale-105"
                 />
               </a>
               <div className="p-6">
                 <div className="flex items-center justify-between gap-3">
                   <span className="rounded-full bg-[#eef4df] px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-[#657f1b]">
-                    {post.category}
+                    {t(post.categoryKey || post.category)}
                   </span>
                   <span className="flex items-center gap-1 text-[10px] text-[#94a3b8]">
                     <Clock3 size={12} /> {post.readTime}
                   </span>
                 </div>
-                <h2 className="mt-5 text-xl font-black tracking-[-.035em] text-[#0f172a]">{post.title}</h2>
-                <p className="mt-3 text-sm leading-6 text-[#64748b]">{post.excerpt}</p>
+                <h2 className="mt-5 text-xl font-black tracking-[-.035em] text-[#0f172a]">{t(post.titleKey || post.title)}</h2>
+                <p className="mt-3 text-sm leading-6 text-[#64748b]">{t(post.excerptKey || post.excerpt)}</p>
                 <a
                   href={`/journal/${post.slug}`}
                   className="mt-6 inline-flex items-center gap-2 text-xs font-black text-[#7d9f24] transition hover:text-[#4a6000]"

@@ -91,7 +91,7 @@ export default function TradeInPage() {
       setResult({ estimatedTradeInValue: value, min: Math.round(value * 0.92), max: Math.round(value * 1.08) })
       toast({ message: t('ti_result_title'), type: 'success' })
     } catch {
-      toast({ message: 'Valuation failed. Please try again.', type: 'error' })
+      toast({ message: t('ti_error'), type: 'error' })
     } finally { setLoading(false) }
   }
 

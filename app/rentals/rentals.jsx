@@ -164,19 +164,22 @@ export default function RentalsPage() {
       <section className="sticky top-[100px] z-30 border-b border-[#E2E6DE] bg-[#F5F6F3]/95 backdrop-blur-xl">
         <div className="page-inner flex items-center gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
           <SlidersHorizontal size={15} className="shrink-0 text-[#7C8B55]" />
-          {CATEGORIES_LIST.map((item) => (
-            <button
-              key={item}
-              onClick={() => updateCategory(item)}
-              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
-                category === item
-                  ? 'bg-[#0E1418] text-white'
-                  : 'border border-[#DDE2D8] bg-white text-[#64748B] hover:border-[#B5E92E] hover:text-[#0F172A]'
-              }`}
-            >
-              {item}
-            </button>
-          ))}
+          {CATEGORIES_LIST.map((item) => {
+            const categoryMeta = RENTAL_CATEGORIES.find((entry) => entry.name === item)
+            return (
+              <button
+                key={item}
+                onClick={() => updateCategory(item)}
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
+                  category === item
+                    ? 'bg-[#0E1418] text-white'
+                    : 'border border-[#DDE2D8] bg-white text-[#64748B] hover:border-[#B5E92E] hover:text-[#0F172A]'
+                }`}
+              >
+                {t(categoryMeta?.labelKey || item)}
+              </button>
+            )
+          })}
         </div>
       </section>
 

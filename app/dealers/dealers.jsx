@@ -25,9 +25,9 @@ export default function DealersPage() {
         image="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=86"
       >
         <div className="mt-8 flex flex-wrap gap-3 text-[11px] font-black uppercase tracking-[.18em] text-white/65">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Verified sellers</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Trusted network</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">Premium service</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('dealers_badge_verified')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('dealers_badge_trusted')}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{t('dealers_badge_premium')}</span>
         </div>
       </PageHero>
 

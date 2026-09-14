@@ -9,17 +9,18 @@ import { useToast } from '@/context/ToastContext'
 import { useLang } from '@/context/LangContext'
 
 const STATUS_CONFIG = {
-  pending:   { label: 'Pending',   bg: 'bg-amber-100', text: 'text-amber-700' },
-  confirmed: { label: 'Confirmed', bg: 'bg-blue-100',  text: 'text-blue-700'  },
-  active:    { label: 'Active',    bg: 'bg-[#ecfccb]', text: 'text-[#3a5a00]' },
-  completed: { label: 'Completed', bg: 'bg-gray-100',  text: 'text-gray-600'  },
-  cancelled: { label: 'Cancelled', bg: 'bg-red-100',   text: 'text-red-600'   },
+  pending:   { labelKey: 'booking_status_pending',   bg: 'bg-amber-100', text: 'text-amber-700' },
+  confirmed: { labelKey: 'booking_status_confirmed', bg: 'bg-blue-100',  text: 'text-blue-700'  },
+  active:    { labelKey: 'booking_status_active',    bg: 'bg-[#ecfccb]', text: 'text-[#3a5a00]' },
+  completed: { labelKey: 'booking_status_completed', bg: 'bg-gray-100',  text: 'text-gray-600'  },
+  cancelled: { labelKey: 'booking_status_cancelled', bg: 'bg-red-100',   text: 'text-red-600'   },
 }
 const TABS = ['all', 'confirmed', 'active', 'completed', 'cancelled']
 
 function BookingCard({ booking, onCancel }) {
   const { t } = useLang()
   const cfg = STATUS_CONFIG[booking.status] || STATUS_CONFIG.pending
+  const statusLabel = t(cfg.labelKey)
   const canCancel = ['pending', 'confirmed'].includes(booking.status)
 
   return (
@@ -43,7 +44,7 @@ function BookingCard({ booking, onCancel }) {
               <p className="mt-0.5 text-[12px] text-gray-400">{t('booking_payment')} #{booking.id}</p>
             </div>
             <span className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wide ${cfg.bg} ${cfg.text}`}>
-              {cfg.label}
+              {statusLabel}
             </span>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
@@ -75,7 +76,7 @@ function BookingCard({ booking, onCancel }) {
           </div>
           {booking.transactionId && (
             <div className="hidden sm:block">
-              <p className="text-[10px] text-gray-400">Txn</p>
+              <p className="text-[10px] text-gray-400">{t('success_txn_id')}</p>
               <p className="font-mono text-[12px] text-gray-600">{booking.transactionId}</p>
             </div>
           )}
@@ -83,7 +84,7 @@ function BookingCard({ booking, onCancel }) {
         <div className="flex gap-2">
           <button onClick={() => window.print()}
             className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-[11px] font-semibold text-gray-600 transition hover:border-[#B5E92E] hover:text-green-700">
-            <Download size={13} /> Invoice
+            <Download size={13} /> {t('booking_invoice')}
           </button>
           {booking.status === 'completed' && (
             <a href="/cars"
@@ -99,7 +100,7 @@ function BookingCard({ booking, onCancel }) {
           )}
           <a href={`/rental/success/${booking.id}`}
             className="flex items-center gap-1.5 rounded-xl bg-green-600 px-3 py-2 text-[11px] font-bold text-white transition hover:bg-green-500">
-            Details <ArrowRight size={13} />
+            {t('booking_details')} <ArrowRight size={13} />
           </a>
         </div>
       </div>
@@ -130,9 +131,9 @@ export default function MyBookingsPage() {
     try {
       await bookingService.cancelBooking(toCancel)
       setBookings(b => b.map(x => x.id === toCancel ? { ...x, status: 'cancelled' } : x))
-      toast({ message: 'Booking cancelled.', type: 'success' })
+      toast({ message: t('booking_cancelled'), type: 'success' })
     } catch (e) {
-      toast({ message: e.message || 'Failed to cancel.', type: 'error' })
+      toast({ message: e.message || t('booking_cancel_failed'), type: 'error' })
     } finally {
       setCancelling(false)
       setToCancel(null)
@@ -160,8 +161,8 @@ export default function MyBookingsPage() {
                   tab === tb ? 'bg-green-600 text-white' : 'text-gray-500 hover:bg-gray-100'
                 }`}>
                 {tb === 'all'
-                  ? `All (${bookings.length})`
-                  : `${STATUS_CONFIG[tb]?.label} (${bookings.filter(b => b.status === tb).length})`
+                  ? `${t('booking_tab_all')} (${bookings.length})`
+                  : `${t(STATUS_CONFIG[tb]?.labelKey)} (${bookings.filter(b => b.status === tb).length})`
                 }
               </button>
             ))}
@@ -183,7 +184,9 @@ export default function MyBookingsPage() {
             className="flex flex-col items-center justify-center py-24 text-center">
             <div className="mb-4 text-5xl">&#x1F4C5;</div>
             <p className="text-[18px] font-bold text-gray-800">
-              {tab === 'all' ? t('dash_no_bookings') : `No ${STATUS_CONFIG[tab]?.label.toLowerCase()} bookings`}
+              {tab === 'all'
+                ? t('dash_no_bookings')
+                : `${t('no')} ${t(STATUS_CONFIG[tab]?.labelKey).toLowerCase()} ${t('bookings_lower')}`}
             </p>
             <a href="/cars"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-[13px] font-bold text-white transition hover:bg-green-500">
@@ -204,7 +207,7 @@ export default function MyBookingsPage() {
       <ConfirmModal
         open={!!toCancel}
         title={t('btn_cancel')}
-        message="Are you sure you want to cancel this booking? Refund is subject to our cancellation policy."
+        message={t('booking_cancel_confirm')}
         confirmLabel={t('btn_cancel')}
         danger
         loading={cancelling}

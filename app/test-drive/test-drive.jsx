@@ -71,7 +71,7 @@ export default function TestDrivePage() {
       setRef(id); setDone(true)
       toast({ message: t('td_success_title'), type: 'success' })
     } catch {
-      toast({ message: 'Something went wrong.', type: 'error' })
+      toast({ message: t('test_drive_error_generic'), type: 'error' })
     } finally { setLoading(false) }
   }
 

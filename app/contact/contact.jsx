@@ -28,9 +28,9 @@ export default function ContactPage() {
         image="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=86"
       >
         <div className="mt-8 grid gap-4 text-sm text-white/70 sm:grid-cols-3">
-          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Mail className="text-[#d7ff3f]" size={17} /> hello@drivex.ae</p>
-          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Phone className="text-[#d7ff3f]" size={17} /> +971 4 000 0000</p>
-          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><MapPin className="text-[#d7ff3f]" size={17} /> Dubai, UAE</p>
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Mail className="text-[#d7ff3f]" size={17} /> {t('contact_email_value')}</p>
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><Phone className="text-[#d7ff3f]" size={17} /> {t('contact_phone_value')}</p>
+          <p className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2"><MapPin className="text-[#d7ff3f]" size={17} /> {t('contact_location')}</p>
         </div>
       </PageHero>
 
@@ -50,7 +50,7 @@ export default function ContactPage() {
               </motion.div>
             ) : (
               <form
-                onSubmit={e => { e.preventDefault(); setSent(true); toast({ message: 'Thanks for reaching out. We’ll contact you shortly.', type: 'success' }) }}
+                onSubmit={e => { e.preventDefault(); setSent(true); toast({ message: t('contact_success_toast'), type: 'success' }) }}
                 className="rounded-[8px] bg-white p-7 text-foreground sm:p-9"
               >
                 <div className="grid gap-5 sm:grid-cols-2">

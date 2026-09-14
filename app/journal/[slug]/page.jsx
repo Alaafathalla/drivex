@@ -1,6 +1,8 @@
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, CalendarDays, Clock3 } from 'lucide-react'
 import { getJournalPost, JOURNAL_POSTS } from '@/lib/journal-content'
+import { t as translate } from '@/lib/i18n'
 import { NewsSection, TrustBand } from '@/components/platform/rich-sections'
 
 export function generateStaticParams() {
@@ -12,7 +14,11 @@ export default async function JournalArticlePage({ params }) {
   const post = getJournalPost(slug)
   if (!post) notFound()
 
-  const formattedDate = new Date(`${post.date}T12:00:00`).toLocaleDateString('en-AE', {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('drivex_lang')?.value === 'ar' ? 'ar' : 'en'
+  const localize = (key, fallback) => (key ? translate(key, lang) : fallback)
+
+  const formattedDate = new Date(`${post.date}T12:00:00`).toLocaleDateString(lang === 'ar' ? 'ar-AE' : 'en-AE', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -31,11 +37,11 @@ export default async function JournalArticlePage({ params }) {
           >
             <ArrowLeft size={14} /> Journal
           </a>
-          <p className="mt-10 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">{post.category}</p>
+          <p className="mt-10 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">{localize(post.categoryKey, post.category)}</p>
           <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.02] tracking-[-.05em] sm:text-6xl">
-            {post.title}
+            {localize(post.titleKey, post.title)}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/60">{post.excerpt}</p>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/60">{localize(post.excerptKey, post.excerpt)}</p>
           <div className="mt-7 flex flex-wrap gap-4 text-xs text-white/40">
             <span className="flex items-center gap-2"><CalendarDays size={14} />{formattedDate}</span>
             <span className="flex items-center gap-2"><Clock3 size={14} />{post.readTime}</span>
@@ -46,14 +52,14 @@ export default async function JournalArticlePage({ params }) {
       {/* Article content */}
       <article className="page-inner py-16">
         <div className="mx-auto max-w-3xl space-y-10">
-          {post.sections.map(([heading, body], index) => (
+          {post.sections.map(([headingKey, bodyKey], index) => (
             <section
-              key={heading}
+              key={headingKey}
               className="rounded-[24px] border border-[#e2e6de] bg-white p-6 sm:p-8"
             >
               <span className="text-[10px] font-black text-[#7d9f24]">0{index + 1}</span>
-              <h2 className="mt-4 text-2xl font-black tracking-[-.035em] text-[#0f172a]">{heading}</h2>
-              <p className="mt-4 text-[15px] leading-8 text-[#64748b]">{body}</p>
+              <h2 className="mt-4 text-2xl font-black tracking-[-.035em] text-[#0f172a]">{localize(headingKey, headingKey)}</h2>
+              <p className="mt-4 text-[15px] leading-8 text-[#64748b]">{localize(bodyKey, bodyKey)}</p>
             </section>
           ))}
         </div>

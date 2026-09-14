@@ -2,18 +2,21 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, MapPin, Navigation, Truck } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
 import { RENTAL_LOCATIONS } from '@/lib/rental-catalog'
 
 export default function RentByLocationPage() {
+  const { t, isRTL } = useLang()
+
   return (
-    <main className="min-h-screen bg-[#F5F6F3]">
+    <main className="min-h-screen bg-[#F5F6F3]" dir={isRTL ? 'rtl' : 'ltr'}>
       <section className="page-inner py-16 sm:py-20 lg:py-24">
         <div className="grid items-end gap-8 lg:grid-cols-[1fr_.7fr]">
           <div>
-            <p className="text-xs font-black uppercase tracking-[.2em] text-[#7C8B55]">Rent by location</p>
-            <h1 className="mt-4 max-w-4xl text-5xl font-black tracking-[-.055em] text-[#0F172A] sm:text-6xl">Your car, where you need it.</h1>
+            <p className="text-xs font-black uppercase tracking-[.2em] text-[#7C8B55]">{t('rent_by_loc_eyebrow')}</p>
+            <h1 className="mt-4 max-w-4xl text-5xl font-black tracking-[-.055em] text-[#0F172A] sm:text-6xl">{t('rent_by_loc_title')}</h1>
           </div>
-          <p className="max-w-xl text-base leading-7 text-[#64748B]">Choose the nearest pickup point or request vehicle delivery. Rental availability can then be refined by your exact start and end dates.</p>
+          <p className="max-w-xl text-base leading-7 text-[#64748B]">{t('rent_by_loc_desc')}</p>
         </div>
 
         <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -36,10 +39,10 @@ export default function RentByLocationPage() {
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-sm leading-6 text-[#64748B]">{location.description}</p>
+                <p className="text-sm leading-6 text-[#64748B]">{t(location.descriptionKey || location.description)}</p>
                 <div className="mt-5 flex items-center justify-between border-t border-[#EEF0EC] pt-4">
-                  <span className="text-xs font-black text-[#0F172A]">{location.cars}+ cars nearby</span>
-                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
+                  <span className="text-xs font-black text-[#0F172A]">{location.cars}{t('rent_cars_nearby')}</span>
+                  <ArrowRight size={17} className={`transition-transform group-hover:translate-x-1 ${isRTL ? 'rotate-180' : ''}`} />
                 </div>
               </div>
             </motion.a>
@@ -47,8 +50,8 @@ export default function RentByLocationPage() {
         </div>
 
         <div className="mt-10 grid gap-4 rounded-[28px] bg-[#0B1319] p-6 text-white sm:grid-cols-2 sm:p-8">
-          <div className="flex gap-4"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#B5E92E] text-[#0B1319]"><Navigation size={18} /></div><div><h3 className="font-black">Flexible pickup</h3><p className="mt-1 text-sm leading-6 text-white/55">Choose a listed hub or provide your preferred delivery area during booking.</p></div></div>
-          <div className="flex gap-4"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#B5E92E] text-[#0B1319]"><Truck size={18} /></div><div><h3 className="font-black">Doorstep delivery</h3><p className="mt-1 text-sm leading-6 text-white/55">Premium delivery can be added to eligible rentals and special-event bookings.</p></div></div>
+          <div className="flex gap-4"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#B5E92E] text-[#0B1319]"><Navigation size={18} /></div><div><h3 className="font-black">{t('rent_flexible_pickup')}</h3><p className="mt-1 text-sm leading-6 text-white/55">{t('rent_flexible_pickup_sub')}</p></div></div>
+          <div className="flex gap-4"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#B5E92E] text-[#0B1319]"><Truck size={18} /></div><div><h3 className="font-black">{t('rent_doorstep_delivery')}</h3><p className="mt-1 text-sm leading-6 text-white/55">{t('rent_doorstep_delivery_sub')}</p></div></div>
         </div>
       </section>
     </main>

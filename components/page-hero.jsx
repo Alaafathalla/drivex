@@ -1,6 +1,12 @@
-﻿import { ArrowDownRight } from 'lucide-react'
+﻿'use client'
 
-export function PageHero({ eyebrow, title, description, children, image }) {
+import { ArrowDownRight } from 'lucide-react'
+import { useLang } from '@/context/LangContext'
+
+export function PageHero({ eyebrow, title, description, children, image, footerLabel }) {
+  const { t } = useLang()
+  const bottomLabel = footerLabel ?? t('page_hero_platform')
+
   return (
     <section className="grain relative w-full overflow-hidden bg-[#090c10] text-white">
       {image && (
@@ -18,7 +24,7 @@ export function PageHero({ eyebrow, title, description, children, image }) {
             <div className="mt-8 max-w-2xl border-l border-white/15 pl-5"><p className="text-[15px] leading-7 text-white/58 sm:text-[17px]">{description}</p></div>
             {children && <div className="mt-9">{children}</div>}
           </div>
-          <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-5"><span className="text-[9px] font-black uppercase tracking-[.18em] text-white/25">Motory / automotive platform</span><ArrowDownRight size={18} className="text-white/25"/></div>
+          <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-5"><span className="text-[9px] font-black uppercase tracking-[.18em] text-white/25">{bottomLabel}</span><ArrowDownRight size={18} className="text-white/25"/></div>
         </div>
       </div>
     </section>

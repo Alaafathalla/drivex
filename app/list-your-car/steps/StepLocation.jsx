@@ -43,7 +43,7 @@ export function StepLocation({ data, update }) {
     )
   }
 
-  const placeLabel = [data.address, data.area, data.city, data.country].filter(Boolean).join(', ') || (lang === 'ar' ? 'أضف مدينة أو استخدم موقعك الحالي' : 'Add a city or use your current location')
+  const placeLabel = [data.address, data.area, data.city, data.country].filter(Boolean).join(', ') || t('lyc_add_city_or_current_location')
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -82,12 +82,12 @@ export function StepLocation({ data, update }) {
         <div className="relative flex items-start gap-4">
           <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-green-600 text-white shadow-lg shadow-green-200"><MapPin size={19}/></div>
           <div className="min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-[.14em] text-[#15803d]">{lang === 'ar' ? 'معاينة موقع الإعلان' : 'Listing location preview'}</p>
+            <p className="text-[10px] font-black uppercase tracking-[.14em] text-[#15803d]">{t('lyc_listing_location_preview')}</p>
             <p className="mt-1 text-sm font-bold text-gray-900">{placeLabel}</p>
             {data.latitude && data.longitude ? (
-              <p className="mt-2 text-xs text-gray-500">{lang === 'ar' ? 'الإحداثيات' : 'Coordinates'}: {data.latitude}, {data.longitude}</p>
+              <p className="mt-2 text-xs text-gray-500">{t('lyc_coordinates')}: {data.latitude}, {data.longitude}</p>
             ) : (
-              <p className="mt-2 text-xs text-gray-500">{lang === 'ar' ? 'استخدم موقع الجهاز لإرفاق إحداثيات دقيقة للإعلان.' : 'Use device location to attach precise coordinates to the API payload.'}</p>
+              <p className="mt-2 text-xs text-gray-500">{t('lyc_coordinates_desc')}</p>
             )}
             {locationError ? <p className="mt-2 text-xs font-semibold text-amber-600">{locationError}</p> : null}
           </div>

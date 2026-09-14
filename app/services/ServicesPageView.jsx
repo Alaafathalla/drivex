@@ -67,7 +67,7 @@ function ServiceBooking({ selected, setSelected }) {
               className="h-12 w-full rounded-2xl border border-[#dfe5db] bg-white px-4 text-sm font-bold outline-none focus:border-[#B5E92E]"
             >
               {SERVICE_CATALOG.map(item => (
-                <option key={item.slug} value={item.slug}>{item.title}</option>
+                <option key={item.slug} value={item.slug}>{t(item.titleKey || item.title)}</option>
               ))}
             </select>
           </label>
@@ -209,7 +209,7 @@ export default function ServicesPageView() {
                   <img src={service.image} alt={service.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#071016]/75 via-transparent to-transparent" />
                   <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[9px] font-black uppercase tracking-[.12em] text-[#0f172a]">
-                    {service.category}
+                    {t(service.categoryKey || service.category)}
                   </span>
                   <span className="absolute bottom-4 left-4 grid size-10 place-items-center rounded-full bg-[#B5E92E] text-[#071016]">
                     <Icon size={18} />
@@ -218,8 +218,8 @@ export default function ServicesPageView() {
                 <div className="p-5">
                   <div className="flex justify-between gap-5">
                     <div>
-                      <h3 className="text-lg font-black text-[#0f172a]">{service.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-[#64748b]">{service.description}</p>
+                      <h3 className="text-lg font-black text-[#0f172a]">{t(service.titleKey || service.title)}</h3>
+                      <p className="mt-2 text-sm leading-6 text-[#64748b]">{t(service.descriptionKey || service.description)}</p>
                     </div>
                     <ArrowRight size={17} className="mt-1 shrink-0" />
                   </div>

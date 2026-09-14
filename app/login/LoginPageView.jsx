@@ -14,10 +14,10 @@ export default function LoginPageView() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!email || !password) {
-      toast({ message: 'Please enter your email and password.', type: 'error' })
+      toast({ message: t('login_missing_credentials'), type: 'error' })
       return
     }
-    toast({ message: 'Signed in successfully. Welcome back!', type: 'success' })
+    toast({ message: t('login_success'), type: 'success' })
   }
 
   return (

@@ -27,8 +27,8 @@ export default function GaragePage() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-[10px] uppercase tracking-[.16em] text-white/35">{t('garage_primary_label')}</p>
-                <h2 className="mt-2 text-3xl font-black">Porsche Cayenne S</h2>
-                <p className="mt-2 text-sm text-white/45">{isRTL ? '٢٠٢٣ · دبي' : '2023 · Dubai'}</p>
+                <h2 className="mt-2 text-3xl font-black">{t('garage_vehicle_name')}</h2>
+                <p className="mt-2 text-sm text-white/45">{t('garage_vehicle_meta')}</p>
               </div>
               <ShieldCheck className="text-accent" />
             </div>

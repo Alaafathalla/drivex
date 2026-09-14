@@ -1,10 +1,39 @@
 import { useLang } from '@/context/LangContext'
 
-const BRANDS = ['BMW','Mercedes-Benz','Audi','Porsche','Range Rover','Tesla','Toyota','Lexus','Nissan','Honda','Ford','Hyundai']
-const BODIES  = ['Sedan','SUV','Coupe','Hatchback','Convertible','Pickup','Van']
-const FUELS   = ['Petrol','Diesel','Electric','Hybrid']
-const TRANS   = ['Automatic','Manual']
-const YEARS   = Array.from({ length: 15 }, (_, i) => String(2025 - i))
+const BRANDS = [
+  { value: 'BMW', label: 'BMW', labelAr: 'بي أم دبليو' },
+  { value: 'Mercedes-Benz', label: 'Mercedes-Benz', labelAr: 'مرسيدس بنز' },
+  { value: 'Audi', label: 'Audi', labelAr: 'أودي' },
+  { value: 'Porsche', label: 'Porsche', labelAr: 'بورشه' },
+  { value: 'Range Rover', label: 'Range Rover', labelAr: 'رينج روفر' },
+  { value: 'Tesla', label: 'Tesla', labelAr: 'تسلا' },
+  { value: 'Toyota', label: 'Toyota', labelAr: 'تويوتا' },
+  { value: 'Lexus', label: 'Lexus', labelAr: 'لكزس' },
+  { value: 'Nissan', label: 'Nissan', labelAr: 'نيسان' },
+  { value: 'Honda', label: 'Honda', labelAr: 'هوندا' },
+  { value: 'Ford', label: 'Ford', labelAr: 'فورد' },
+  { value: 'Hyundai', label: 'Hyundai', labelAr: 'هيونداي' },
+]
+const BODIES = [
+  { value: 'Sedan', label: 'Sedan', labelAr: 'سيدان' },
+  { value: 'SUV', label: 'SUV', labelAr: 'دفع رباعي' },
+  { value: 'Coupe', label: 'Coupe', labelAr: 'كوبيه' },
+  { value: 'Hatchback', label: 'Hatchback', labelAr: 'هاتشباك' },
+  { value: 'Convertible', label: 'Convertible', labelAr: 'كابريوليه' },
+  { value: 'Pickup', label: 'Pickup', labelAr: 'بيك آب' },
+  { value: 'Van', label: 'Van', labelAr: 'فان' },
+]
+const FUELS = [
+  { value: 'Petrol', label: 'Petrol', labelAr: 'بنزين' },
+  { value: 'Diesel', label: 'Diesel', labelAr: 'ديزل' },
+  { value: 'Electric', label: 'Electric', labelAr: 'كهربائي' },
+  { value: 'Hybrid', label: 'Hybrid', labelAr: 'هجين' },
+]
+const TRANS = [
+  { value: 'Automatic', label: 'Automatic', labelAr: 'أوتوماتيك' },
+  { value: 'Manual', label: 'Manual', labelAr: 'يدوي' },
+]
+const YEARS = Array.from({ length: 15 }, (_, i) => String(2025 - i))
 
 const cl = 'w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/10'
 
@@ -20,11 +49,15 @@ function Row({ label, required, children }) {
 }
 
 function Sel({ value, onChange, options, placeholder }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   return (
     <select value={value} onChange={e => onChange(e.target.value)} className={cl}>
       <option value="">{placeholder || t('select_placeholder')}</option>
-      {options.map(o => <option key={o} value={o}>{o}</option>)}
+      {options.map((option) => {
+        const item = typeof option === 'string' ? { value: option, label: option, labelAr: option } : option
+        const label = lang === 'ar' ? (item.labelAr || item.label) : item.label
+        return <option key={item.value} value={item.value}>{label}</option>
+      })}
     </select>
   )
 }

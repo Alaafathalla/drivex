@@ -10,7 +10,15 @@ import { calcRental } from '@/lib/booking-service'
 import { useLang } from '@/context/LangContext'
 import { useCurrency } from '@/context/CurrencyContext'
 
-const LOCATIONS = ['Dubai Marina','Downtown Dubai','Dubai Airport','Abu Dhabi Airport','Sharjah City Centre','Ajman','Palm Jumeirah']
+const LOCATIONS = [
+  { value: 'Dubai Marina', labelAr: 'دبي مارينا' },
+  { value: 'Downtown Dubai', labelAr: 'وسط مدينة دبي' },
+  { value: 'Dubai Airport', labelAr: 'مطار دبي' },
+  { value: 'Abu Dhabi Airport', labelAr: 'مطار أبوظبي' },
+  { value: 'Sharjah City Centre', labelAr: 'سيتى سنتر الشارقة' },
+  { value: 'Ajman', labelAr: 'عجمان' },
+  { value: 'Palm Jumeirah', labelAr: 'نخلة الجميرة' },
+]
 
 export default function RentPage({ params }) {
   const { id }         = use(params)
@@ -132,7 +140,11 @@ export default function RentPage({ params }) {
                     <select value={form[key]} onChange={e => set(key, e.target.value)}
                       className={`${inp} ${err ? 'border-red-400' : ''}`}>
                       <option value="">{t('rent_select_loc')}</option>
-                      {LOCATIONS.map(l => <option key={l}>{l}</option>)}
+                      {LOCATIONS.map((location) => (
+                        <option key={location.value} value={location.value}>
+                          {isRTL ? location.labelAr : location.value}
+                        </option>
+                      ))}
                     </select>
                     {err && <p className="mt-1 text-[11px] text-red-500">{err}</p>}
                   </label>

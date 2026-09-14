@@ -88,8 +88,8 @@ export default function CategoriesView() {
               </span>
               <ArrowRight size={15} className="text-[#c2c9bd] transition group-hover:translate-x-1"/>
             </div>
-            <h3 className="mt-8 text-xl font-black text-[#0f172a]">{category.name}</h3>
-            <p className="mt-2 text-sm leading-6 text-[#64748b]">{category.description}</p>
+            <h3 className="mt-8 text-xl font-black text-[#0f172a]">{t(category.labelKey || category.name)}</h3>
+            <p className="mt-2 text-sm leading-6 text-[#64748b]">{t(category.descriptionKey || category.description)}</p>
           </a>
         ))}
       </div>

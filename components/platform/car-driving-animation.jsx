@@ -1,18 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLang } from '@/context/LangContext'
 
 export function CarDrivingAnimation({ className = '' }) {
+  const { t, isRTL } = useLang()
+
   return (
-    <div className={`relative overflow-hidden rounded-[32px] border border-[#E5E7EB] bg-white px-5 py-8 shadow-[0_22px_50px_rgba(15,23,42,.06)] ${className}`}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className={`relative overflow-hidden rounded-[32px] border border-[#E5E7EB] bg-white px-5 py-8 shadow-[0_22px_50px_rgba(15,23,42,.06)] ${className}`}>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(181,233,46,.18),transparent_30%),radial-gradient(circle_at_90%_0%,rgba(59,130,246,.08),transparent_28%)]" />
       <div className="relative">
         <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[.22em] text-[#7F9F1B]">Scroll to drive</p>
-            <h3 className="mt-2 text-2xl font-black tracking-[-.04em] text-[#0F172A]">Your automotive journey, now in motion.</h3>
+            <p className="text-[10px] font-black uppercase tracking-[.22em] text-[#7F9F1B]">{t('car_drive_scroll')}</p>
+            <h3 className="mt-2 text-2xl font-black tracking-[-.04em] text-[#0F172A]">{t('car_drive_title')}</h3>
           </div>
-          <p className="hidden max-w-sm text-right text-xs leading-6 text-slate-500 sm:block">Browse → compare → reserve → own → maintain.</p>
+          <p className={`hidden max-w-sm text-xs leading-6 text-slate-500 sm:block ${isRTL ? 'text-right' : 'text-left'}`}>{t('car_drive_caption')}</p>
         </div>
 
         <div className="relative overflow-hidden rounded-[28px] border border-[#E8EBEF] bg-[linear-gradient(180deg,#f8fbff_0%,#eef2f7_100%)] px-4 py-8 sm:px-8">
@@ -51,9 +54,9 @@ export function CarDrivingAnimation({ className = '' }) {
 
           <div className="relative z-10 mt-24 grid gap-3 sm:grid-cols-3">
             {[
-              ['10K+', 'cars listed'],
-              ['50+', 'dealer partners'],
-              ['24/7', 'support available'],
+              ['10K+', t('car_drive_cars_listed')],
+              ['50+', t('car_drive_dealer_partners')],
+              ['24/7', t('car_drive_support_available')],
             ].map(([value, label]) => (
               <div key={label} className="rounded-2xl border border-white/70 bg-white/70 px-4 py-3 backdrop-blur">
                 <p className="text-lg font-black text-[#0F172A]">{value}</p>

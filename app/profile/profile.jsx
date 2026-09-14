@@ -14,10 +14,10 @@ export default function ProfilePage() {
   ]
 
   const info = [
-    ['Full name',  'Alex Morgan'],
-    ['Email',      'alex@example.com'],
-    ['Phone',      '+971 50 000 0000'],
-    ['Location',   'Dubai, UAE'],
+    [t('profile_full_name'),  'Alex Morgan'],
+    [t('profile_email'),      'alex@example.com'],
+    [t('profile_phone'),      '+971 50 000 0000'],
+    [t('profile_location'),   'Dubai, UAE'],
   ]
 
   return (
