@@ -8,9 +8,9 @@ export function PageHero({ eyebrow, title, description, children, image, footerL
   const bottomLabel = footerLabel ?? t('page_hero_platform')
 
   return (
-    <section className="grain relative w-full overflow-hidden bg-[#090c10] text-white">
+    <section className="grain relative w-full overflow-visible bg-[#090c10] text-white">
       {image && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
           <img src={image} alt="" className="h-full w-full object-cover object-center opacity-45" />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#090c10_0%,rgba(9,12,16,.94)_42%,rgba(9,12,16,.28)_78%,rgba(9,12,16,.2)_100%)]" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#090c10] via-transparent to-transparent" />
