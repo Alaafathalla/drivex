@@ -25,7 +25,7 @@ export default function MyCarsPage() {
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
           className="flex items-end justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[.18em] text-accent">Account</p>
+            <p className="text-xs font-black uppercase tracking-[.18em] text-accent">{t('mycars_account')}</p>
             <h1 className="mt-2 text-4xl font-black">{t('mycars_title')}</h1>
           </div>
           <a href="/sell"

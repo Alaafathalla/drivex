@@ -181,7 +181,7 @@ export function CarGallery({ images = [] }) {
                 <motion.img
                   key={active}
                   src={imgs[active]}
-                  alt="Car fullscreen"
+                  alt={t('media_car_fullscreen')}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
@@ -243,7 +243,7 @@ export function CarGallery({ images = [] }) {
                 <button
                   onClick={() => setView360(false)}
                   className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-                  aria-label="Close 360° view"
+                  aria-label={t('gallery_close_360')}
                 >
                   <X size={18} />
                 </button>

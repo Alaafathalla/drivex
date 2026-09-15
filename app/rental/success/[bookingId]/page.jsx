@@ -71,7 +71,7 @@ export default function RentalSuccessPage({ params }) {
           {car && (
             <div className="flex items-center gap-4 border-b border-gray-100 p-5">
               {(car.image || car.images?.[0])
-                ? <img src={car.image || car.images[0]} alt="Car" className="h-16 w-24 shrink-0 rounded-xl object-cover bg-gray-100" />
+                ? <img src={car.image || car.images[0]} alt={t('media_car_alt')} className="h-16 w-24 shrink-0 rounded-xl object-cover bg-gray-100" />
                 : <div className="h-16 w-24 shrink-0 rounded-xl bg-gray-100" />
               }
               <div>

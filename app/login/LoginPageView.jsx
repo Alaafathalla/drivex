@@ -34,7 +34,7 @@ export default function LoginPageView() {
             <div className="mt-14 overflow-hidden rounded-[8px]">
               <img
                 src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=90"
-                alt="Premium car"
+                alt={t('media_premium_car')}
                 className="aspect-[1.6] w-full object-cover opacity-60"
               />
             </div>

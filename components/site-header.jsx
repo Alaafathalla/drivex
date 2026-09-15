@@ -261,7 +261,7 @@ export function SiteHeader() {
         <div className="page-inner flex h-[60px] items-center gap-4">
 
           {/* Brand */}
-          <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label="DriveX home">
+          <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label={t('header_home_aria')}>
             <span className="grid size-9 place-items-center rounded-xl bg-[#0F172A] text-[#B5E92E] shadow-sm">
               <CarFront size={17} />
             </span>
@@ -348,7 +348,7 @@ export function SiteHeader() {
         {drawerOpen && (
           <>
             <motion.button
-              aria-label="Close navigation"
+              aria-label={t('header_close_nav')}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setDrawerOpen(false)}
               className="fixed inset-0 z-40 bg-[#0f172a]/30 backdrop-blur-sm xl:hidden"

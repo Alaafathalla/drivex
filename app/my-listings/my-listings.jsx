@@ -32,7 +32,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
 
       <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-40">
         {listing.images?.[0]
-          ? <img src={listing.images[0]} alt="Car" className="h-full w-full object-cover" />
+          ? <img src={listing.images[0]} alt={t('media_car_alt')} className="h-full w-full object-cover" />
           : <div className="flex h-full items-center justify-center text-3xl text-gray-300">&#x1F697;</div>
         }
         <span className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black ${cfg.bg} ${cfg.text}`}>

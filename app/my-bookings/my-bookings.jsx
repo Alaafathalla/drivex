@@ -31,7 +31,7 @@ function BookingCard({ booking, onCancel }) {
       <div className="flex items-start gap-4 border-b border-gray-50 p-5">
         <div className="h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-gray-100">
           {booking.car?.image
-            ? <img src={booking.car.image} alt="Car" className="h-full w-full object-cover" />
+            ? <img src={booking.car.image} alt={t('media_car_alt')} className="h-full w-full object-cover" />
             : <div className="h-full w-full bg-gradient-to-br from-gray-100 to-gray-200" />
           }
         </div>

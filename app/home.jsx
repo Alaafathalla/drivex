@@ -96,9 +96,16 @@ function HomeCarCard({ car, index }) {
           )}
         </div>
         <motion.button whileTap={{ scale: 0.72 }}
-          onClick={e => { e.preventDefault(); toggle(String(car.id)); toast({ message: fav ? 'Removed' : `${car.brand} ${car.model} saved`, type: fav ? 'info' : 'fav' }) }}
+          onClick={e => {
+            e.preventDefault()
+            toggle(String(car.id))
+            toast({
+              message: fav ? t('card_wishlist_removed') : `${car.brand} ${car.model} ${t('card_wishlist_added')}`,
+              type: fav ? 'info' : 'fav',
+            })
+          }}
           className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition hover:bg-white"
-          aria-label="Wishlist">
+          aria-label={t('home_wishlist_aria')}>
           <Star size={14} className={fav ? 'fill-[#B5E92E] text-[#B5E92E]' : 'text-[#94a3b8]'} />
         </motion.button>
       </a>
@@ -261,7 +268,7 @@ function Hero({ meta }) {
               <button key={i} onClick={() => setSlide(i)}
                 className="rounded-full transition-all duration-300"
                 style={{ height: 6, width: i === slide ? 32 : 8, background: i === slide ? s.accent : 'rgba(255,255,255,0.25)' }}
-                aria-label={`Slide ${i + 1}`} />
+                aria-label={`${t('home_slide')} ${i + 1}`} />
             ))}
           </div>
         </div>
@@ -425,11 +432,11 @@ function FeaturedSection({ cars }) {
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-              onClick={prev} className="grid h-11 w-11 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E] hover:bg-[#B5E92E]" aria-label="Previous">
+              onClick={prev} className="grid h-11 w-11 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E] hover:bg-[#B5E92E]" aria-label={t('home_prev')}>
               <ChevronLeft size={18} />
             </motion.button>
             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-              onClick={next} className="grid h-11 w-11 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E] hover:bg-[#B5E92E]" aria-label="Next">
+              onClick={next} className="grid h-11 w-11 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E] hover:bg-[#B5E92E]" aria-label={t('home_next')}>
               <ChevronRight size={18} />
             </motion.button>
           </div>
@@ -548,11 +555,11 @@ function ServicesSection() {
           </div>
           <div className="flex shrink-0 gap-2">
             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-              onClick={() => scroll(-340)} className="grid h-10 w-10 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E]" aria-label="Left">
+              onClick={() => scroll(-340)} className="grid h-10 w-10 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E]" aria-label={t('home_prev')}>
               <ChevronLeft size={17} />
             </motion.button>
             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-              onClick={() => scroll(340)} className="grid h-10 w-10 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E]" aria-label="Right">
+              onClick={() => scroll(340)} className="grid h-10 w-10 place-items-center rounded-full border border-[#e5e9e2] bg-white text-[#0f172a] shadow-sm transition hover:border-[#B5E92E]" aria-label={t('home_next')}>
               <ChevronRight size={17} />
             </motion.button>
           </div>
