@@ -234,7 +234,7 @@ export function SiteHeader() {
             </div>
 
             {/* Right: utilities */}
-            <div className={`flex items-center gap-2 ${isRTL ? '' : 'ms-auto'}`}>
+            <div className="flex items-center gap-2 ms-auto">
               <CurrencySwitcher compact />
               <div className="h-4 w-px bg-slate-200" />
               <LanguageToggle />

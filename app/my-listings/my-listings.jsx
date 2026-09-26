@@ -28,9 +28,9 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
   return (
     <motion.div layout initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, x:40 }}
       transition={{ duration:.3 }}
-      className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm sm:flex-row">
+      className="flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm sm:flex-row">
 
-      <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-40">
+      <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-t-2xl bg-gray-100 sm:h-auto sm:w-40 sm:rounded-s-2xl sm:rounded-t-none">
         {listing.images?.[0]
           ? <img src={listing.images[0]} alt={t('media_car_alt')} className="h-full w-full object-cover" />
           : <div className="flex h-full items-center justify-center text-3xl text-gray-300">&#x1F697;</div>
@@ -68,7 +68,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
           </a>
           <a href={`/list-your-car?edit=${listing.id}`}
             className="flex h-9 items-center gap-1.5 rounded-xl border border-gray-200 px-3 text-[11px] font-semibold text-gray-700 transition hover:border-[#B5E92E] hover:text-green-700">
-            <Pencil size={13} /> {t('btn_save')}
+            <Pencil size={13} /> {t('sell_edit')}
           </a>
 
           <div className="relative">
@@ -80,7 +80,7 @@ function ListingRow({ listing, onDelete, onStatusChange }) {
               {menuOpen && (
                 <motion.div initial={{ opacity:0, scale:.94, y:-4 }} animate={{ opacity:1, scale:1, y:0 }}
                   exit={{ opacity:0, scale:.94 }} transition={{ duration:.15 }}
-                  className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+                  className="absolute end-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
                   {listing.status !== 'inactive' && (
                     <button onClick={() => { onStatusChange(listing.id, 'inactive'); setMenuOpen(false) }}
                       className="flex w-full items-center gap-3 px-4 py-3 text-[12px] text-gray-700 transition hover:bg-gray-50">

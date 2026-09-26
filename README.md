@@ -4,7 +4,6 @@ DriveX is a Next.js automotive platform covering vehicle discovery, buying, sell
 
 ## What is included
 
-
 - Professional multi-section home experience
 - API-driven buy/inventory with sticky advanced filters
 - Multi-step sell/listing wizard with draft persistence and validation
