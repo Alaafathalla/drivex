@@ -19,7 +19,6 @@ DriveX is a Next.js automotive platform covering vehicle discovery, buying, sell
 - Next.js route-handler mock APIs ready to replace with a real backend
 
 ## Core routes
-
 ```text
 /
 /cars
