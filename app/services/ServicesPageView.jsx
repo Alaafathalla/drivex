@@ -8,6 +8,7 @@ import { SERVICE_CATALOG } from '@/lib/rental-catalog'
 import { clientApi } from '@/lib/client-api'
 import { FaqSection, SectionHeading, TestimonialsSection, TrustBand } from '@/components/platform/rich-sections'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const ICONS = {
   wash: Sparkles, wedding: CalendarHeart, airport: Plane,
@@ -61,15 +62,12 @@ function ServiceBooking({ selected, setSelected }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="sm:col-span-2">
             <span className="mb-2 block text-xs font-black text-[#475569]">{t('svc_choose_service')}</span>
-            <select
+            <Select
               value={selected}
-              onChange={e => { setSelected(e.target.value); setStatus('idle') }}
-              className="h-12 w-full rounded-2xl border border-[#dfe5db] bg-white px-4 text-sm font-bold outline-none focus:border-[#B5E92E]"
-            >
-              {SERVICE_CATALOG.map(item => (
-                <option key={item.slug} value={item.slug}>{t(item.titleKey || item.title)}</option>
-              ))}
-            </select>
+              onValueChange={v => { setSelected(v); setStatus('idle') }}
+              className="h-12 rounded-2xl border-[#dfe5db] bg-white px-4 text-sm font-bold"
+              options={SERVICE_CATALOG.map(item => ({ value: item.slug, label: t(item.titleKey || item.title) }))}
+            />
           </label>
 
           <label>

@@ -11,6 +11,7 @@ import { carService } from '@/services/carService'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 import { FaqSection, TrustBand } from '@/components/platform/rich-sections'
 
 const EMPTY = { brand:'',bodyType:'',fuelType:'',transmission:'',city:'',seats:'',minYear:'',maxYear:'',minPrice:'',maxPrice:'',minMileage:'',maxMileage:'',available:undefined }
@@ -158,10 +159,9 @@ function CarsContent() {
             )}
           </div>
           {/* Sort */}
-          <select value={sort} onChange={e => setSort(e.target.value)}
-            className="h-11 rounded-2xl border border-[#dfe5db] bg-white px-4 text-xs font-bold outline-none">
-            {SORT_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
+          <Select value={sort} onValueChange={setSort}
+            className="h-11 w-auto min-w-[9rem] rounded-2xl border-[#dfe5db] bg-white px-4 text-xs font-bold"
+            options={SORT_OPTIONS.map(([value, label]) => ({ value, label }))} />
           {/* View toggle */}
           <div className="flex h-11 rounded-2xl border border-[#dfe5db] bg-white p-1">
             <button onClick={() => setView('grid')} className={`grid w-9 place-items-center rounded-xl ${view === 'grid' ? 'bg-[#0e1418] text-white' : 'text-[#94a3b8]'}`}><Grid2X2 size={15} /></button>

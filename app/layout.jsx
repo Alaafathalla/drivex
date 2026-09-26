@@ -9,7 +9,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { CompareBar } from '@/components/compare-bar'
 import { HtmlLangSync } from '@/components/html-lang-sync'
-import { Inter, Noto_Sans_Arabic } from 'next/font/google'
+import { Inter, Cairo } from 'next/font/google'
 import './globals.css'
 
 /* ── Latin font ──────────────────────────────── */
@@ -21,7 +21,7 @@ const inter = Inter({
 })
 
 /* ── Arabic font ─────────────────────────────── */
-const notoSansArabic = Noto_Sans_Arabic({
+const cairo = Cairo({
   subsets: ['arabic'],
   variable: '--font-arabic',
   display: 'swap',
@@ -32,7 +32,11 @@ export const metadata = {
   title: 'DriveX — Buy & Rent Premium Cars',
   description: 'Buy, rent and sell premium cars with verified dealers and secure transactions.',
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/favicon.ico',
     apple: '/apple-icon.png',
   },
 }
@@ -45,7 +49,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" dir="ltr" className={`${inter.variable} ${notoSansArabic.variable}`}>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${cairo.variable}`}>
       <body className="font-latin antialiased flex flex-col min-h-screen w-full bg-white text-gray-900">
         <ThemeProvider>
           <LangProvider>

@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Car, CheckCircle2, ChevronDown, Info, TrendingDown, TrendingUp } from 'lucide-react'
+import { ArrowRight, Car, CheckCircle2, Info, TrendingDown, TrendingUp } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { useToast } from '@/context/ToastContext'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const BRANDS = ['BMW','Mercedes-Benz','Audi','Porsche','Range Rover','Tesla','Toyota','Lexus','Nissan','Chevrolet','Ferrari','Lamborghini','Other']
 const YEARS  = Array.from({ length: 20 }, (_, i) => String(new Date().getFullYear() - i))
@@ -17,14 +18,13 @@ function Sel({ label, options, value, onChange, error }) {
   return (
     <div>
       <label className="mb-2 block text-[11px] font-black uppercase tracking-[.12em] text-[#64748b]">{label}</label>
-      <div className="relative">
-        <select value={value} onChange={e => onChange(e.target.value)}
-          className={`h-12 w-full appearance-none rounded-2xl border px-4 pr-9 text-[13px] font-semibold text-[#0f172a] outline-none transition focus:ring-2 focus:ring-[#B5E92E]/20 ${error ? 'border-red-400' : 'border-[#dfe5db] focus:border-[#B5E92E]'}`}>
-          <option value="">{t('select_placeholder')}</option>
-          {options.map(o => <option key={o} value={o}>{o}</option>)}
-        </select>
-        <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
-      </div>
+      <Select
+        value={value}
+        onValueChange={onChange}
+        placeholder={t('select_placeholder')}
+        className={`h-12 rounded-2xl px-4 text-[13px] font-semibold text-[#0f172a] ${error ? 'border-red-400' : 'border-[#dfe5db]'}`}
+        options={options.map(o => ({ value: o, label: o }))}
+      />
       {error && <p className="mt-1 text-[11px] text-red-500">{error}</p>}
     </div>
   )

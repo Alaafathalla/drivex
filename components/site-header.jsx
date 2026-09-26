@@ -272,66 +272,68 @@ export function SiteHeader() {
 
           {/* Desktop nav */}
           <nav
-            className="relative mx-4 hidden flex-1 items-center gap-0.5 xl:flex"
+            className="relative mx-2 hidden min-w-0 flex-1 items-center lg:flex"
             onMouseLeave={() => setMega(null)}
           >
-            {NAV.map((item) => (
-              <div key={item.href} className="relative" onMouseEnter={() => item.mega ? setMega(item.mega) : setMega(null)}>
-                <a
-                  href={item.href}
-                  className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-[11px] font-black uppercase tracking-[.1em] transition whitespace-nowrap ${
-                    active(item.href)
-                      ? 'bg-[#0F172A] text-white'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
-                  }`}
-                >
-                  {t(item.key)}
-                  {item.mega && (
-                    <motion.span animate={{ rotate: mega === item.mega ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                      <ChevronDown size={11} />
-                    </motion.span>
-                  )}
-                </a>
-              </div>
-            ))}
+            <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto scrollbar-hide">
+              {NAV.map((item) => (
+                <div key={item.href} className="relative shrink-0" onMouseEnter={() => item.mega ? setMega(item.mega) : setMega(null)}>
+                  <a
+                    href={item.href}
+                    className={`flex items-center gap-1 rounded-full px-3 py-2 text-[11px] font-black uppercase tracking-[.1em] transition whitespace-nowrap ${
+                      active(item.href)
+                        ? 'bg-[#0F172A] text-white'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
+                    }`}
+                  >
+                    {t(item.key)}
+                    {item.mega && (
+                      <motion.span animate={{ rotate: mega === item.mega ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronDown size={11} />
+                      </motion.span>
+                    )}
+                  </a>
+                </div>
+              ))}
+            </div>
             <AnimatePresence>
               {mega && <MegaMenu type={mega} onClose={() => setMega(null)} />}
             </AnimatePresence>
           </nav>
 
           {/* Right actions */}
-          <div className="ms-auto flex shrink-0 items-center gap-2">
+          <div className="ms-auto flex shrink-0 items-center gap-1.5 xl:gap-2">
             {/* Search button */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="group hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 text-[11px] font-semibold text-slate-500 transition hover:border-slate-300 hover:bg-white md:flex"
+              className="group hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 text-[11px] font-semibold text-slate-500 transition hover:border-slate-300 hover:bg-white xl:flex"
             >
               <Search size={14} className="text-slate-400" />
-              <span className="hidden lg:inline">{t('nav_search_ph')}</span>
+              <span className="hidden xl:inline">{t('nav_search_ph')}</span>
               <kbd className="ms-1 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-bold text-slate-400">⌘K</kbd>
             </button>
-            <button onClick={() => setSearchOpen(true)} className="grid size-9 place-items-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50 md:hidden">
+            <button onClick={() => setSearchOpen(true)} className="grid size-9 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50 xl:hidden">
               <Search size={16} />
             </button>
 
             {/* Compare */}
             <a href="/compare"
-              className="hidden size-9 place-items-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50 sm:grid"
+              className="hidden size-9 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50 sm:grid"
               aria-label={t('nav_compare')}>
               <GitCompare size={16} />
             </a>
 
             {/* Sell / List CTA */}
             <a href="/list-your-car"
-              className="hidden h-9 items-center gap-2 rounded-full bg-[#B5E92E] px-4 text-[11px] font-black text-[#0E1418] shadow-[0_6px_20px_rgba(181,233,46,.35)] transition hover:-translate-y-0.5 hover:brightness-105 md:flex">
-              <Sparkles size={13} />
-              {t('nav_list_car')}
+              className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-[#B5E92E] px-3 text-[11px] font-black text-[#0E1418] shadow-[0_6px_20px_rgba(181,233,46,.35)] transition hover:-translate-y-0.5 hover:brightness-105 lg:px-4">
+              <Sparkles size={13} className="shrink-0" />
+              <span className="hidden lg:inline whitespace-nowrap">{t('nav_list_car')}</span>
             </a>
 
             {/* Mobile menu toggle */}
             <button
               onClick={() => setDrawerOpen((v) => !v)}
-              className="grid size-9 place-items-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-slate-50 xl:hidden"
+              className="grid size-9 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-slate-50 lg:hidden"
               aria-label={t('header_menu')}
             >
               {drawerOpen ? <X size={18} /> : <Menu size={18} />}
@@ -351,7 +353,7 @@ export function SiteHeader() {
               aria-label={t('header_close_nav')}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setDrawerOpen(false)}
-              className="fixed inset-0 z-40 bg-[#0f172a]/30 backdrop-blur-sm xl:hidden"
+              className="fixed inset-0 z-40 bg-[#0f172a]/30 backdrop-blur-sm lg:hidden"
             />
             <motion.aside
               initial={{ x: isRTL ? '100%' : '-100%' }}

@@ -19,18 +19,20 @@
 
 /* ── Font families ────────────────────────────── */
 .font-latin  { font-family: var(--font-latin,  'Inter', 'Segoe UI', sans-serif); }
-.font-arabic { font-family: var(--font-arabic, 'Noto Sans Arabic', 'Arial', sans-serif); letter-spacing: 0; line-height: 1.8; }
+.font-arabic { font-family: var(--font-arabic, 'Cairo', 'Segoe UI', 'Arial', sans-serif); letter-spacing: 0; line-height: 1.8; }
 
 /* Arabic-specific overrides */
 [dir='rtl'] {
-  font-family: var(--font-arabic, 'Noto Sans Arabic', 'Arial', sans-serif);
+  font-family: var(--font-arabic, 'Cairo', 'Segoe UI', 'Arial', sans-serif);
   letter-spacing: 0;
   line-height: 1.8;
 }
-/* Tight tracking classes look bad in Arabic — reset them */
+/* Tight/positive tracking classes look bad or waste width in Arabic — reset them */
 [dir='rtl'] .tracking-tight,
 [dir='rtl'] .tracking-tighter,
-[dir='rtl'] [class*='tracking-[-'] { letter-spacing: 0 !important; }
+[dir='rtl'] [class*='tracking-['] { letter-spacing: 0 !important; }
+/* Arabic script has no case, so uppercase transforms just add empty width — drop them */
+[dir='rtl'] .uppercase { text-transform: none !important; }
 /* Leading also needs more space in Arabic */
 [dir='rtl'] .leading-none,
 [dir='rtl'] .leading-tight { line-height: 1.6 !important; }
@@ -64,6 +66,11 @@
 
 /* ── Full-width baseline ─────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
+
+/* Hide scrollbars while keeping native scroll (used for horizontally
+   scrollable strips: gallery thumbnails, overflowing nav on small laptops) */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 
 html, body, #root {
   width: 100%;

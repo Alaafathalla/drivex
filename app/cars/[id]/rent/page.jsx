@@ -9,6 +9,7 @@ import { carService } from '@/services/carService'
 import { calcRental } from '@/lib/booking-service'
 import { useLang } from '@/context/LangContext'
 import { useCurrency } from '@/context/CurrencyContext'
+import { Select } from '@/components/ui/select'
 
 const LOCATIONS = [
   { value: 'Dubai Marina', labelAr: 'دبي مارينا' },
@@ -137,15 +138,13 @@ export default function RentPage({ params }) {
                 ].map(([label, key, err]) => (
                   <label key={key} className="block">
                     <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{label}</p>
-                    <select value={form[key]} onChange={e => set(key, e.target.value)}
-                      className={`${inp} ${err ? 'border-red-400' : ''}`}>
-                      <option value="">{t('rent_select_loc')}</option>
-                      {LOCATIONS.map((location) => (
-                        <option key={location.value} value={location.value}>
-                          {isRTL ? location.labelAr : location.value}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      value={form[key]}
+                      onValueChange={v => set(key, v)}
+                      placeholder={t('rent_select_loc')}
+                      className={`${inp} ${err ? 'border-red-400' : ''}`}
+                      options={LOCATIONS.map((location) => ({ value: location.value, label: isRTL ? location.labelAr : location.value }))}
+                    />
                     {err && <p className="mt-1 text-[11px] text-red-500">{err}</p>}
                   </label>
                 ))}

@@ -14,6 +14,7 @@ import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 import { carService } from '@/services/carService'
+import { Select } from '@/components/ui/select'
 
 // ─── Data constants ────────────────────────────────────────────────────────
 const BRANDS = [
@@ -291,12 +292,14 @@ function Hero({ meta }) {
             <div className="bg-transparent px-5 py-3">
               <p className="text-[9px] font-black uppercase tracking-[.15em] text-white/35">{t('home_hero_make')}</p>
               <div className="relative mt-1">
-                <select value={filters.brand} onChange={e => setF('brand', e.target.value)}
-                  className="w-full appearance-none bg-transparent text-[13px] font-semibold text-white outline-none">
-                  <option value="" className="bg-[#0d1922]">{t('home_hero_any_brand')}</option>
-                  {(meta?.brands || []).map(b => <option key={b} value={b} className="bg-[#0d1922]">{b}</option>)}
-                </select>
-                <ChevronDown size={12} className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-white/30" />
+                <Select
+                  value={filters.brand}
+                  onValueChange={(v) => setF('brand', v)}
+                  placeholder={t('home_hero_any_brand')}
+                  options={[{ value: '', label: t('home_hero_any_brand') }, ...(meta?.brands || []).map(b => ({ value: b, label: b }))]}
+                  className="h-auto border-none bg-transparent px-0 text-[13px] font-semibold text-white hover:border-none [&_svg]:text-white/30"
+                  contentClassName="bg-[#0d1922] border-white/10 [&_[data-slot=select-item]]:text-white/80 [&_[data-slot=select-item][data-highlighted]]:text-[#0d1922]"
+                />
               </div>
             </div>
             <div className="bg-transparent px-5 py-3">

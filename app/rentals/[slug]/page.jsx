@@ -9,6 +9,7 @@ import { calcRental } from '@/lib/booking-service'
 import { RENTAL_ADDONS, RENTAL_LOCATIONS, getDefaultRentalDates } from '@/lib/rental-catalog'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 export default function RentalDetailsPage({ params }) {
   const { slug } = use(params)
@@ -112,8 +113,24 @@ export default function RentalDetailsPage({ params }) {
             <div className="mt-6 grid gap-3">
               <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><CalendarDays size={13} /> {t('rent_rental_start')}</span><input type="date" value={pickup} min={defaults.start} onChange={(e) => setPickup(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none" /></label>
               <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><CalendarDays size={13} /> {t('rent_rental_end')}</span><input type="date" value={returnDate} min={pickup || defaults.start} onChange={(e) => setReturnDate(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none" /></label>
-              <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><MapPin size={13} /> {t('rent_pickup_loc')}</span><select value={location} onChange={(e) => { setLocation(e.target.value); if (!dropoff) setDropoff(e.target.value) }} className="mt-2 w-full bg-transparent text-sm font-bold outline-none"><option value="">{t('rent_choose_location')}</option>{(car.locations?.length ? car.locations : RENTAL_LOCATIONS.map((item) => item.city)).map((item) => <option key={item}>{item}</option>)}</select></label>
-              <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><MapPin size={13} /> {t('rent_return')}</span><select value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="mt-2 w-full bg-transparent text-sm font-bold outline-none"><option value="">{t('rent_same_as_pickup')}</option>{RENTAL_LOCATIONS.map((item) => <option key={item.city}>{item.city}</option>)}</select></label>
+              <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><MapPin size={13} /> {t('rent_pickup_loc')}</span>
+                <Select
+                  value={location}
+                  onValueChange={(v) => { setLocation(v); if (!dropoff) setDropoff(v) }}
+                  placeholder={t('rent_choose_location')}
+                  className="mt-2 h-auto border-none bg-transparent p-0 text-sm font-bold"
+                  options={(car.locations?.length ? car.locations : RENTAL_LOCATIONS.map((item) => item.city)).map((item) => ({ value: item, label: item }))}
+                />
+              </label>
+              <label className="rounded-2xl border border-[#E6E9E2] bg-[#FAFBF9] p-3"><span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[.12em] text-[#94A3B8]"><MapPin size={13} /> {t('rent_return')}</span>
+                <Select
+                  value={dropoff}
+                  onValueChange={setDropoff}
+                  placeholder={t('rent_same_as_pickup')}
+                  className="mt-2 h-auto border-none bg-transparent p-0 text-sm font-bold"
+                  options={RENTAL_LOCATIONS.map((item) => ({ value: item.city, label: item.city }))}
+                />
+              </label>
             </div>
 
             {breakdown && <div className="mt-5 rounded-2xl bg-[#F3F5F1] p-4"><div className="flex justify-between text-xs text-[#64748B]"><span>{days} {t('booking_days')} × {format(car.pricePerDay)}</span><span className="font-black text-[#0F172A]">{format(breakdown.base)}</span></div>{addOnTotal > 0 && <div className="mt-2 flex justify-between text-xs text-[#64748B]"><span>{t('rent_selected_services')}</span><span className="font-black text-[#0F172A]">{format(addOnTotal)}</span></div>}<div className="mt-3 flex items-end justify-between border-t border-[#DDE2D8] pt-3"><span className="text-xs font-black uppercase tracking-[.12em] text-[#64748B]">{t('rent_estimated_total')}</span><span className="text-2xl font-black text-[#0F172A]">{format(breakdown.total)}</span></div></div>}

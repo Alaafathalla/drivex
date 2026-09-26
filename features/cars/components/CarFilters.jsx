@@ -1,7 +1,8 @@
 'use client'
 
-import { ChevronDown, Gauge, Paintbrush, RotateCcw, Zap } from 'lucide-react'
+import { Gauge, Paintbrush, RotateCcw, Zap } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const DEFAULT_META = {
   brands:    ['BMW', 'Mercedes-Benz', 'Audi', 'Porsche', 'Range Rover', 'Tesla', 'Toyota', 'Lexus', 'Nissan', 'Ferrari', 'Lamborghini'],
@@ -27,21 +28,13 @@ function Sel({ label, options, value, onChange, anyLabel = 'Any', getLabel }) {
   return (
     <div className="border-b border-[#f0f2ef] py-3">
       <p className="mb-2 text-[10px] font-black uppercase tracking-[.14em] text-[#64748b]">{label}</p>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="h-10 w-full appearance-none rounded-xl border border-[#dfe5db] bg-white px-3 pr-8 text-[12px] font-semibold text-[#0f172a] outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/15"
-        >
-          <option value="">{anyLabel}</option>
-          {options.map((o) => (
-            <option key={o} value={o}>
-              {getLabel ? getLabel(o) : o}
-            </option>
-          ))}
-        </select>
-        <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
-      </div>
+      <Select
+        value={value}
+        onValueChange={onChange}
+        placeholder={anyLabel}
+        className="h-10 rounded-xl border-[#dfe5db] bg-white px-3 text-[12px] font-semibold text-[#0f172a]"
+        options={[{ value: '', label: anyLabel }, ...options.map((o) => ({ value: o, label: getLabel ? getLabel(o) : o }))]}
+      />
     </div>
   )
 }

@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  ArrowRight, BadgeCheck, ChevronDown, RefreshCw,
+  ArrowRight, BadgeCheck, RefreshCw,
   TrendingDown, TrendingUp, Minus,
 } from 'lucide-react'
 import { MAKES, BODY_TYPES, FUEL_TYPES, TRANSMISSIONS } from '@/lib/api'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const CONDITIONS_KEYS = ['Excellent', 'Good', 'Fair', 'Poor']
 const YEARS = Array.from({ length: 15 }, (_, i) => 2024 - i)
@@ -32,15 +33,14 @@ function Sel({ label, value, onChange, options, placeholder }) {
     <label className="block text-[11px] font-bold uppercase tracking-[.1em] text-white/50">
       {label}
       <div className="relative mt-2">
-        <select
+        <Select
           value={value}
-          onChange={e => onChange(e.target.value)}
-          className="w-full appearance-none rounded-[5px] border border-white/12 bg-[#0f1210] px-4 py-3 pe-9 text-[13px] text-white outline-none normal-case tracking-normal focus:border-[#2ee52b] transition"
-        >
-          <option value="">{placeholder}</option>
-          {options.map(o => <option key={o} value={o}>{o}</option>)}
-        </select>
-        <ChevronDown size={14} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-white/30" />
+          onValueChange={onChange}
+          placeholder={placeholder}
+          options={options.map(o => ({ value: o, label: o }))}
+          className="h-auto rounded-[5px] border-white/12 bg-[#0f1210] px-4 py-3 text-[13px] font-normal normal-case tracking-normal text-white hover:border-white/20 focus-visible:border-[#2ee52b] [&_svg]:text-white/30"
+          contentClassName="border-white/10 bg-[#0f1210] [&_[data-slot=select-item]]:text-white/80 [&_[data-slot=select-item][data-highlighted]]:bg-[#2ee52b]/15 [&_[data-slot=select-item][data-highlighted]]:text-white"
+        />
       </div>
     </label>
   )

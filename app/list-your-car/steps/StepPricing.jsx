@@ -1,4 +1,5 @@
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const cl = 'w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-[#B5E92E]/10'
 
@@ -34,11 +35,12 @@ export function StepPricing({ data, update }) {
           <PriceField label={t('lyc_deposit')}             value={data.deposit}      onChange={v => update({ deposit: v })}      placeholder="500"  hint={t('lyc_deposit_hint')} />
           <label className="block sm:col-span-2">
             <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{t('lyc_min_days')}</p>
-            <select value={data.minRentalDays} onChange={e => update({ minRentalDays: e.target.value })} className={cl}>
-              {['1','2','3','5','7','14','30'].map(d => (
-                <option key={d} value={d}>{d} {d === '1' ? t('td_date') : t('rent_days')}</option>
-              ))}
-            </select>
+            <Select
+              value={data.minRentalDays}
+              onValueChange={v => update({ minRentalDays: v })}
+              className={cl}
+              options={['1','2','3','5','7','14','30'].map(d => ({ value: d, label: `${d} ${d === '1' ? t('rent_day_singular') : t('rent_days')}` }))}
+            />
           </label>
         </div>
       ) : (

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LocateFixed, MapPin } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const CITIES = ['Dubai','Abu Dhabi','Sharjah','Ajman','Ras Al Khaimah','Fujairah','Umm Al Quwain']
 
@@ -60,10 +61,13 @@ export function StepLocation({ data, update }) {
         </label>
         <label className="block">
           <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{t('lyc_city_label')}</p>
-          <select value={data.city} onChange={e => update({ city: e.target.value })} className={cl}>
-            <option value="">{t('lyc_select_city_ph')}</option>
-            {CITIES.map(c => <option key={c} value={c}>{lang === 'ar' && CITY_AR[c] ? CITY_AR[c] : c}</option>)}
-          </select>
+          <Select
+            value={data.city}
+            onValueChange={v => update({ city: v })}
+            placeholder={t('lyc_select_city_ph')}
+            className={cl}
+            options={CITIES.map(c => ({ value: c, label: lang === 'ar' && CITY_AR[c] ? CITY_AR[c] : c }))}
+          />
         </label>
         <label className="block">
           <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{t('lyc_area_label')}</p>

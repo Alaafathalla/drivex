@@ -1,6 +1,7 @@
 'use client'
 
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const cl = "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-[14px] text-gray-800 outline-none transition focus:border-[#B5E92E] focus:ring-2 focus:ring-green-100"
 
@@ -27,11 +28,16 @@ export function StepOwner({ data, update }) {
         </label>
         <label className="block">
           <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-gray-500">{t('lyc_owner_pref_contact')}</p>
-          <select value={data.preferredContact} onChange={e => update({ preferredContact: e.target.value })} className={cl}>
-            <option value="phone">{t('lyc_pref_call')}</option>
-            <option value="whatsapp">{t('lyc_pref_wa')}</option>
-            <option value="email">{t('lyc_pref_em')}</option>
-          </select>
+          <Select
+            value={data.preferredContact}
+            onValueChange={v => update({ preferredContact: v })}
+            className={cl}
+            options={[
+              { value: 'phone', label: t('lyc_pref_call') },
+              { value: 'whatsapp', label: t('lyc_pref_wa') },
+              { value: 'email', label: t('lyc_pref_em') },
+            ]}
+          />
         </label>
       </div>
       <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-4">

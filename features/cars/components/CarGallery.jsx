@@ -275,13 +275,19 @@ export function CarGallery({ images = [] }) {
   )
 }
 
-// Interactive 360° strip — rotates through images on drag
+// Interactive 360° strip — rotates through images on drag.
+// When enough distinct photos exist we cycle real frames for a true
+// photographic spin; otherwise (single/few photos, common in listings)
+// we fall back to a CSS 3D tilt so dragging always visibly responds.
 function View360Strip({ images }) {
   const [frame, setFrame] = useState(0)
+  const [angle, setAngle] = useState(0)
   const [dragging, setDragging] = useState(false)
   const startX = useRef(null)
   const frameRef = useRef(0)
+  const angleRef = useRef(0)
   const totalFrames = images.length
+  const hasEnoughFrames = totalFrames >= 8
 
   const onStart = (e) => {
     setDragging(true)
@@ -292,16 +298,54 @@ function View360Strip({ images }) {
     if (!dragging || startX.current === null) return
     const currentX = e.touches?.[0]?.clientX ?? e.clientX
     const diff = currentX - startX.current
-    const framesPerPx = totalFrames / 400
-    let newFrame = Math.round(frameRef.current - diff * framesPerPx)
-    newFrame = ((newFrame % totalFrames) + totalFrames) % totalFrames
-    setFrame(newFrame)
+
+    if (hasEnoughFrames) {
+      const framesPerPx = totalFrames / 400
+      let newFrame = Math.round(frameRef.current - diff * framesPerPx)
+      newFrame = ((newFrame % totalFrames) + totalFrames) % totalFrames
+      setFrame(newFrame)
+    } else {
+      // Simulated rotation: map horizontal drag to a Y-axis spin so the
+      // control always feels alive even with a single hero photo.
+      const degPerPx = 0.6
+      setAngle(angleRef.current + diff * degPerPx)
+    }
   }
 
   const onEnd = () => {
     setDragging(false)
     frameRef.current = frame
+    angleRef.current = angle
     startX.current = null
+  }
+
+  if (!hasEnoughFrames) {
+    return (
+      <div
+        className="flex h-full w-full select-none items-center justify-center"
+        style={{ cursor: dragging ? 'grabbing' : 'grab', perspective: 900 }}
+        onMouseDown={onStart}
+        onMouseMove={onMove}
+        onMouseUp={onEnd}
+        onMouseLeave={onEnd}
+        onTouchStart={onStart}
+        onTouchMove={onMove}
+        onTouchEnd={onEnd}
+        draggable={false}
+      >
+        <img
+          src={images[0]}
+          alt="360° view"
+          className="h-[78%] w-[78%] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,.55)]"
+          style={{
+            transform: `rotateY(${angle}deg) scaleX(${Math.cos((angle * Math.PI) / 180) < 0 ? -1 : 1})`,
+            transition: dragging ? 'none' : 'transform .35s ease-out',
+            willChange: 'transform',
+          }}
+          draggable={false}
+        />
+      </div>
+    )
   }
 
   return (

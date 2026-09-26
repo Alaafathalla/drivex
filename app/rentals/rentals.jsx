@@ -12,6 +12,7 @@ import { RentalDateRangePicker } from '@/components/platform/rental-date-range-p
 import { CarDrivingAnimation } from '@/components/platform/car-driving-animation'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 function RentalCard({ car, index, search }) {
   const { format } = useCurrency()
@@ -136,16 +137,13 @@ export default function RentalsPage() {
             <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45">
               <MapPin size={13} className="text-[#B5E92E]" /> {t('rentals_pickup_label')}
             </span>
-            <select
+            <Select
               value={location}
-              onChange={(e) => updateLocation(e.target.value)}
-              className="mt-2 w-full bg-transparent text-sm font-bold outline-none [&>option]:text-black"
-            >
-              <option value="">{t('rentals_any_location')}</option>
-              {RENTAL_LOCATIONS.map((item) => (
-                <option key={item.city} value={item.city}>{item.city}</option>
-              ))}
-            </select>
+              onValueChange={updateLocation}
+              placeholder={t('rentals_any_location')}
+              className="mt-2 h-auto border-none bg-transparent p-0 text-sm font-bold text-white [&_svg]:text-white/45"
+              options={[{ value: '', label: t('rentals_any_location') }, ...RENTAL_LOCATIONS.map((item) => ({ value: item.city, label: item.city }))]}
+            />
           </label>
           <RentalDateRangePicker
             start={startDate} end={endDate} minDate={defaults.start}

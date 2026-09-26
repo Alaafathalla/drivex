@@ -1,4 +1,5 @@
 import { useLang } from '@/context/LangContext'
+import { Select } from '@/components/ui/select'
 
 const BRANDS = [
   { value: 'BMW', label: 'BMW', labelAr: 'بي أم دبليو' },
@@ -50,15 +51,18 @@ function Row({ label, required, children }) {
 
 function Sel({ value, onChange, options, placeholder }) {
   const { t, lang } = useLang()
+  const normalized = options.map((option) => {
+    const item = typeof option === 'string' ? { value: option, label: option, labelAr: option } : option
+    return { value: item.value, label: lang === 'ar' ? (item.labelAr || item.label) : item.label }
+  })
   return (
-    <select value={value} onChange={e => onChange(e.target.value)} className={cl}>
-      <option value="">{placeholder || t('select_placeholder')}</option>
-      {options.map((option) => {
-        const item = typeof option === 'string' ? { value: option, label: option, labelAr: option } : option
-        const label = lang === 'ar' ? (item.labelAr || item.label) : item.label
-        return <option key={item.value} value={item.value}>{label}</option>
-      })}
-    </select>
+    <Select
+      value={value}
+      onValueChange={onChange}
+      placeholder={placeholder || t('select_placeholder')}
+      className={cl}
+      options={normalized}
+    />
   )
 }
 
