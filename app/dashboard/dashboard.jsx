@@ -9,6 +9,26 @@ import { useLang } from '@/context/LangContext'
 import { CarCard } from '@/features/cars/components/CarCard'
 import { FaqSection, NewsSection, TrustBand } from '@/components/platform/rich-sections'
 
+// Raw status values ('pending', 'sold', ...) were being rendered straight
+// from the API with no translation — these map them to the existing i18n
+// keys (same ones used on /my-listings) instead of showing English/raw
+// values while in Arabic.
+const BOOKING_STATUS_KEY = {
+  pending:   'booking_status_pending',
+  confirmed: 'booking_status_confirmed',
+  active:    'booking_status_active',
+  completed: 'booking_status_completed',
+  cancelled: 'booking_status_cancelled',
+}
+const LISTING_STATUS_KEY = {
+  pending:  'booking_status_pending',
+  active:   'booking_status_active',
+  rejected: 'listing_status_rejected',
+  sold:     'listing_status_sold',
+  rented:   'listing_status_rented',
+  inactive: 'listing_status_inactive',
+}
+
 export default function DashboardPage() {
   const { format } = useCurrency()
   const { t, isRTL } = useLang()
@@ -111,7 +131,7 @@ export default function DashboardPage() {
                         </p>
                       </div>
                       <span className="rounded-full bg-[#B5E92E]/20 px-3 py-1 text-[10px] font-black text-[#657f1b]">
-                        {booking.status}
+                        {BOOKING_STATUS_KEY[booking.status] ? t(BOOKING_STATUS_KEY[booking.status]) : booking.status}
                       </span>
                     </div>
                   ))
@@ -185,7 +205,7 @@ export default function DashboardPage() {
                     <p className="mt-1 text-xs text-[#94a3b8]">{listing.year} · {listing.city}</p>
                   </div>
                   <span className="rounded-full bg-[#eef4df] px-3 py-1 text-[10px] font-black text-[#657f1b]">
-                    {listing.status}
+                    {LISTING_STATUS_KEY[listing.status] ? t(LISTING_STATUS_KEY[listing.status]) : listing.status}
                   </span>
                   <span className="min-w-12 text-right text-sm font-black text-[#0f172a]">{listing.views || 0}</span>
                 </div>

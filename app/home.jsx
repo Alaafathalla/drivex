@@ -234,8 +234,8 @@ function Hero({ meta }) {
             <motion.h1 key={`h-${slide}`}
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.5, ease: [.22,1,.36,1] }}
-              className="mt-6 whitespace-pre-line font-black leading-[0.88] tracking-[-0.06em] text-white"
-              style={{ fontSize: 'clamp(52px, 7vw, 96px)' }}>
+             className="mt-6 whitespace-pre-line font-bold leading-[0.98] tracking-[-0.03em] text-white"
+                  style={{ fontSize: 'clamp(38px, 5vw, 68px)' }}>
               {s.title}
             </motion.h1>
           </AnimatePresence>
@@ -244,7 +244,7 @@ function Hero({ meta }) {
             <motion.p key={`d-${slide}`}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.4, delay: 0.12 }}
-              className="mt-6 max-w-lg text-[16px] leading-7 text-white/60">
+              className="mt-6 max-w-xl text-[16px] leading-7 text-white/60">
               {s.description}
             </motion.p>
           </AnimatePresence>
@@ -430,7 +430,7 @@ function FeaturedSection({ cars }) {
               transition={{ delay: 0.07 }}
               className="mt-4 font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
-              {t('home_featured_title').split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
+              {t('home_featured_title').split(' ').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
             </motion.h2>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -551,9 +551,9 @@ function ServicesSection() {
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               className="text-[10px] font-black uppercase tracking-[.2em] text-[#94a3b8]">{t('services_eyebrow')}</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-              className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+              className="mt-3 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
-              {t('services_title').split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
+              {t('services_title')}
             </motion.h2>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -689,7 +689,7 @@ function SellCTA() {
       <Particles count={14} color="#B5E92E" />
 
       <div className="page-inner relative z-10">
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
           <motion.span initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="inline-flex items-center gap-2 rounded-full bg-[#B5E92E]/15 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">
             <Sparkles size={10} /> {t('sell_cta_badge')}

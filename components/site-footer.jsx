@@ -89,7 +89,10 @@ export function SiteFooter() {
               </span>
             </div>
             <div className="mt-7 flex gap-2">
-              {[['IG', 'Instagram'], ['YT', 'YouTube'], ['in', 'LinkedIn']].map(([label, name]) => (
+              {/* LinkedIn isn't a consumer platform people actually use in
+                  this market — Facebook is the most-used social network
+                  in Egypt, so it replaces it here alongside IG/YouTube. */}
+              {[['FB', 'Facebook'], ['IG', 'Instagram'], ['YT', 'YouTube']].map(([label, name]) => (
                 <a key={name} href="#" aria-label={name}
                   className="grid size-10 place-items-center rounded-full border border-[#E5E7EB] text-[10px] font-black text-slate-500 transition hover:border-[#B5E92E] hover:text-[#7F9F1B]">
                   {label}

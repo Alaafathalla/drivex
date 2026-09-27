@@ -38,6 +38,12 @@
 [dir='rtl'] .leading-tight { line-height: 1.6 !important; }
 [dir='rtl'] h1, [dir='rtl'] h2, [dir='rtl'] h3 { line-height: 1.5; }
 
+/* Header text in Arabic (Cairo) reads much heavier than Inter at the same
+   weight — font-black (900) looks over-bold. Scoped to .dx-header only, so
+   the rest of the site keeps its normal weight scale. */
+[dir='rtl'] .dx-header .font-black { font-weight: 700; }
+[dir='rtl'] .dx-header .font-bold  { font-weight: 600; }
+
 /* ── Light theme (default) ───────────────────── */
 :root {
   --background: #ffffff;

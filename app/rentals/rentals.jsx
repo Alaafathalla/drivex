@@ -131,7 +131,13 @@ export default function RentalsPage() {
       >
         <motion.div
           initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.1fr_1.35fr_auto]"
+          // framer-motion's animate prop applies a transform, which creates a
+          // new stacking context here. Without an explicit z-index higher
+          // than the sticky category strip below (z-30), that stacking
+          // context painted at "auto", so the calendar popover — despite its
+          // own huge z-index — was getting rendered behind that strip and
+          // the results grid. relative + z-40 fixes the stacking order.
+          className="relative z-40 mt-8 grid max-w-5xl gap-2 rounded-[20px] border border-white/15 bg-black/35 p-2 backdrop-blur lg:grid-cols-[1.1fr_1.35fr_auto]"
         >
           <label className="rounded-[15px] bg-white/[.08] px-4 py-3 text-white">
             <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[.15em] text-white/45">

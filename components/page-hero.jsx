@@ -20,7 +20,7 @@ export function PageHero({ eyebrow, title, description, children, image, footerL
         <div className="flex h-full min-h-[380px] flex-col justify-between">
           <div className="max-w-[980px]">
             <div className="flex items-center gap-4"><span className="h-px w-11 bg-[#d7ff3f]"/><p className="text-[10px] font-black uppercase tracking-[.23em] text-[#d7ff3f]">{eyebrow}</p></div>
-            <h1 className="mt-7 text-[clamp(54px,7.4vw,116px)] font-black leading-[.85] tracking-[-.078em] text-balance">{title}</h1>
+            <h1 className="mt-7 text-[clamp(38px,5vw,72px)] font-bold leading-[.95] tracking-[-.03em] text-balance">{title}</h1>
             <div className="mt-8 max-w-2xl border-l border-white/15 pl-5"><p className="text-[15px] leading-7 text-white/58 sm:text-[17px]">{description}</p></div>
             {children && <div className="mt-9">{children}</div>}
           </div>

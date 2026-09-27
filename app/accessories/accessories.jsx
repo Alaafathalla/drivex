@@ -143,9 +143,9 @@ function HeroBanner() {
   const [slide, setSlide] = useState(0)
 
   const BANNER_SLIDES = [
-    { tag: 'New arrivals',  title: 'Ceramic Coating\nKits — Pro Grade',  sub: 'From AED 780',   cta: t('acc_browse_cats'), accent: '#B5E92E', img: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=1400&q=85' },
-    { tag: 'Best sellers',  title: 'Performance\nUpgrade Packs',          sub: 'Starting AED 920', cta: t('acc_browse_cats'), accent: '#38bdf8', img: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=1400&q=85' },
-    { tag: 'Limited offer', title: 'Tech & Audio\nBundle Deals',          sub: 'Save up to 20%',   cta: t('acc_browse_cats'), accent: '#fb923c', img: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=1400&q=85' },
+    { tag: 'New arrivals',  title: 'Ceramic Coating Kits — Pro Grade',  sub: 'From AED 780',   cta: t('acc_browse_cats'), accent: '#B5E92E', img: 'https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac?w=1400&q=85' },
+    { tag: 'Best sellers',  title: 'Performance Upgrade Packs',          sub: 'Starting AED 920', cta: t('acc_browse_cats'), accent: '#38bdf8', img: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=1400&q=85' },
+    { tag: 'Limited offer', title: 'Tech & Audio Bundle Deals',          sub: 'Save up to 20%',   cta: t('acc_browse_cats'), accent: '#fb923c', img: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=1400&q=85' },
   ]
 
   const s = BANNER_SLIDES[slide]
@@ -356,7 +356,7 @@ function BrandsSection() {
               {t('acc_curated_brands_eyebrow')}
             </motion.p>
             <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-              className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+              className="mt-3 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[#0f172a]"
               style={{ fontSize: 'clamp(24px, 3vw, 38px)' }}>
               {t('acc_curated_brands_title')}
             </motion.h2>
@@ -487,7 +487,7 @@ export default function Accessories() {
                 {t('acc_store_eyebrow')}
               </motion.p>
               <motion.h2 initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.06 }}
-                className="mt-3 font-black leading-none tracking-[-0.05em] text-[#0f172a]"
+                className="mt-3 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[#0f172a]"
                 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)' }}>
                 {t('acc_upgrade_title')}
               </motion.h2>

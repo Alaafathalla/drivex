@@ -36,6 +36,9 @@ const NAV = [
   { key: 'nav_contact',    href: '/contact' },
 ]
 
+// Example search chips shown before the user has typed anything.
+const SEARCH_CHIPS = ['chip_bmw_x5', 'chip_electric_suv', 'chip_mercedes', 'chip_dubai_rentals']
+
 const BRAND_LINKS = [
   ['BMW', '/brands/bmw'],
   ['Mercedes-Benz', '/brands/mercedes-benz'],
@@ -163,6 +166,21 @@ export function SiteHeader() {
   const [searching, setSearching] = useState(false)
   const debouncedQ = useDebouncedValue(q, 220)
   const inputRef = useRef(null)
+  const headerRef = useRef(null)
+  // The header's real height changes in Arabic (longer nav labels can wrap
+  // onto a 2nd line), so the layout spacer below tracks it live instead of
+  // assuming a fixed 100px.
+  const [headerHeight, setHeaderHeight] = useState(100)
+
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const update = () => setHeaderHeight(el.offsetHeight)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -205,11 +223,15 @@ export function SiteHeader() {
   const searchHref = useMemo(() => `/cars?q=${encodeURIComponent(q.trim())}`, [q])
 
   return (
-    <>
+    // Wraps every part of the header (bar, drawer, search overlay) so RTL
+    // font-weight rules can be scoped to `.dx-header` without leaking to the
+    // rest of the site. display:contents keeps it out of the layout entirely.
+    <div className="dx-header" style={{ display: 'contents' }}>
       <ScrollProgress />
 
       {/* ── Two-row header ─────────────────────────────────────────────── */}
       <motion.header
+        ref={headerRef}
         initial={{ y: -120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -258,7 +280,10 @@ export function SiteHeader() {
         </div>
 
         {/* ── ROW 2: brand + nav + actions ────────────────────────────── */}
-        <div className="page-inner flex h-[60px] items-center gap-4">
+        {/* min-h + py instead of a fixed h-[60px]: Arabic nav labels are
+            longer, so the nav below may wrap onto a 2nd line — the row
+            grows to fit instead of clipping it. */}
+        <div className="page-inner flex min-h-[60px] items-center gap-4 py-1.5">
 
           {/* Brand */}
           <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label={t('header_home_aria')}>
@@ -275,7 +300,10 @@ export function SiteHeader() {
             className="relative mx-2 hidden min-w-0 flex-1 items-center lg:flex"
             onMouseLeave={() => setMega(null)}
           >
-            <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto scrollbar-hide">
+            {/* Arabic labels are wider (and heavier), so instead of forcing a
+                single scrollable line — which pushed the buttons on the other
+                side off-screen — the nav is allowed to wrap onto a 2nd line. */}
+            <div className={`flex min-w-0 items-center gap-0.5 ${isRTL ? 'flex-wrap gap-y-1' : 'overflow-x-auto scrollbar-hide'}`}>
               {NAV.map((item) => (
                 <div key={item.href} className="relative shrink-0" onMouseEnter={() => item.mega ? setMega(item.mega) : setMega(null)}>
                   <a
@@ -342,8 +370,9 @@ export function SiteHeader() {
         </div>
       </motion.header>
 
-      {/* Spacer matching the 2-row height (40 + 60 = 100px) */}
-      <div className="h-[100px]" />
+      {/* Spacer matching the header's real (fixed) height. Measured live
+          since Arabic nav can wrap onto a 2nd line and grow the header. */}
+      <div style={{ height: headerHeight }} />
 
       {/* ── Mobile drawer ──────────────────────────────────────────────── */}
       <AnimatePresence>
@@ -483,10 +512,10 @@ export function SiteHeader() {
                   </div>
                 ) : (
                   <div className="flex flex-wrap gap-2 px-2 pb-3">
-                    {['BMW X5', 'Electric SUV', 'Mercedes', 'Dubai rentals'].map((item) => (
-                      <button key={item} type="button" onClick={() => setQ(item)}
+                    {SEARCH_CHIPS.map((key) => (
+                      <button key={key} type="button" onClick={() => setQ(t(key))}
                         className="rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-[#B5E92E] hover:bg-[#B5E92E]/10">
-                        {item}
+                        {t(key)}
                       </button>
                     ))}
                   </div>
@@ -504,6 +533,6 @@ export function SiteHeader() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   )
 }
