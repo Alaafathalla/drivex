@@ -425,14 +425,23 @@ function FeaturedSection({ cars }) {
               {t('home_featured_eyebrow')}
             </motion.span>
             <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.07 }}
-              className="mt-4 font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
-              style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
-              {t('home_featured_title').split(' ').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
-            </motion.h2>
+  initial={{ opacity: 0, y: 16 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: 0.07 }}
+  className="mt-4 font-black leading-[0.92] tracking-[-0.05em] text-[#0f172a]"
+  style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
+  {(() => {
+    const [first, ...rest] = t('home_featured_title').split(' ')
+    return (
+      <>
+        {first}
+        <br />
+        {rest.join(' ')}
+      </>
+    )
+  })()}
+</motion.h2>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
