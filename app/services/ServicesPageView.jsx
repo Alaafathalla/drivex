@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, CalendarHeart, CarFront, CheckCircle2, Clock3, MapPin, Plane, ShieldCheck, Sparkles, Wrench } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
@@ -190,18 +191,17 @@ export default function ServicesPageView() {
           {SERVICE_CATALOG.map((service, index) => {
             const Icon = ICONS[service.slug] || Sparkles
             return (
-              <motion.button
+              <motion.div
                 key={service.slug}
-                onClick={() => setSelected(service.slug)}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className={`group overflow-hidden rounded-[25px] border bg-white text-start shadow-[0_16px_45px_rgba(15,23,42,.05)] transition ${
-                  selected === service.slug
-                    ? 'border-[#B5E92E] ring-4 ring-[#B5E92E]/10'
-                    : 'border-[#e2e6de]'
-                }`}
+              >
+              <Link
+                href={`/services/${service.slug}`}
+                aria-label={t(service.titleKey || service.title)}
+                className="group block overflow-hidden rounded-[25px] border border-[#e2e6de] bg-white text-start shadow-[0_16px_45px_rgba(15,23,42,.05)] transition hover:border-[#B5E92E] hover:ring-4 hover:ring-[#B5E92E]/10 focus-visible:border-[#B5E92E] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#B5E92E]/20"
               >
                 <div className="relative aspect-[1.75] overflow-hidden">
                   <img src={service.image} alt={service.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
@@ -219,11 +219,12 @@ export default function ServicesPageView() {
                       <h3 className="text-lg font-black text-[#0f172a]">{t(service.titleKey || service.title)}</h3>
                       <p className="mt-2 text-sm leading-6 text-[#64748b]">{t(service.descriptionKey || service.description)}</p>
                     </div>
-                    <ArrowRight size={17} className="mt-1 shrink-0" />
+                    <ArrowRight size={17} className="mt-1 shrink-0 transition group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
                   </div>
                   <p className="mt-5 text-xs font-black uppercase tracking-[.1em] text-[#7d9f24]">{service.price}</p>
                 </div>
-              </motion.button>
+              </Link>
+              </motion.div>
             )
           })}
         </div>
