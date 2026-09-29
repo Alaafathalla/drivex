@@ -11,6 +11,7 @@ import { carService } from '@/services/carService'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { localizeVehicleValue } from '@/lib/vehicle-i18n'
 import { Select } from '@/components/ui/select'
 import { FaqSection, TrustBand } from '@/components/platform/rich-sections'
 
@@ -18,7 +19,7 @@ const EMPTY = { brand:'',bodyType:'',fuelType:'',transmission:'',city:'',seats:'
 
 function CarListRow({ car, index }) {
   const { format } = useCurrency()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   return (
     <motion.a
       href={`/cars/${car.id}`}
@@ -29,12 +30,12 @@ function CarListRow({ car, index }) {
       <div className="min-w-0 px-1">
         <div className="flex flex-wrap gap-2">
           <span className="rounded-full bg-[#eef4df] px-2 py-1 text-[9px] font-black uppercase text-[#657f1b]">
-            {car.listingType === 'rent' ? t('cars_for_rent') : car.condition || t('cars_for_sale')}
+            {car.listingType === 'rent' ? t('cars_for_rent') : localizeVehicleValue(car.condition, lang) || t('cars_for_sale')}
           </span>
-          <span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] font-black uppercase text-slate-500">{car.bodyType}</span>
+          <span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] font-black uppercase text-slate-500">{localizeVehicleValue(car.bodyType, lang)}</span>
         </div>
         <h3 className="mt-3 text-xl font-black tracking-[-.03em] text-[#0f172a]">{car.brand} {car.model}</h3>
-        <p className="mt-2 text-xs text-[#64748b]">{car.year} · {car.city} · {car.transmission} · {car.fuelType} · {Number(car.mileage||0).toLocaleString()} {t('km_unit')}</p>
+        <p className="mt-2 text-xs text-[#64748b]">{car.year} · {car.city} · {localizeVehicleValue(car.transmission, lang)} · {localizeVehicleValue(car.fuelType, lang)} · {Number(car.mileage||0).toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US')} {t('km_unit')}</p>
         <p className="mt-3 line-clamp-1 text-xs leading-6 text-[#94a3b8]">{car.description}</p>
       </div>
       <div className="min-w-[150px] p-2 text-left sm:text-right">
@@ -98,7 +99,7 @@ function CarsContent() {
       const res = await carService.getCars({ ...filters, listingType: tab === 'all' ? undefined : tab, q: q || undefined, sort, page, limit: 9 })
       if (token === tokenRef.current) setData(res)
     } catch (e) {
-      if (token === tokenRef.current) setError(e.message || 'Failed to load cars.')
+      if (token === tokenRef.current) setError(e.message || t('cars_load_error'))
     } finally {
       if (token === tokenRef.current) setLoading(false)
     }

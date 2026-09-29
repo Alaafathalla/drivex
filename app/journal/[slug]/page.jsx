@@ -35,7 +35,7 @@ export default async function JournalArticlePage({ params }) {
             href="/journal"
             className="inline-flex items-center gap-2 text-xs font-black text-white/55 transition hover:text-white"
           >
-            <ArrowLeft size={14} /> Journal
+            <ArrowLeft size={14} className={lang === 'ar' ? 'rotate-180' : ''} /> {translate('journal_back', lang)}
           </a>
           <p className="mt-10 text-[10px] font-black uppercase tracking-[.2em] text-[#B5E92E]">{localize(post.categoryKey, post.category)}</p>
           <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.02] tracking-[-.05em] sm:text-6xl">

@@ -12,6 +12,7 @@ import { useFavorites } from '@/context/FavoritesContext'
 import { useToast } from '@/context/ToastContext'
 import { useCurrency } from '@/context/CurrencyContext'
 import { useLang } from '@/context/LangContext'
+import { localizeVehicleValue } from '@/lib/vehicle-i18n'
 
 function StarRating({ rating }) {
   return (
@@ -37,14 +38,14 @@ export default function CarDetailPage({ params }) {
   const { toggle, isFav } = useFavorites()
   const toast = useToast()
   const { format } = useCurrency()
-  const { t, isRTL } = useLang()
+  const { t, lang, isRTL } = useLang()
   const fav = isFav(String(id))
 
   useEffect(() => {
     setLoading(true)
     Promise.all([carService.getCarById(id), carService.getRelatedCars(id)])
       .then(([c, r]) => { setCar(c); setRelated(r) })
-      .catch(e => setError(e.message))
+      .catch(e => setError(e.message || t('cars_load_error')))
       .finally(() => setLoading(false))
   }, [id])
 
@@ -67,6 +68,22 @@ export default function CarDetailPage({ params }) {
     { key: 'specs',     label: t('detail_tab_specs') },
     { key: 'features',  label: t('detail_tab_features') },
   ]
+
+  const handleShare = async () => {
+    const url = window.location.href
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${car.brand} ${car.model}`, url })
+      } else {
+        await navigator.clipboard.writeText(url)
+        toast({ message: t('detail_link_copied'), type: 'success' })
+      }
+    } catch (shareError) {
+      if (shareError?.name !== 'AbortError') {
+        toast({ message: t('quick_view_share_error'), type: 'error' })
+      }
+    }
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
@@ -95,7 +112,7 @@ export default function CarDetailPage({ params }) {
                   <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase ${
                     isRent ? 'bg-blue-100 text-blue-700' : car.condition === 'New' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                   }`}>
-                    {isRent ? t('detail_for_rent') : `${car.condition} · ${t('detail_for_sale')}`}
+                    {isRent ? t('detail_for_rent') : `${localizeVehicleValue(car.condition, lang)} · ${t('detail_for_sale')}`}
                   </span>
                   {car.available && isRent && (
                     <span className="flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-[10px] font-bold text-green-700">
@@ -121,7 +138,7 @@ export default function CarDetailPage({ params }) {
                   className="grid h-10 w-10 place-items-center rounded-full border border-gray-200 bg-white shadow-sm transition hover:border-rose-300">
                   <Heart size={18} className={fav ? 'fill-rose-500 text-rose-500' : 'text-gray-400'} />
                 </motion.button>
-                <button onClick={() => { navigator.share?.({ url: window.location.href }).catch(() => {}); toast({ message: t('detail_link_copied'), type: 'success' }) }}
+                <button onClick={handleShare}
                   className="grid h-10 w-10 place-items-center rounded-full border border-gray-200 bg-white shadow-sm transition hover:border-green-300">
                   <Share2 size={18} className="text-gray-400" />
                 </button>
@@ -160,9 +177,9 @@ export default function CarDetailPage({ params }) {
                             className="flex items-center gap-2 rounded-full bg-green-600 px-4 py-2.5 text-[13px] font-bold text-white hover:bg-green-500 transition">
                             <Phone size={14} /> {t('detail_call')}
                           </a>
-                          <button className="rounded-full border border-gray-200 px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
+                          <a href={`mailto:${car.owner.email}`} className="rounded-full border border-gray-200 px-4 py-2.5 text-[13px] font-semibold text-gray-700 hover:border-green-400 transition">
                             {t('detail_message')}
-                          </button>
+                          </a>
                         </div>
                       </div>
                     )}
@@ -217,8 +234,8 @@ export default function CarDetailPage({ params }) {
                   [t('detail_pickup'),       car.location],
                   [t('detail_availability'), car.available ? t('detail_avail_now') : t('detail_avail_booked')],
                 ] : [
-                  [t('detail_cond_label'),   car.condition],
-                  [t('detail_mileage'),      `${car.mileage?.toLocaleString()} ${t('km_unit')}`],
+                  [t('detail_cond_label'),   localizeVehicleValue(car.condition, lang)],
+                  [t('detail_mileage'),      `${car.mileage != null ? Number(car.mileage).toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US') : '—'} ${t('km_unit')}`],
                   [t('detail_location'),     car.city],
                   [t('detail_financing'),    car.financing?.available ? t('detail_fin_avail') : '—'],
                 ]).map(([k, v]) => (

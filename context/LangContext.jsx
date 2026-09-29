@@ -23,7 +23,10 @@ export function LangProvider({ children }) {
     if (!mounted) return
     document.documentElement.lang = lang
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
-    try { localStorage.setItem('drivex_lang', lang) } catch {}
+    try {
+      localStorage.setItem('drivex_lang', lang)
+      document.cookie = `drivex_lang=${lang}; path=/; max-age=31536000; SameSite=Lax`
+    } catch {}
   }, [lang, mounted])
 
   const setLang = useCallback((l) => {

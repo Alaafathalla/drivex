@@ -15,6 +15,7 @@ import { useLang } from '@/context/LangContext'
 import { api } from '@/lib/api'
 import { carService } from '@/services/carService'
 import { Select } from '@/components/ui/select'
+import { localizeVehicleValue } from '@/lib/vehicle-i18n'
 
 // ─── Data constants ────────────────────────────────────────────────────────
 const BRANDS = [
@@ -69,7 +70,7 @@ function HomeCarCard({ car, index }) {
   const { toggle, isFav } = useFavorites()
   const toast   = useToast()
   const { format } = useCurrency()
-  const { t }   = useLang()
+  const { t, lang } = useLang()
   const fav     = isFav(String(car.id))
   const isRent  = car.listingType === 'rent'
   const image   = car.images?.[0] || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80'
@@ -91,9 +92,9 @@ function HomeCarCard({ car, index }) {
         <div className="absolute left-3 top-3 flex gap-1.5">
           <span className={`rounded-full px-2.5 py-1 text-[10px] font-black uppercase shadow-sm ${
             isRent ? 'bg-[#38bdf8] text-white' : car.condition === 'New' ? 'bg-[#B5E92E] text-[#071016]' : 'bg-white/90 text-[#334155]'
-          }`}>{isRent ? t('search_rent') : car.condition}</span>
+          }`}>{isRent ? t('search_rent') : localizeVehicleValue(car.condition, lang)}</span>
           {car.fuelType === 'Electric' && (
-            <span className="flex items-center gap-1 rounded-full bg-[#B5E92E] px-2 py-1 text-[9px] font-black text-[#071016] shadow-sm"><Zap size={8} />EV</span>
+            <span className="flex items-center gap-1 rounded-full bg-[#B5E92E] px-2 py-1 text-[9px] font-black text-[#071016] shadow-sm"><Zap size={8} />{t('card_electric_badge')}</span>
           )}
         </div>
         <motion.button whileTap={{ scale: 0.72 }}
@@ -116,8 +117,8 @@ function HomeCarCard({ car, index }) {
         <h3 className="truncate text-[14px] font-black text-[#0f172a]">{car.brand} {car.model}</h3>
         <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#94a3b8]"><MapPin size={9} />{car.city} · {car.year}</p>
         <div className="mt-3 flex flex-wrap gap-1">
-          {[car.transmission, car.fuelType].filter(Boolean).map(t => (
-            <span key={t} className="rounded-md bg-[#f5f6f3] px-2 py-0.5 text-[10px] text-[#64748b]">{t}</span>
+          {[car.transmission, car.fuelType].filter(Boolean).map((value) => (
+            <span key={value} className="rounded-md bg-[#f5f6f3] px-2 py-0.5 text-[10px] text-[#64748b]">{localizeVehicleValue(value, lang)}</span>
           ))}
         </div>
         <div className="mt-auto flex items-end justify-between pt-4">

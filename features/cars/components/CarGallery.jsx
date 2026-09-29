@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Camera, ChevronLeft, ChevronRight, Maximize2, RotateCcw, X } from 'lucide-react'
+import { Camera, ChevronLeft, ChevronRight, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 
-// Swiper is loaded client-side only to avoid SSR issues
+const ZOOM_SCALE = 2.6
+const LENS_SIZE = 168
+
 export function CarGallery({ images = [] }) {
   const { t, isRTL } = useLang()
   const [active, setActive] = useState(0)
   const [lightbox, setLightbox] = useState(false)
-  const [view360, setView360] = useState(false)
+  const [zoomEnabled, setZoomEnabled] = useState(false)
+  const [zoomPoint, setZoomPoint] = useState({ x: 50, y: 50, visible: false })
   const [dragStart, setDragStart] = useState(null)
   const mainRef = useRef(null)
 
@@ -21,46 +24,79 @@ export function CarGallery({ images = [] }) {
   const prev = () => setActive((i) => (i - 1 + imgs.length) % imgs.length)
   const next = () => setActive((i) => (i + 1) % imgs.length)
 
-  // Keyboard navigation
   useEffect(() => {
     if (!lightbox) return
     const handler = (e) => {
-      if (e.key === 'ArrowLeft')  prev()
+      if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
-      if (e.key === 'Escape')     setLightbox(false)
+      if (e.key === 'Escape') setLightbox(false)
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [lightbox, imgs.length])
 
-  // Touch / drag swipe support
-  const handleDragStart = (e) => setDragStart(e.touches?.[0]?.clientX ?? e.clientX)
+  useEffect(() => {
+    setZoomPoint({ x: 50, y: 50, visible: false })
+  }, [active])
+
+  const handleDragStart = (e) => {
+    if (zoomEnabled) return
+    setDragStart(e.touches?.[0]?.clientX ?? e.clientX)
+  }
+
   const handleDragEnd = (e) => {
-    if (dragStart === null) return
+    if (zoomEnabled || dragStart === null) return
     const end = e.changedTouches?.[0]?.clientX ?? e.clientX
     const diff = dragStart - end
     if (Math.abs(diff) > 40) diff > 0 ? next() : prev()
     setDragStart(null)
   }
 
+  const updateLens = (e) => {
+    if (!zoomEnabled || !mainRef.current) return
+    const rect = mainRef.current.getBoundingClientRect()
+    const point = e.touches?.[0] || e
+    const x = Math.max(0, Math.min(100, ((point.clientX - rect.left) / rect.width) * 100))
+    const y = Math.max(0, Math.min(100, ((point.clientY - rect.top) / rect.height) * 100))
+    setZoomPoint({ x, y, visible: true })
+  }
+
+  const toggleZoom = (e) => {
+    e?.stopPropagation?.()
+    setZoomEnabled((value) => !value)
+    setZoomPoint((point) => ({ ...point, visible: false }))
+  }
+
   return (
     <>
       <div className="overflow-hidden rounded-2xl">
-        {/* Main image */}
         <div
           ref={mainRef}
-          className="group relative cursor-grab overflow-hidden bg-gray-100 active:cursor-grabbing"
+          className={`group relative overflow-hidden bg-gray-100 ${zoomEnabled ? 'cursor-crosshair' : 'cursor-grab active:cursor-grabbing'}`}
           style={{ aspectRatio: '16/9' }}
           onMouseDown={handleDragStart}
           onMouseUp={handleDragEnd}
-          onTouchStart={handleDragStart}
-          onTouchEnd={handleDragEnd}
+          onMouseMove={updateLens}
+          onMouseEnter={updateLens}
+          onMouseLeave={() => {
+            setDragStart(null)
+            setZoomPoint((point) => ({ ...point, visible: false }))
+          }}
+          onTouchStart={(e) => {
+            handleDragStart(e)
+            updateLens(e)
+          }}
+          onTouchMove={updateLens}
+          onTouchEnd={(e) => {
+            handleDragEnd(e)
+            setZoomPoint((point) => ({ ...point, visible: false }))
+          }}
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.img
               key={active}
               src={imgs[active]}
-              alt={`Car image ${active + 1}`}
+              alt={`${t('gallery_image')} ${active + 1}`}
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
@@ -70,16 +106,39 @@ export function CarGallery({ images = [] }) {
             />
           </AnimatePresence>
 
-          {/* Overlay gradient */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
-          {/* Nav arrows */}
+          {/* Magnifying lens — replaces the old simulated 360° control. */}
+          <AnimatePresence>
+            {zoomEnabled && zoomPoint.visible && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.86 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="pointer-events-none absolute z-30 hidden overflow-hidden rounded-full border-4 border-white bg-white shadow-[0_18px_55px_rgba(0,0,0,.38)] sm:block"
+                style={{
+                  width: LENS_SIZE,
+                  height: LENS_SIZE,
+                  left: `${zoomPoint.x}%`,
+                  top: `${zoomPoint.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                  backgroundImage: `url(${imgs[active]})`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: `${ZOOM_SCALE * 100}% ${ZOOM_SCALE * 100}%`,
+                  backgroundPosition: `${zoomPoint.x}% ${zoomPoint.y}%`,
+                }}
+              >
+                <div className="absolute inset-0 rounded-full ring-1 ring-black/10" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {imgs.length > 1 && (
             <>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); prev() }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
+                className="absolute left-3 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
                 aria-label={t('gallery_prev')}
               >
                 <ChevronLeft size={18} className={`text-[#0f172a] ${isRTL ? 'rotate-180' : ''}`} />
@@ -87,7 +146,7 @@ export function CarGallery({ images = [] }) {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); next() }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
+                className="absolute right-3 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 shadow-lg backdrop-blur-sm transition hover:bg-white"
                 aria-label={t('gallery_next')}
               >
                 <ChevronRight size={18} className={`text-[#0f172a] ${isRTL ? 'rotate-180' : ''}`} />
@@ -95,50 +154,53 @@ export function CarGallery({ images = [] }) {
             </>
           )}
 
-          {/* Top-right actions */}
-          <div className="absolute right-3 top-3 flex flex-col gap-2">
+          <div className={`absolute top-3 z-40 flex flex-col gap-2 ${isRTL ? 'left-3' : 'right-3'}`}>
             <motion.button
               whileTap={{ scale: 0.88 }}
-              onClick={() => setLightbox(true)}
-              className="grid h-9 w-9 place-items-center rounded-full bg-white/85 shadow backdrop-blur-sm transition hover:bg-white"
+              onClick={(e) => { e.stopPropagation(); setLightbox(true) }}
+              className="grid h-9 w-9 place-items-center rounded-full bg-white/90 shadow backdrop-blur-sm transition hover:bg-white"
               aria-label={t('gallery_fullscreen')}
+              title={t('gallery_fullscreen')}
             >
               <Maximize2 size={14} className="text-[#0f172a]" />
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.88 }}
-              onClick={() => setView360(true)}
-              className="grid h-9 w-9 place-items-center rounded-full bg-[#B5E92E] shadow backdrop-blur-sm transition hover:brightness-105"
-              aria-label={t('gallery_360_btn')}
+              onClick={toggleZoom}
+              className={`grid h-9 w-9 place-items-center rounded-full shadow backdrop-blur-sm transition ${zoomEnabled ? 'bg-[#0f172a] text-white' : 'bg-[#B5E92E] text-[#071016] hover:brightness-105'}`}
+              aria-label={zoomEnabled ? t('gallery_zoom_off') : t('gallery_zoom_btn')}
+              title={zoomEnabled ? t('gallery_zoom_off') : t('gallery_zoom_btn')}
             >
-              <RotateCcw size={13} className="text-[#071016]" />
+              {zoomEnabled ? <ZoomOut size={14} /> : <ZoomIn size={14} />}
             </motion.button>
           </div>
 
-          {/* Counter + photo count */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-2">
+          <div className={`absolute bottom-3 z-20 flex items-center gap-2 ${isRTL ? 'right-3' : 'left-3'}`}>
             <span className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
               <Camera size={10} /> {active + 1}/{imgs.length}
             </span>
+            {zoomEnabled && (
+              <span className="hidden rounded-full bg-[#B5E92E] px-3 py-1 text-[10px] font-black text-[#071016] sm:inline-flex">
+                {t('gallery_zoom_hint')}
+              </span>
+            )}
           </div>
 
-          {/* Dot indicators */}
           {imgs.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
               {imgs.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActive(i)}
+                  onClick={(e) => { e.stopPropagation(); setActive(i) }}
                   className={`rounded-full transition-all duration-300 ${i === active ? 'w-5 bg-[#B5E92E]' : 'w-1.5 bg-white/60 hover:bg-white'}`}
                   style={{ height: 6 }}
-                  aria-label={`Go to image ${i + 1}`}
+                  aria-label={`${t('gallery_go_to_image')} ${i + 1}`}
                 />
               ))}
             </div>
           )}
         </div>
 
-        {/* Thumbnail strip */}
         {imgs.length > 1 && (
           <div className="mt-2.5 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {imgs.map((src, i) => (
@@ -149,6 +211,7 @@ export function CarGallery({ images = [] }) {
                 whileTap={{ scale: 0.97 }}
                 className={`relative shrink-0 overflow-hidden rounded-xl border-2 transition ${active === i ? 'border-[#B5E92E] shadow-sm' : 'border-transparent opacity-60 hover:opacity-100'}`}
                 style={{ width: 80, aspectRatio: '16/10' }}
+                aria-label={`${t('gallery_go_to_image')} ${i + 1}`}
               >
                 <img src={src} alt="" className="h-full w-full object-cover" />
               </motion.button>
@@ -157,7 +220,6 @@ export function CarGallery({ images = [] }) {
         )}
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox && (
           <motion.div
@@ -190,27 +252,27 @@ export function CarGallery({ images = [] }) {
                   draggable={false}
                 />
               </AnimatePresence>
-
-              {/* Caption */}
               <p className="mt-3 text-center text-xs text-white/50">
                 {active + 1} / {imgs.length} — {t('gallery_drag_hint')}
               </p>
             </motion.div>
 
-            {/* Controls */}
-            <button onClick={() => setLightbox(false)}
-              className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+            <button
+              onClick={() => setLightbox(false)}
+              className={`absolute top-5 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 ${isRTL ? 'left-5' : 'right-5'}`}
+              aria-label={t('btn_close')}
+            >
               <X size={20} />
             </button>
             {imgs.length > 1 && (
               <>
                 <button onClick={(e) => { e.stopPropagation(); prev() }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                  className="absolute left-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
                   aria-label={t('gallery_prev')}>
                   <ChevronLeft size={24} className={isRTL ? 'rotate-180' : ''} />
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); next() }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 grid h-12 w-12 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                  className="absolute right-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
                   aria-label={t('gallery_next')}>
                   <ChevronRight size={24} className={isRTL ? 'rotate-180' : ''} />
                 </button>
@@ -219,154 +281,6 @@ export function CarGallery({ images = [] }) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* 360° View Modal */}
-      <AnimatePresence>
-        {view360 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/95 p-6"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-3xl"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-black text-white">{t('gallery_360_title')}</h2>
-                  <p className="mt-1 text-sm text-white/40">{t('gallery_360_sub')}</p>
-                </div>
-                <button
-                  onClick={() => setView360(false)}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-                  aria-label={t('gallery_close_360')}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              {/* 360° Interactive strip using the available images */}
-              <div className="relative overflow-hidden rounded-2xl bg-[#0d1922]" style={{ aspectRatio: '16/9' }}>
-                <View360Strip images={imgs} />
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-xs text-white/70 backdrop-blur-sm">
-                  <RotateCcw size={12} />
-                  {t('gallery_360_drag')}
-                </div>
-              </div>
-
-              {/* Thumbnail row */}
-              <div className="mt-4 flex gap-2 overflow-x-auto">
-                {imgs.map((src, i) => (
-                  <button key={i} onClick={() => setActive(i)}
-                    className="h-14 w-20 shrink-0 overflow-hidden rounded-xl opacity-70 transition hover:opacity-100">
-                    <img src={src} alt="" className="h-full w-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
-  )
-}
-
-// Interactive 360° strip — rotates through images on drag.
-// When enough distinct photos exist we cycle real frames for a true
-// photographic spin; otherwise (single/few photos, common in listings)
-// we fall back to a CSS 3D tilt so dragging always visibly responds.
-function View360Strip({ images }) {
-  const [frame, setFrame] = useState(0)
-  const [angle, setAngle] = useState(0)
-  const [dragging, setDragging] = useState(false)
-  const startX = useRef(null)
-  const frameRef = useRef(0)
-  const angleRef = useRef(0)
-  const totalFrames = images.length
-  const hasEnoughFrames = totalFrames >= 8
-
-  const onStart = (e) => {
-    setDragging(true)
-    startX.current = e.touches?.[0]?.clientX ?? e.clientX
-  }
-
-  const onMove = (e) => {
-    if (!dragging || startX.current === null) return
-    const currentX = e.touches?.[0]?.clientX ?? e.clientX
-    const diff = currentX - startX.current
-
-    if (hasEnoughFrames) {
-      const framesPerPx = totalFrames / 400
-      let newFrame = Math.round(frameRef.current - diff * framesPerPx)
-      newFrame = ((newFrame % totalFrames) + totalFrames) % totalFrames
-      setFrame(newFrame)
-    } else {
-      // Simulated rotation: map horizontal drag to a Y-axis spin so the
-      // control always feels alive even with a single hero photo.
-      const degPerPx = 0.6
-      setAngle(angleRef.current + diff * degPerPx)
-    }
-  }
-
-  const onEnd = () => {
-    setDragging(false)
-    frameRef.current = frame
-    angleRef.current = angle
-    startX.current = null
-  }
-
-  if (!hasEnoughFrames) {
-    return (
-      <div
-        className="flex h-full w-full select-none items-center justify-center"
-        style={{ cursor: dragging ? 'grabbing' : 'grab', perspective: 900 }}
-        onMouseDown={onStart}
-        onMouseMove={onMove}
-        onMouseUp={onEnd}
-        onMouseLeave={onEnd}
-        onTouchStart={onStart}
-        onTouchMove={onMove}
-        onTouchEnd={onEnd}
-        draggable={false}
-      >
-        <img
-          src={images[0]}
-          alt="360° view"
-          className="h-[78%] w-[78%] object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,.55)]"
-          style={{
-            transform: `rotateY(${angle}deg) scaleX(${Math.cos((angle * Math.PI) / 180) < 0 ? -1 : 1})`,
-            transition: dragging ? 'none' : 'transform .35s ease-out',
-            willChange: 'transform',
-          }}
-          draggable={false}
-        />
-      </div>
-    )
-  }
-
-  return (
-    <div
-      className="h-full w-full select-none"
-      style={{ cursor: dragging ? 'grabbing' : 'grab' }}
-      onMouseDown={onStart}
-      onMouseMove={onMove}
-      onMouseUp={onEnd}
-      onMouseLeave={onEnd}
-      onTouchStart={onStart}
-      onTouchMove={onMove}
-      onTouchEnd={onEnd}
-      draggable={false}
-    >
-      <img
-        src={images[frame % images.length]}
-        alt="360° view"
-        className="h-full w-full object-contain"
-        draggable={false}
-      />
-    </div>
   )
 }

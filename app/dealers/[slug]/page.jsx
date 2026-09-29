@@ -1,13 +1,15 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Phone, ShieldCheck, Star, Mail } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
+import { useCurrency } from '@/context/CurrencyContext'
 import { api, CARS } from '@/lib/api'
 
 export default function DealerDetailsPage({ params }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  const { format } = useCurrency()
   const [dealer, setDealer] = useState(null)
   const [inventory, setInventory] = useState([])
 
@@ -92,8 +94,8 @@ export default function DealerDetailsPage({ params }) {
                   </div>
                   <div className="p-5">
                     <h3 className="font-black">{car.name}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{car.year} · {car.mileage?.toLocaleString()} km</p>
-                    <p className="mt-3 text-lg font-black text-accent">${car.price?.toLocaleString()}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{car.year} · {Number(car.mileage || 0).toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US')} {t('km_unit')}</p>
+                    <p className="mt-3 text-lg font-black text-accent">{format(car.price || 0)}</p>
                   </div>
                 </motion.a>
               ))}
